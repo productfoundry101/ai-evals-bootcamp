@@ -50,10 +50,6 @@ tutor/          Session protocol and scoring rubrics (Claude's instructions)
 progress/       Your local progress (gitignored)
 ```
 
-## Attribution
-
-Lesson structure inspired by [aianalystlab.ai](https://aianalystlab.ai). All lessons are original PM-focused rewrites covering AI evaluation concepts through a product management lens.
-
 ## License
 
 [CC BY-NC-SA 4.0](LICENSE) — Share and adapt for non-commercial purposes with attribution.

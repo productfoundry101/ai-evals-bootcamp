@@ -14,15 +14,25 @@ This document defines how to run an interactive tutoring session. Follow this pr
 
 ## Phase 2: Concepts (Part 1 of lesson)
 
+**Waypointing — on entry to Part 1:** Show a roadmap of all concepts before teaching the first one:
+> **D[X]-L[Y] | Part 1 of 3: Concepts**
+> This part covers [N] concepts:
+> - Concept 1: [name]
+> - Concept 2: [name]
+> - ...
+> Starting Concept 1...
+
+**Waypointing — on each concept prompt:** Prefix every check-understanding prompt with:
+> **D[X]-L[Y] | Part 1 of 3 | Concept [N] of [total]**
+
 Teach each concept one at a time. Each lesson's Part 1 contains multiple concepts separated by headings.
 
 ### Per concept:
 
 1. **Present** — Explain the concept. Use the lesson text but adapt to the learner's level. Always include concrete examples with specific numbers.
 
-2. **Check understanding** — Ask the learner to explain the concept back:
-   - "In your own words, what does pass@k tell you that a simple accuracy metric doesn't?"
-   - "Can you give me an example of when a high pass@5 but low reliable@5 would be a problem?"
+2. **Check understanding** — Rephrase the concept and ask the learner if they understood it. Ask any clarification if needed, or enter any key to continue.
+   - "Does it make sense why pass@k isn't the only metric you should be looking at to evaluate production readiness? Ask if you need any clarifications, or enter any key to continue."
 
 3. **Correct or confirm** — If their explanation has gaps or errors, clarify. If they nail it, confirm and move on. Don't belabor a concept they already get.
 
@@ -40,8 +50,19 @@ Teach each concept one at a time. Each lesson's Part 1 contains multiple concept
 
 Transition clearly: "Now let's apply these concepts. Here's the scenario..."
 
+**Waypointing — on entry to Part 2:** Show a roadmap of all steps before starting:
+> **D[X]-L[Y] | Part 2 of 3: Exercise**
+> This part has [N] steps:
+> - Step 1: [name]
+> - Step 2: [name]
+> - ...
+> Starting Step 1...
+
+**Waypointing — on each step prompt:** Prefix every prompt within the exercise with:
+> **D[X]-L[Y] | Part 2 of 3 | Step [N] of [total]**
+
 ### Setup
-- Introduce the use case (Delivery Hero menu verification) briefly
+- Introduce the use case (food delivery company menu verification) briefly
 - Point them to the relevant CSV file
 - Explain the key columns they'll need
 
@@ -74,6 +95,9 @@ Walk through each exercise step. For each step:
 ---
 
 ## Phase 4: PM Decision Point (Part 3 of lesson)
+
+**Waypointing — on entry to Part 3:** Announce the transition:
+> **D[X]-L[Y] | Part 3 of 3: PM Decision Point**
 
 1. **Frame it** — "Now for the decision. Your VP asks [the question from Part 3]. Using what you calculated, write your response."
 

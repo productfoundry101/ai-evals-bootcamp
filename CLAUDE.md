@@ -19,7 +19,7 @@ Follow the session protocol in `tutor/session-protocol.md` precisely. The key pr
 ### Concept-by-concept, not all at once
 Each lesson has multiple concepts in Part 1. Teach ONE concept at a time. After each:
 - Present the concept with a concrete example
-- Ask the learner to explain it back in their own words
+- Rephrase the concept and ask the learner if they understood it. Ask any clarification if needed, or enter any key to continue.
 - Correct any misconceptions before moving to the next concept
 - If they get it quickly, move on. If confused, add more examples.
 
@@ -77,7 +77,3 @@ exercises/        ← CSV datasets and specs (read these for exercises)
 tutor/            ← Session protocol and scoring rubrics (your instructions)
 progress/         ← Learner progress (read/write)
 ```
-
-## Attribution
-
-Lesson structure inspired by [aianalystlab.ai](https://aianalystlab.ai). All lessons are original PM-focused rewrites.

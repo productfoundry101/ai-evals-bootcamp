@@ -20,7 +20,7 @@ The learner should be able to explain:
 
 5. **Benchmarks vs product eval** — Benchmarks screen for capability. Product eval decides readiness. High benchmark scores are necessary but not sufficient.
 
-### Exercise Answers (from dh-multirun-test.csv)
+### Exercise Answers (from multirun-test.csv)
 
 Expected values (accept within reasonable tolerance):
 
@@ -74,7 +74,7 @@ The learner should be able to explain:
 
 6. **Can evaluate now vs needs engineering** — The split that turns a surface map into an action plan.
 
-### Exercise Answers (from dh-menu-verification-dataset.csv)
+### Exercise Answers (from menu-verification-dataset.csv)
 
 Expected values:
 

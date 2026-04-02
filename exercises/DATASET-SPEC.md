@@ -1,6 +1,6 @@
 # Dataset Specifications
 
-## dh-menu-verification-dataset.csv (200 rows)
+## menu-verification-dataset.csv (200 rows)
 
 Production shadow-mode data. LLM decisions logged alongside human ground truth.
 
@@ -47,7 +47,7 @@ Production shadow-mode data. LLM decisions logged alongside human ground truth.
 
 ---
 
-## dh-multirun-test.csv (100 rows = 20 test cases × 5 runs)
+## multirun-test.csv (100 rows = 20 test cases × 5 runs)
 
 Controlled test data. Same input run 5 times to measure pass@k and reliable@k.
 
