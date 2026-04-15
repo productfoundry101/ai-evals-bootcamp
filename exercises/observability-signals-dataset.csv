@@ -1,0 +1,16 @@
+signal_id,signal_name,signal_type,what_it_measures,indicator_type,detection_latency,implementation_cost
+S-01,approval_rate_by_cuisine,metric,Percent of menu changes approved for each cuisine type,leading,minutes,medium
+S-02,p95_decision_latency_ms,metric,95th percentile end-to-end decision latency in milliseconds,lagging,minutes,low
+S-03,requests_per_hour,metric,Total menu verification requests received per hour,neutral,seconds,low
+S-04,error_rate_5xx,metric,Percent of requests failing with a 5xx server error,lagging,seconds,low
+S-05,avg_llm_confidence_score,metric,Average confidence score emitted by the LLM across requests,leading,minutes,low
+S-06,human_escalation_rate,metric,Percent of cases routed to human reviewers,leading,minutes,low
+S-07,restaurant_complaint_tickets,human_feedback,Count of restaurant-owner complaint tickets opened,lagging,days,low
+S-08,allergen_false_approval_count,metric,Count of approved changes later flagged as allergen-unsafe by auditors,lagging,hours,medium
+S-09,per_request_log,log,Full per-request record: input, output, model version, timestamps,neutral,seconds,medium
+S-10,end_to_end_trace_by_stage,trace,Per-stage timing and state for each pipeline stage on sampled requests,neutral,seconds,high
+S-11,cost_per_request_usd,metric,Average API cost per verification request,lagging,minutes,low
+S-12,thumbs_down_rate,human_feedback,Percent of cases where the restaurant owner submitted negative feedback,lagging,minutes,low
+S-13,input_distribution_kl_divergence,metric,Drift score between current input distribution and training distribution,leading,hours,high
+S-14,restaurant_churn_rate_weekly,metric,Percent of restaurants leaving the platform each week,lagging,days,low
+S-15,model_version_tag,metric,Which model version served each request,neutral,seconds,low

@@ -19,10 +19,10 @@ Available lessons (one lesson per day, 21 days across 3 weeks):
 - **D6**: LLM-as-Judge — Building and Trusting Automated Quality Checks (calibration trap, Critique Shadowing, failure modes, meta-evaluation)
 - **D7**: Ground Truth, Golden Datasets, and the Eval Dataset Lifecycle (three sources, building golden datasets, contamination, staleness, lifecycle)
 
-**Week 2 — Metrics and Measurement at Scale (Days 8–14)** *(coming soon)*
-- **D8**: Retrieval and RAG Evaluation
-- **D9**: Hallucination Detection
-- **D10**: Blocking Metrics and Release Criteria
+**Week 2 — Metrics and Measurement at Scale (Days 8–14)**
+- **D8**: Retrieval and RAG Evaluation (Precision@k, Recall@k, faithfulness, answer relevance, the 2x2 diagnostic matrix)
+- **D9**: Hallucination Detection (intrinsic vs extrinsic, detection strategies, correct decisions with hallucinated reasoning)
+- **D10**: Blocking Metrics and Release Criteria (guardrail vs optimization metrics, setting thresholds, the ship/hold framework)
 - **D11**: Metric Design and Cost-Aware Evaluation
 - **D12**: Fairness, Bias, and Subgroup Evaluation
 - **D13**: Eval-Driven Development

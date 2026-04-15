@@ -163,30 +163,140 @@ Eval dataset audit data. Metadata for 40 cases in an existing eval dataset, desi
 
 **Design targets:**
 - Verdict distribution: 27 PASS (68%), 13 FAIL (32%) — not enough failures
-- Difficulty skew: 22 easy (55%), 11 medium (28%), 5 hard (13%), 2 edge_case (5%)
+- Difficulty skew: 20 easy (50%), 11 medium (28%), 9 hard (23%)
 - Change type skew: price 17 (43%), description 12 (30%), allergen 6 (15%), image 3 (8%), category 2 (5%)
 - Contaminated ground truth: 10 cases (7 copied_from_v1, 3 model_generated)
 - Stale labels (before 2026-01-01 policy update): 11 cases
-- High redundancy (4+ similar cases): 10 cases
 
-**Columns (8):**
+**Columns (7):**
 
 | Column | Description |
 |--------|-------------|
 | case_id | Case identifier (DS-01 through DS-40) |
 | change_type | One of: price, description, allergen_dietary, image, category |
-| difficulty | easy, medium, hard, or edge_case |
+| difficulty | easy, medium, or hard |
+| ground_truth_value | PASS (should be approved) or FAIL (should be rejected) — the reference answer for evaluation |
 | ground_truth_source | How the label was created: expert_annotation, model_generated, or copied_from_v1 |
 | ground_truth_date | When the label was created (ISO date) |
-| human_verdict | PASS or FAIL |
-| similar_cases_in_dataset | Count of similar cases already in the dataset |
 | notes | Free-text context about the case |
 
 **Key teaching patterns:**
 - **Contamination**: DS-24/DS-25 (allergen cases labeled by v1) are especially dangerous — safety-critical labels from an untrusted source
 - **Staleness + contamination overlap**: DS-31 through DS-35 are both contaminated AND stale — double problem
-- **Redundancy**: 8+ easy price cases under 15% — learner should recognize these as wasted capacity
-- **Coverage gaps**: hard/edge cases underrepresented (7/40), description cases underrepresented relative to their failure importance
+- **Easy skew**: 50% of cases are easy — learner should recognize this as wasted capacity (easy cases don't test where the system actually struggles)
+- **Coverage gaps**: hard cases underrepresented (9/40), description cases underrepresented relative to their failure importance
+
+---
+
+## rag-eval-dataset.csv (18 rows)
+
+RAG pipeline evaluation data. 18 queries run through a two-stage retrieval + generation system, with full ground truth for retrieval quality, generation quality, and final decision correctness.
+
+**Pipeline setup:**
+- Knowledge base: 15 policy documents (POL-PRICE-STD, POL-PRICE-SEASONAL, POL-PRICE-PREMIUM, POL-ALLERGEN-REMOVE, POL-ALLERGEN-ADD, POL-DESC-SOURCE, POL-DESC-BREED, POL-DESC-PREP, POL-DESC-ORGANIC, POL-CUISINE-AUTH, POL-CAT-CHANGE, POL-PORTION, POL-IMAGE-ACC, POL-NUTRI, POL-VENDOR-HIST)
+- Retriever fetches top-5 policies per query
+- Generator uses retrieved policies as context to produce a decision + reasoning
+
+**Design targets:**
+- Avg Precision@5: ~0.14 (retriever is noisy — most slots are irrelevant)
+- Avg Recall@5: ~0.67 (decent when it works, zero when it misses)
+- Faithfulness rate: ~72% (13/18 faithful)
+- Answer relevance rate: ~72% (13/18 relevant)
+- Overall correctness: 33% (6/18) — much lower than any individual stage metric
+- 2x2 matrix distribution: 6 Good-R+Good-G, 6 Good-R+Bad-G, 2 Bad-R+Good-G, 4 Bad-R+Bad-G
+- Change type distribution: 3 price, 3 allergen, 4 description, 2 category, 1 portion, 1 image, 1 nutrition, + variants
+
+**Columns (13):**
+
+| Column | Description |
+|--------|-------------|
+| case_id | Case identifier (Q-01 through Q-18) |
+| query_text | The user query / proposed menu change to evaluate |
+| change_type | One of: price, allergen, description, category, portion, image, nutrition |
+| retrieved_docs | Semicolon-separated list of 5 policy IDs the retriever fetched (in rank order) |
+| relevant_docs | Semicolon-separated list of policy IDs that are actually relevant (ground truth) |
+| precision_at_5 | (relevant ∩ retrieved) / 5 |
+| recall_at_5 | (relevant ∩ retrieved) / (number of relevant) |
+| generated_decision | approve, reject, or flag_for_review |
+| generated_reasoning | Short text from the generator explaining its decision |
+| ground_truth_decision | approve or reject (expert ground truth) |
+| decision_correct | TRUE if generated_decision matches ground_truth_decision |
+| faithful | TRUE if generated_reasoning is grounded in retrieved_docs (no fabricated claims) |
+| answer_relevant | TRUE if generated_reasoning addresses the actual query (vs. discussing something off-topic) |
+
+**Key teaching patterns:**
+- **Good R + Good G (Q-01 to Q-06)**: Working baseline. Relevant policy retrieved, generator uses it correctly.
+- **Good R + Bad G (Q-07 to Q-12)**: Retrieval worked; generation broke. Mix of faithful-but-irrelevant (Q-07, Q-10, Q-12: off-topic reasoning) and unfaithful-but-relevant (Q-08, Q-09, Q-11: fabricated policy thresholds).
+- **Bad R + Good G (Q-13, Q-14)**: Generator handled retrieval failure gracefully but had nothing to ground on. The relevant policy was missing.
+- **Bad R + Bad G (Q-15 to Q-18)**: Both stages broken. These cases need fixes on both sides.
+- **Decision Point math**: Fixing generation eliminates Q-07 to Q-12 (+6 correct → 12/18). Fixing retrieval eliminates Q-13 to Q-14 (+2 correct → 8/18). Generation is the bigger lever. Q-15 to Q-18 need both.
+
+---
+
+## hallucination-detection-dataset.csv (15 rows)
+
+Hallucination detection data. 15 menu change decisions where the system cites a specific policy in its reasoning. The learner compares reasoning against the actual policy text (provided in the lesson) to detect hallucinations.
+
+**Policy reference:** 6 policies with short, clear text provided in the lesson (POL-PRICE-STD, POL-ALLERGEN-REMOVE, POL-DESC-SOURCE, POL-DESC-PREP, POL-CUISINE-AUTH, POL-IMAGE-ACC). The learner uses these as the source of truth.
+
+**Design targets:**
+- Grounded (no hallucination): 7 cases (H-01 to H-07), all decision_correct = TRUE
+- Intrinsic hallucination (contradicts policy): 2 cases (H-08, H-10), all decision_correct = FALSE
+- Extrinsic hallucination (adds fabricated claims): 6 cases (H-09, H-11 to H-15), 3 correct + 3 wrong
+- Overall hallucination rate: 53% (8/15)
+- Overall decision correctness: 67% (10/15)
+- Hallucinated + correct decisions: 3/8 (38%) — these are invisible to decision-only checks
+- Intrinsic → 100% wrong decisions. Extrinsic → 50% wrong decisions.
+
+**Columns (8):**
+
+| Column | Description |
+|--------|-------------|
+| case_id | Case identifier (H-01 through H-15) |
+| query_summary | The menu change being evaluated |
+| change_type | One of: price, allergen, description, image, cuisine |
+| cited_policy | Policy ID the system claims supports its decision |
+| system_decision | approve, reject, or flag_for_review |
+| system_reasoning | The system's explanation citing the policy — may be grounded, may be hallucinated |
+| ground_truth_decision | approve or reject (expert-verified) |
+| decision_correct | TRUE if system_decision matches ground_truth_decision |
+
+**Key teaching patterns:**
+- **Intrinsic hallucinations (H-08, H-10):** System distorts actual policy thresholds. H-08 changes 15% to 20%. H-10 changes 80% to 50%. Both cause wrong decisions.
+- **Extrinsic hallucinations (H-09, H-11 to H-15):** System adds fabricated claims. H-09 adds "medical documentation" as accepted. H-11 adds "vendor attestation" as accepted. H-12 invents body-of-water documentation. H-13 invents vendor frequency limits. H-14 invents temperature/duration requirements. H-15 invents a cultural heritage exception. H-09, H-11, H-15 cause wrong decisions. H-12, H-13, H-14 have correct decisions despite hallucinated reasoning.
+- **The key insight:** 3 extrinsic hallucinations (H-12, H-13, H-14) have correct decisions. These are invisible if you only check decision correctness — the hallucinated reasoning is a latent risk that could flip decisions on different inputs.
+
+---
+
+## release-criteria-dataset.csv (12 rows)
+
+Release criteria evaluation data. 12 metrics measured for both v2 (current production) and v3 (release candidate). The learner classifies each as guardrail or optimization, checks guardrails against thresholds, assesses optimization trade-offs, and makes a ship/hold decision.
+
+**Design targets:**
+- 5 guardrail metrics (have a release_threshold): M-01 to M-05
+- 7 optimization metrics (no threshold): M-06 to M-12
+- v3 fails exactly ONE guardrail: M-01 allergen safety (98.1% < 99.0%)
+- v3 passes all other guardrails
+- 5 of 7 optimization metrics improved, 2 regressed (cost +25%, escalation +22%)
+- The two regressions are related: higher cost and more escalations likely reflect a more cautious model
+- Ship/hold answer: HOLD — allergen guardrail failure blocks release regardless of optimization gains
+
+**Columns (6):**
+
+| Column | Description |
+|--------|-------------|
+| metric_id | Identifier (M-01 through M-12) |
+| metric_name | Descriptive name of the metric |
+| v2_value | Current production system's value |
+| v3_value | Release candidate's value |
+| release_threshold | Pass/fail threshold with comparison operator (e.g., ">=99.0%"). Blank for optimization metrics. |
+| threshold_rationale | Why this threshold exists (regulatory, business requirement, SLA, quality floor). Blank for optimization metrics. |
+
+**Key teaching patterns:**
+- **The allergen trap (M-01):** v3 is better on 9 of 12 metrics but fails the allergen guardrail (98.1% < 99.0%). The 1.1pp drop means ~1 in 50 allergen decisions that were correct in v2 are now wrong. For safety-critical decisions, "ship now, patch later" is unacceptable.
+- **The escalation trade-off (M-02 + M-11):** False approval rate improved (1.8% → 1.5%) while escalation rate regressed (18% → 22%). The model is likely more cautious — sending more borderline cases to human review. This explains both metrics and is a defensible trade-off.
+- **Cost regression (M-10):** Cost went up $0.12 → $0.15 (+25%). But accuracy improved 78% → 84% and hallucination rate dropped 12% → 8%. The extra cost is buying better quality — worth investigating but not alarming.
+- **Threshold rationale matters:** Each guardrail traces to a concrete source (regulatory, SLA, business requirement, quality floor). This helps the learner understand why guardrails can't be negotiated.
 
 ---
 

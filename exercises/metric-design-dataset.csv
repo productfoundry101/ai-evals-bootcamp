@@ -1,0 +1,13 @@
+check_id,pipeline_id,check_name,check_type,failure_type_targeted,sampling_rate_pct,cost_per_run_usd
+PC-01,P-A,Price threshold check,code,price_error,100,0.00
+PC-02,P-A,Allergen completeness check,code,allergen_error,100,0.00
+PC-03,P-A,Hallucination detection grader,model,hallucination,100,0.02
+PC-04,P-A,Policy compliance grader,model,policy_misapplication,100,0.02
+PC-05,P-A,Human safety audit,human,all,5,2.00
+PC-06,P-B,Price threshold check,code,price_error,100,0.00
+PC-07,P-B,Allergen completeness check,code,allergen_error,100,0.00
+PC-08,P-B,Human full review,human,all,20,2.00
+PC-09,P-C,Price threshold check,code,price_error,100,0.00
+PC-10,P-C,Allergen completeness check,code,allergen_error,100,0.00
+PC-11,P-C,Hallucination detection grader,model,hallucination,25,0.02
+PC-12,P-C,Human allergen audit,human,allergen_error,5,2.00
