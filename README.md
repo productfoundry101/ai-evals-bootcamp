@@ -1,41 +1,41 @@
-# The Eval Bootcamp
+# 🧪 The Eval Bootcamp
 
 A 21-day, hands-on course that teaches product people how to evaluate AI systems — by actually doing it.
 
-No slides. No videos. You clone this repo, open Claude Code, and it becomes your AI evals tutor: teaching one concept at a time, guiding you through exercises with real datasets, and evaluating your product decisions.
+No slides. No videos. You clone this repo, open Claude Code, and it becomes your personal AI evals tutor: teaching one concept at a time, guiding you through exercises with real datasets, and evaluating your product decisions.
 
 ---
 
-## Who Should Take This Course
+## 🙋 Who Should Take This Course
 
 This course is for **anyone working on AI products** who wants to build rigorous evaluation skills — without needing a machine learning background.
 
-**Primary audience (ICP): Product Managers** shipping AI features and wanting to go beyond gut-feel quality checks. Also valuable for:
+**Primary audience: Product Managers** shipping AI features and wanting to go beyond gut-feel quality checks. Also great for:
 
 - Associate and Group PMs transitioning into AI-focused roles
 - Founders and solo builders who own both product and quality
 - Product Leads overseeing AI teams and setting eval strategy
 - Technical PMs who want to bridge engineering metrics and product decisions
 
-If you've asked "how do I know if this AI is actually working?" — this course is for you.
+If you've ever asked *"how do I know if this AI is actually working?"* — this course is for you.
 
 ---
 
-## What You'll Learn
+## 🎯 What You'll Learn
 
-- **Read any AI system from scratch** — map pipeline stages, trace production logs, and identify which stage is responsible when things go wrong
+- **Read any AI system from scratch** — map pipeline stages, trace production logs, identify which stage is breaking
 - **Measure reliability, not just accuracy** — pass@k, reliable@k, and the consistency gap that separates demo-ready from production-ready
 - **Build a failure taxonomy** — systematic error analysis that turns raw traces into actionable categories
 - **Design automated quality checks** — code-based graders, LLM-as-judge, and a layering strategy that scales
 - **Build ground truth you can trust** — golden datasets, contamination detection, and lifecycle management
 - **Design metrics that drive decisions** — guardrail vs optimization metrics, fairness and subgroup evaluation
-- **Run AI experiments** — what's different about A/B testing for LLM systems, and how to avoid the traps
+- **Run AI experiments** — what's different about A/B testing for LLM systems, and how to avoid the common traps
 - **Ship with a framework** — release criteria, production monitoring, and a repeatable ship/hold process
 - **Build an eval culture** — how to institutionalize evals across your team
 
 ---
 
-## Course Features
+## ✨ Course Features
 
 - **Hands-on with real data** — every lesson includes a synthetic dataset you analyze yourself; no toy examples
 - **You do the thinking** — Claude computes on request; you direct the analysis and draw the conclusions
@@ -46,11 +46,17 @@ If you've asked "how do I know if this AI is actually working?" — this course 
 
 ---
 
-## Quick Start
+## 🚀 Quick Start
+
+> **Already set up?** Skip to the relevant step:
+> - Have an Anthropic account but not Claude Code? → [Step 2](#step-2--install-claude-code)
+> - Have both an account and Claude Code installed? → [Step 3](#step-3--clone-the-course-and-start)
+
+---
 
 ### Step 1 — Create an Anthropic account
 
-Claude Code requires an Anthropic account. If you don't have one, create a free account at [claude.ai](https://claude.ai). You'll use this to authenticate Claude Code in Step 3.
+Claude Code requires an Anthropic account. If you don't have one yet, create a free account at [claude.ai](https://claude.ai). You'll use it to authenticate Claude Code in Step 3.
 
 ---
 
@@ -86,11 +92,11 @@ claude
 
 > **Don't have git?** Download it from [git-scm.com](https://git-scm.com/downloads), or use [GitHub Desktop](https://desktop.github.com/) to clone the repo visually — then open your terminal, navigate to the `the-eval-bootcamp` folder, and run `claude`.
 
-Claude reads `CLAUDE.md` on startup and introduces itself as your tutor. It will check your progress and suggest your next lesson.
+Claude reads `CLAUDE.md` on startup and introduces itself as your tutor. It checks your progress and suggests your next lesson.
 
 ---
 
-### Resuming after your first session
+### 🔄 Resuming after your first session
 
 Next time, just navigate to the folder and run `claude` again:
 
@@ -103,15 +109,15 @@ Your progress is saved locally in `progress/progress.json` — gitignored and ne
 
 ---
 
-### Works with Terminal, Cursor, or Obsidian
+### 💻 Works with Terminal, Cursor, or Obsidian
 
 - **Terminal** (Mac/Linux): run `claude` from inside the repo folder
-- **Cursor**: open the repo folder in Cursor, then open the built-in terminal (`Ctrl+`` `) and run `claude`
+- **Cursor**: open the repo folder in Cursor, open the built-in terminal (`` Ctrl+` ``), and run `claude`
 - **Obsidian**: open your system terminal, navigate to the repo folder, and run `claude`
 
 ---
 
-### Troubleshooting
+### 🔧 Troubleshooting
 
 | Problem | Fix |
 |---------|-----|
@@ -119,11 +125,11 @@ Your progress is saved locally in `progress/progress.json` — gitignored and ne
 | `permission denied` on install | Try `sudo npm install -g @anthropic-ai/claude-code` |
 | Claude asks to approve file writes | Type `yes` — it needs to save your progress to `progress/progress.json` |
 | Claude doesn't introduce itself as tutor | Make sure you're running `claude` from inside the `the-eval-bootcamp` folder, not a parent directory |
-| Stuck mid-lesson | Type `resume` — Claude will re-read your progress file and pick up where you left off |
+| Stuck mid-lesson | Type `resume` — Claude will re-read your progress and pick up where you left off |
 
 ---
 
-## Course Structure
+## 📅 Course Structure
 
 21 days. 3 weeks. One lesson per day.
 
@@ -167,7 +173,7 @@ Your progress is saved locally in `progress/progress.json` — gitignored and ne
 
 ---
 
-## What's in the Repo
+## 📁 What's in the Repo
 
 ```
 lessons/        Lesson content — concepts, exercises, decision points (D1.md through D19.md)
@@ -179,6 +185,6 @@ CLAUDE.md       Course configuration — Claude reads this on startup
 
 ---
 
-## License
+## 📄 License
 
 [CC BY-NC-SA 4.0](LICENSE) — Free to use and adapt for non-commercial purposes with attribution.
