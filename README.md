@@ -1,6 +1,6 @@
 # 🧪 The Eval Bootcamp
 
-A 21-day, hands-on course that teaches product people how to evaluate AI systems — by actually doing it.
+A 21-day, hands-on course that teaches product people how to build and evaluate production-ready AI systems — ✨ by actually doing it ✨
 
 No slides. No videos. You clone this repo, open Claude Code, and it becomes your personal AI evals tutor: teaching one concept at a time, guiding you through exercises with real datasets, and evaluating your product decisions.
 
