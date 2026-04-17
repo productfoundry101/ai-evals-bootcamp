@@ -1,0 +1,7 @@
+week,week_start,model_version,total_requests,thai_pct,american_pct,indian_pct,other_pct,new_cuisines_seen,allergen_guardrail_breaches,p95_latency_ms,llm_judge_pass_rate,human_review_pass_rate,notes
+W1,2026-03-02,v2.1,1050,20,50,28,2,none,0,820,81,82,Launch week. 10 pct traffic rollout. Baseline established.
+W2,2026-03-09,v2.1,5200,22,48,28,2,none,0,830,80,81,Expanded to 50 pct rollout. Signals holding.
+W3,2026-03-16,v2.1,10400,28,43,27,2,none,0,850,79,79,100 pct rollout complete. Thai volume growing (restaurant onboarding team signed 14 new Thai venues).
+W4,2026-03-23,v2.1,11200,32,40,25,3,Mexican,1,1100,78,76,New Mexican restaurants onboarded mid-week. State allergen law AB-1523 takes effect requiring disclosure of sesame as top-9 allergen.
+W5,2026-03-30,v2.2,11800,35,37,22,6,"Mexican, Korean",2,1350,77,71,Upstream LLM provider pushed minor model update on 2026-04-01. No regression suite run before update. Korean restaurant onboarding started.
+W6,2026-04-06,v2.2,12400,38,33,21,8,"Mexican, Korean, Vietnamese",3,1500,76,68,CTO flagged customer complaint about shellfish disclosure on a Mexican menu. Vietnamese appearing for first time. No action taken on prior weeks drift.

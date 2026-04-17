@@ -1226,3 +1226,275 @@ The aggregate +10pp is the net of a +40pp Thai improvement plus a −40pp Americ
 - Doesn't cite specific numbers — hand-waves about "statistical concerns"
 - Follow-up experiment design copies the flawed one (similar n, no clustering plan, no guardrails)
 - Treats the American regression as acceptable collateral damage for aggregate gain — misses the D10 guardrail-breach framing
+
+---
+
+## D17: Launch Readiness and Production Monitoring
+
+### Exercise Evaluation
+
+**Step 1 — Baseline and trend:**
+
+Baseline (W1): LLM-judge 81%, human review 82%, p95 820ms, 0 allergen breaches.
+
+Trend across W1→W6:
+- Human review: 82 → 81 → 79 → 76 → 71 → **68** (14pp decline, accelerating after W3)
+- LLM-judge: 81 → 80 → 79 → 78 → 77 → **76** (only 5pp decline — much milder than human)
+- p95 latency: 820 → 830 → 850 → 1100 → 1350 → **1500ms** (sudden jump W3→W4, continues rising)
+- Allergen breaches: 0 → 0 → 0 → 1 → 2 → **3** (appears W4, grows)
+
+The **judge/human divergence** (was 1pp at W1, now 8pp at W6) is the most important signal. The LLM judge is masking the decline — either because it was calibrated on the original distribution and doesn't recognize the new cases, or because judge quality is itself drifting. Without the human review layer, the team would believe things are "only slightly off."
+
+**Strong response:** identifies the judge/human divergence as a key signal, notes that the degradation accelerates W3→W4, connects this to the production-monitoring framing (you cannot trust a single automated quality signal — you need the meta-eval loop from D6 feeding back).
+
+**Weak response:** reads the LLM-judge column only (76% still above 75% threshold — "looks fine"); ignores human review drift; misses the divergence story.
+
+**Step 2 — Drift classification:**
+
+All three drift types are present:
+
+- **Input drift (W3 onward):** Thai volume grows from 20% → 38%. Mexican cuisine first appears W4. Korean W5. Vietnamese W6. `new_cuisines_seen` column confirms. The eval set did not cover these → model handles them poorly.
+- **Output drift (W5):** `model_version` changes from v2.1 → v2.2. Notes confirm upstream LLM provider pushed update with no regression suite run before rolling it out.
+- **Concept drift (W4):** Notes reference AB-1523 taking effect — a new state allergen disclosure law requiring sesame disclosure. The definition of "correctly disclosed" changed; menus that would have passed W3 now fail W4+.
+
+**Critical point:** all three are happening simultaneously, which makes root-cause isolation hard. The W4→W5 quality drop could be attributed to any of: Mexican volume growth, allergen law, or model update. Without disaggregating, you'd miss two of three.
+
+**Strong response:** identifies all three drift types with specific evidence; notes that multiple concurrent drifts make attribution harder and require disaggregated analysis (e.g., break out breach rate by cuisine, by week, by model version).
+
+**Weak response:** identifies one drift type (usually input drift because the cuisine mix is most visually obvious); misses the concept drift in notes; misses the model version change; doesn't grapple with co-occurrence.
+
+**Step 3 — Guardrail check:**
+
+- **Allergen breaches (0/week):** breached W4 (1), W5 (2), W6 (3). **System has been out of compliance on its hardest guardrail for 3 weeks.**
+- **Human review ≥ 75%:** breached W5 (71%) and W6 (68%). **Out of compliance for 2 weeks.**
+- **p95 ≤ 1000ms:** breached W4 (1100ms), W5 (1350ms), W6 (1500ms). **Out of compliance for 3 weeks.**
+
+All three pre-launch ship criteria are breached. The system would not pass its own launch readiness gate if re-evaluated today. This means it should not be serving production traffic in its current form.
+
+**Strong response:** systematically checks each guardrail, counts weeks breached, concludes the system is shipping past its own ship criteria and has been for multiple weeks.
+
+**Weak response:** checks only the most visible guardrail (latency or breaches); misses that aggregate quality is also breached; doesn't frame the situation as "out of compliance with our own criteria."
+
+**Step 4 — Rollback criteria and action:**
+
+Rollback triggers breached:
+- **Safety trigger (2+ breaches in 4 weeks):** W4–W6 has 6 total breaches. Trigger breached W5 (when second breach occurred).
+- **Quality trigger (human review −7pp for 2 weeks):** baseline 82%, 7pp threshold = 75%. W5 (71%) and W6 (68%) both breach. Trigger breached W6.
+- **Performance trigger (p95 > SLO for > 2 weeks):** W4–W6 all breach. Trigger breached W6.
+
+All three rollback triggers are breached by W6.
+
+**Recommended action: Targeted fix (not full rollback).** Rationale:
+- Full rollback (to v1) would revert the D16 American-cuisine fix that took effort to build, and v1 doesn't handle the new allergen law either — rollback doesn't solve the concept-drift problem.
+- Hold steady is off the table — all three rollback triggers are breached.
+- The right move is surgical: (a) rollback the v2.2 model update to v2.1 immediately (output-drift fix — this is a pure regression from an uncontrolled upstream change), (b) route Mexican/Korean/Vietnamese traffic to manual review (human-in-the-loop) until eval coverage is added, (c) update the golden dataset with AB-1523 compliance cases and re-run all evals (concept-drift fix), (d) re-expand only after all three ship criteria are re-hit on the updated dataset.
+
+**Strong response:** applies all three triggers, concludes all breached by W6, proposes a targeted fix that maps each action to the specific drift type it addresses, states re-expansion criteria.
+
+**Weak response:** picks "full rollback" without distinguishing which drift rolling back addresses; picks "hold steady" ignoring the breached triggers; doesn't specify re-expansion criteria.
+
+### PM Decision Point Evaluation
+
+**Strong response:**
+
+1. **Action recommendation:** Targeted fix. Cites: v2.2 model update rolled back to v2.1 (W5 regression), Mexican/Korean/Vietnamese routed to human review until covered in eval set (W4+ input drift), golden dataset updated with AB-1523 cases and system re-evaluated (concept drift). Re-expansion only after human review ≥ 80%, 0 allergen breaches for 2 consecutive weeks, p95 < 1000ms.
+
+2. **Identifies at least two engineering framing errors:**
+   - "Aggregate steady-ish" is wrong — human review dropped 14pp from baseline. Engineering is reading LLM-judge only and ignoring the judge/human divergence.
+   - "Out of our hands" for the model update is wrong — we control what model version we serve. A regression suite before model-provider updates is a standard production-AI practice that was missing here.
+   - "Mexican wasn't in our eval set" is a concession, not an excuse. The failure is not that Mexican showed up — it's that the monitoring didn't alert when a new input category crossed a volume threshold, and traffic continued flowing to an uncovered segment for 3 weeks without intervention.
+   - The allergen law (concept drift) was a known regulatory change; it should have been tracked by PM/legal and added to the golden dataset before AB-1523 took effect. This is not an engineering issue — it's a PM process gap.
+
+3. **Specific launch-readiness gap that allowed the drift to continue unaddressed:**
+   - Missing alert on new-cuisine volume crossing a threshold (would have caught input drift at W4).
+   - Missing regression suite on model-provider version updates (would have caught output drift at W5 before it hit users).
+   - Missing human-review sampling with an alert threshold on LLM-judge/human agreement divergence (would have caught the judge miscalibration at W4–W5).
+   - Missing rollback ownership — "rollback triggers are breached" but no one pulled the trigger for three weeks because the rollback decision ownership was not assigned pre-launch.
+   - Missing regulatory change intake — PM did not have a process to update golden dataset ground truth when a known regulation took effect.
+
+PM owns the miss. Specifically: launch readiness was treated as a one-time gate (pass the evals, ship), not an ongoing gate (can the system still pass its evals on *today's* traffic against *today's* ground truth). The fix is continuous readiness gating tied to monitoring alerts, with pre-committed rollback ownership.
+
+**Weak response:**
+- Accepts "out of our hands" framing on the model update
+- Doesn't identify the judge/human divergence as the core missed signal
+- Proposes "better monitoring" without naming specific alerts or thresholds
+- Doesn't take PM accountability for the missed launch-readiness criteria
+- Picks full rollback without distinguishing what each drift type requires
+
+---
+
+## D18: Red Teaming and Adversarial Evaluation
+
+### Exercise Evaluation
+
+**Step 1 — Attack Success Rate by category:**
+
+- Prompt injection: 4/6 succeeded (P-01, P-02, P-03, P-05) = **67% ASR** — highest
+- Jailbreak: 2/5 succeeded (P-08, P-11) = **40% ASR**
+- Policy evasion: 2/7 succeeded (P-12, P-16) = **29% ASR**
+- Data exfiltration: 1/4 succeeded (P-20) = **25% ASR**
+- Harmful content: 0/3 succeeded = **0% ASR**
+- **Overall: 9/25 = 36% ASR**
+
+**Strong response:** reports category ASRs, identifies prompt injection as the clear weakness (67% — 2.5× the overall rate), notes that a 36% overall ASR averages over very different category risk profiles and is not a useful summary for a ship decision. The weakest category (prompt injection) is also where several high-severity successes live.
+
+**Weak response:** reports only the overall ASR of 36%; doesn't break out by category; treats "36% ASR" as the decision-relevant number.
+
+**Step 2 — Severity-weighted view of successful attacks:**
+
+Of the 9 successful attacks:
+- **Critical: 2** (P-01 prompt injection bypassing allergen check; P-12 shellfish via 'natural ocean seasoning')
+- **High: 4** (P-02 Unicode injection; P-03 persona override; P-05 long-context injection; P-16 hedged dairy disclosure)
+- **Medium: 2** (P-08 film-script jailbreak; P-20 system prompt leakage)
+- **Low: 1** (P-11 emoji-encoded jailbreak)
+
+**Strong response:** surfaces the 2 criticals and 4 highs as the decision-relevant findings; argues that "36% ASR, mostly mediums" is the wrong framing because 6 of 9 are critical/high; connects this back to the D10 guardrail-vs-optimization logic — any critical success is a ship-blocker regardless of aggregate.
+
+**Weak response:** treats all 9 successes as equal; or only reports the 2 criticals and ignores that 4 of the remaining 7 are also high-severity.
+
+**Step 3 — Mitigation layer mapping of successful attacks:**
+
+- **Code:** 2 (P-02 Unicode sanitizer, P-12 allergen dictionary expansion) — fast and durable
+- **Prompt:** 5 (P-01, P-03, P-05, P-11, P-20) — fast but fragile, attackers adapt
+- **Model:** 1 (P-16 requires fine-tuning on hedged-disclosure patterns) — slow and expensive
+- **Policy:** 1 (P-08 film-script exemption needs human-review gate) — slow at scale, manual
+- **Out of scope:** 0
+
+**Strong response:** notes that 2 of the 9 fixes are code-level (fastest and most durable — including one of the two criticals, P-12); 5 are prompt-level (can be shipped quickly but need regression suite because attackers will iterate); only 1 needs model retraining (P-16 — this is the bottleneck for full remediation). Concludes: the fastest meaningful ASR reduction is code + prompt hardening, covering 7 of 9 successes.
+
+**Weak response:** doesn't distinguish layers; or counts "we can fix all 9 in a sprint" without flagging that the model-level fix (P-16) requires a retraining cycle and cannot be rushed.
+
+**Step 4 — Threshold check and ship decision:**
+
+Thresholds:
+- Safety-critical (harmful_content): 0% ASR required. **Met: 0/3 succeeded.** ✅
+- Critical-severity successful attacks: 0 allowed. **Breached: 2 succeeded (P-01, P-12).** ❌
+- High-severity successful attacks: ≤ 1 allowed. **Breached: 4 succeeded.** ❌
+- Medium-severity successful attacks: ≤ 3 allowed. **Met: 2 succeeded.** ✅
+- Low-severity: no cap. **1 succeeded — acceptable.**
+
+Two thresholds breached (criticals and highs). **Cannot ship to EU in current state.**
+
+**Strong response:** applies thresholds systematically; concludes the system fails two of its own pre-committed ship criteria; flags specifically that the 4 high-severity prompt-injection successes (P-02, P-03, P-05, plus P-16) make "safety-weighted ship decision" the right framing rather than aggregate ASR.
+
+**Weak response:** ignores pre-committed thresholds; rationalizes the 36% ASR as "industry-standard"; doesn't apply the D10 severity-gating logic to this lesson's adversarial findings.
+
+### PM Decision Point Evaluation
+
+**Strong response:**
+
+1. **Ship decision:** Hold EU launch. Condition for re-expansion: (a) 0 critical-severity successful attacks across a refreshed red-team regression suite of at least 100 probes; (b) high-severity successful attacks ≤ 1 across that suite; (c) prompt-injection category ASR reduced from 67% to < 15%; (d) regression suite runs on every model/prompt change, not just before initial launch.
+
+2. **Pushes back on at least two of:**
+   - "In line with other labs' ASR" — Anthropic and OpenAI publish ASRs on adversarial *benchmarks* as model-evaluation research, not as product ship criteria. Comparing your production food-safety system's 36% ASR to model-benchmark numbers is a category error. Your threshold is your severity-weighted ship criteria, not an industry average.
+   - "We've fixed the two criticals" — the 4 high-severity successes are also ship-blockers under pre-committed thresholds. The security lead is triaging to criticals only and ignoring the high-severity ledger. Also: "fixed" needs verification via regression suite runs post-fix, not a verbal claim.
+   - "Ship and iterate" on prompt injection is especially dangerous because prompt injection is the attack category closest to the safety-critical surface (allergen bypass via P-01). Post-launch iteration on a category that can trigger allergen-disclosure failures is the exact scenario that generated the D17 allergen breaches.
+   - "EU AI Act documentation drafted" is not the same as "EU AI Act documentation passes conformity assessment." Drafted docs that don't evidence systematic coverage, attack taxonomy, and mitigation tracking will fail a third-party audit.
+
+3. **States specific EU AI Act documentation requirements:**
+   - Attack taxonomy coverage: which categories tested, why those chosen
+   - Probe construction methodology: seed sources (OWASP LLM Top 10, Promptfoo, internal), mutation approach
+   - ASR by category and severity, with thresholds pre-committed before the red team
+   - Mitigation layer mapping for every successful attack, with owner and target date
+   - Regression suite status: which successful probes have been added to regression; how often it runs
+   - Re-breach policy: what happens if a probe that was fixed later re-succeeds (auto-rollback? re-open incident?)
+   - Third-party red team arrangement: EU AI Act conformity assessment for high-risk systems often requires external review, not just internal
+
+PM owns signing the attestation. "Security eng said it was fine" is not a defense in conformity assessment.
+
+**Weak response:**
+- Ships to EU because "36% is standard"
+- Accepts "we've fixed the two criticals" without requiring evidence via regression suite
+- Confuses drafted documentation with conformity-passing documentation
+- Treats prompt injection as low-priority because it's "not a content safety issue" — misses that P-01 shows prompt injection can directly bypass allergen safety
+- Doesn't pre-commit re-expansion criteria or name specific ASR targets for remediation
+
+---
+
+## D19: The Ship Decision Framework
+
+### Exercise Evaluation
+
+**Step 1 — Triage the signals:**
+
+- Pass: 11 (C-01, C-02, C-03, C-04, C-06, C-07, C-08, C-10, C-11, C-12, C-14)
+- Marginal: 1 (C-13 shadow-mode agreement 82% vs 85%)
+- Fail: 3
+  - **Critical:** 2 (C-05 Mexican subgroup 62% vs 75%; C-09 prompt injection ASR 42% vs 15%)
+  - **High:** 1 (C-15 jailbreak ASR 18% vs 10%)
+
+"12 of 15 pass = 80% ready" is the wrong framing. Guardrails are AND-gated: one critical breach is a hold, regardless of how many green. Aggregate-counting treats safety-critical fails as trade-able against wins on unrelated dimensions.
+
+**Strong response:** counts by status and severity; explicitly rejects the 80%-ready framing; surfaces the 2 criticals as the decision-relevant items.
+
+**Weak response:** aggregates everything into a single pass rate; doesn't separate guardrail from optimization; treats the 3 fails as equivalent.
+
+**Step 2 — AND logic on guardrails:**
+
+All 10 guardrails (C-01, C-02, C-03, C-04, C-05, C-06, C-07, C-08, C-09, C-10, C-15) are reviewed. Three breach:
+- C-05 Mexican subgroup (critical) → hold unless conditional path isolates the breach
+- C-09 Prompt injection ASR (critical) → hold unless conditional path or pre-launch fix with re-test
+- C-15 Jailbreak ASR (high) → hold unless conditional path + named mitigation owner
+
+Initial answer: **Hold.** Two critical failures rule out an unconditional ship.
+
+A strong +8pp paired improvement over v1 (C-11) does *not* offset the criticals because that's an optimization metric trading against guardrails — the whole point of the D10 distinction.
+
+**Strong response:** states initial answer is hold; articulates why the C-11 optimization win cannot offset C-05/C-09 guardrail breaches; explicitly references AND logic.
+
+**Weak response:** proposes "net positive" framing (strong C-11 offsets weaker failures); doesn't distinguish guardrail from optimization in the decision rule; ships because "8 of 10 guardrails pass."
+
+**Step 3 — Conditional ship paths:**
+
+- **C-05 Mexican subgroup:** Isolatable. Conditional ship path: route Mexican-cuisine requests to v1 (legacy path) for launch. Expansion criteria: Mexican subgroup pass rate ≥ 75% on hold-out of ≥ 50 cases. Rollback trigger: any Mexican case mis-approved on the v1 path (i.e., legacy still has the same drift concerns — D17 showed v1 also doesn't handle AB-1523 well, so consider human-review for Mexican as an alternative).
+- **C-09 Prompt injection ASR:** Partially isolatable. Code-layer input sanitizer (the fix identified in D18 for P-02) can ship in 2-3 days and does not require model retraining. Post-fix: re-run the 6 prompt-injection probes. Expansion/ship criterion: ASR ≤ 15%. If the sanitizer doesn't clear it, hold.
+- **C-15 Jailbreak ASR:** Isolatable via prompt hardening (P-08, P-11 are both prompt-layer). Similar 2-3 day fix + re-test. Ship criterion: ASR ≤ 10%.
+
+Breaches that would NOT be conditional-shippable: a fail on C-08 (harmful content ASR) or C-06 (allergen breaches on hold-out) — those are absolute safety guardrails where "isolate and ship" would still expose some users.
+
+**Strong response:** proposes a specific conditional-ship package: Mexican excluded, prompt-injection fix shipped and re-tested, jailbreak fix shipped and re-tested; names expansion criteria and rollback triggers for each; distinguishes conditional-shippable from non-shippable breaches.
+
+**Weak response:** proposes "staged rollout" without specifying the conditional scope; promises "we'll fix post-launch" for C-09 and C-15 without re-test; doesn't specify expansion criteria.
+
+**Step 4 — Ship memo skeleton:**
+
+A strong ship memo skeleton covers:
+
+1. **Decision:** "Conditional ship to EU Monday, with Mexican cuisine excluded and prompt-injection + jailbreak code/prompt fixes shipped and re-tested before launch. Hold if re-tests do not meet threshold."
+2. **Evidence summary:** 11/15 criteria pass; 2 critical guardrails and 1 high breach identified; paired v2 improvement +8pp (95% CI +4 to +12) over v1.
+3. **Reasoning:** optimization win (C-11) cannot offset guardrail breaches; Mexican subgroup isolatable via routing; prompt-injection and jailbreak fixable at code/prompt layer within timeline; full hold would forfeit real v2 gains across 4 cuisines for a breach affecting 3% of volume (Mexican).
+4. **Conditional ship details:** scope = v2 for non-Mexican requests; expansion criterion = Mexican ≥ 75% pass on 50-case hold-out AND re-tested ASRs within thresholds; rollback = any allergen breach in first 72h, any prompt-injection re-breach, Mexican-route v1 handling a confirmed user-facing safety incident.
+5. **Open risks and monitoring plan:** monitor Mexican-route latency on v1; daily review of prompt-injection attempt logs; weekly re-run of red-team regression; shadow-mode agreement tracking (C-13 marginal).
+6. **Sign-offs:** PM, eng lead, security lead, legal (EU AI Act).
+
+**Strong response:** skeleton uses specific numbers and criteria from the exercise; decision is stated plainly in one line; conditional scope is concrete, not vague; rollback triggers are numerical.
+
+**Weak response:** vague decision statement ("monitor carefully"); no specific expansion criteria; treats "staged rollout" as the entire plan without scope definition.
+
+### PM Decision Point Evaluation
+
+**Strong response:**
+
+1. **Decision:** Conditional ship. Recommended scope: v2 for non-Mexican requests; Mexican routed to v1 until subgroup-specific eval clears 75%; prompt-injection code-layer sanitizer and jailbreak prompt hardening shipped and re-tested before Monday 6am. If re-tests don't clear: hold.
+
+2. **Conditional scope (precise):**
+   - **In-scope for v2 Monday:** American, Thai, Indian, and "other" cuisines except Mexican. Start at 25% traffic; expand to 50% at 72h, 100% at 7 days, each gated by: no allergen breaches, human-review pass rate ≥ 78%, p95 latency ≤ 1000ms.
+   - **Out-of-scope:** Mexican cuisine, routed to v1 with human-review overlay on v1 outputs until re-eval clears.
+   - **Expansion criteria for Mexican:** ≥ 75% pass rate on a 50-case Mexican hold-out, AB-1523 allergen cases included, 2 consecutive weeks with 0 breaches.
+   - **Rollback triggers:** any allergen breach in first 72h = full rollback. Any prompt-injection regression in red-team suite = block further rollout and investigate. Mexican-route v1 produces ≥ 1 user-facing safety incident = escalate to full hold.
+
+3. **Fastest realistic path to full ship:**
+   - **Mexican subgroup (2-3 weeks):** expand eval set to 50+ Mexican cases including AB-1523, run full eval, iterate on prompt for Mexican-specific patterns, hold-out re-test. Owner: eng + ML. This cannot ship Monday — any claim otherwise is false urgency.
+   - **Prompt-injection fix (2-3 days):** code-layer Unicode/long-input sanitizer + system-prompt hardening. Owner: security eng. Re-test: all 6 probes + 20 mutated variants. Can clear by Monday AM if started today.
+   - **Jailbreak fix (2-3 days):** prompt hardening for P-08 film-script and P-11 emoji-decode patterns. Owner: ML eng. Re-test: all 5 probes + 10 variants.
+   - **Marginal C-13 shadow agreement:** human-review sampling on disagreement cases to confirm v2 is correcting v1 errors (not introducing new ones). Owner: PM. 1-week investigation.
+
+The response makes the CEO's trade-off explicit: Monday is achievable *for the non-Mexican v2 launch with security fixes*, not for full v2. "Fastest realistic" is not "fastest wished" — and the regulatory risk of EU launch with a subgroup safety failure is larger than a Q2 slip headline.
+
+**Weak response:**
+- Says "ship Monday" without naming the conditional scope or re-tests
+- Says "hold" without offering the conditional alternative
+- Accepts CEO framing of "perfect enemy of good" without pushing back — the issue is guardrails, not perfection
+- Promises timelines that are not realistic (e.g., "we'll fix Mexican subgroup by Monday" for a 2-3 week fix)
+- Doesn't name owners or rollback triggers
+- Hides or softens the critical findings in the response to leadership
