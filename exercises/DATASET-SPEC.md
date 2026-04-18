@@ -1,5 +1,40 @@
 # Dataset Specifications
 
+## menu-verification-d1.csv (30 rows)
+
+Simplified production shadow-mode data for D1. Derived from menu-verification-dataset.csv with columns collapsed for first-day pipeline mapping exercise.
+
+**Design targets:**
+- 30 rows with change type distribution: 12 price, 7 description, 5 allergen, 4 image, 2 category
+- ~80% human agrees (24 TRUE, 6 FALSE)
+- Mix of llm_decision: approve, reject, flag_for_review
+- Some price changes missing reference_data (no last verified price on file)
+- Description and category changes have no reference_data — teaches context retrieval gaps
+
+**Columns (12):**
+
+| Column | Description |
+|--------|-------------|
+| change_id | Unique identifier (CHG-001 through CHG-030) |
+| restaurant_name | Restaurant name |
+| item_name | Menu item name |
+| change_type | One of: price, description, allergen_dietary, image, category |
+| old_value | Previous value (price amount, description text, allergen list, image filename, or category name) |
+| new_value | Proposed new value |
+| reference_data | External data retrieved to inform the decision. Populated for price (last verified price + markup) and allergen (current allergen record) changes. Empty for description, category, and some price changes (context gap). |
+| llm_decision | approve, reject, or flag_for_review |
+| llm_confidence | 0.0–1.0 |
+| llm_reasoning | Short text explanation of the LLM's decision |
+| human_decision | approve or reject (always binary — ground truth) |
+| human_agrees_with_llm | TRUE or FALSE |
+
+**Key teaching patterns:**
+- **Pipeline mapping**: 12 columns cleanly map to 5 categories (input, context, LLM output, human review, metadata)
+- **Reference data gap**: description and category changes have no external reference — the system is guessing. Price changes sometimes lack verified prices too. This variation by change_type is the key Step 3 discovery.
+- **Disagreement rows**: 6 rows where human disagrees with LLM — learner can trace why in Step 2
+
+---
+
 ## menu-verification-dataset.csv (200 rows)
 
 Production shadow-mode data. LLM decisions logged alongside human ground truth.

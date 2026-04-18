@@ -8,7 +8,85 @@ This document defines how to run an interactive tutoring session. Follow this pr
 
 1. Check `progress/progress.json` for prior sessions
 2. If returning learner: "Welcome back. Last time you completed [lesson]. Ready for [next lesson]?"
-3. If new learner: "Welcome to AI Evals for PMs. This course teaches you to evaluate AI systems through hands-on exercises with real data. Ready to start with Lesson 1?"
+3. If new learner (no prior progress): deliver the **Full Onboarding** below before starting D1.
+
+### Full Onboarding (new learners only)
+
+Present the following block verbatim (preserve the ASCII formatting), then wait for the learner to type "go" or ask questions before starting D1.
+
+---
+
+Welcome!
+
+You're about to learn one of the most in-demand AI PM skills of the next few years.
+
+Not through videos. Not through slides. Through real data, real decisions,
+and a tutor that doesn't move on until the concept has actually landed.
+
+This is The Eval Bootcamp — a 21-lesson course on evaluating AI systems,
+built specifically for product people.
+
+───────────────────────────────────────────────────────
+
+  HOW IT WORKS
+
+  Each lesson has three parts:
+
+  CONCEPTS  (~10–15 min)
+  Core ideas, one at a time. You confirm each one landed before we move on.
+  No fire-hose. No assuming.
+
+  EXERCISE  (~15–20 min)
+  A real dataset. You direct the analysis. The tutor runs the numbers.
+  You interpret, decide, and draw conclusions — not the other way around.
+
+  DECISION POINT  (~5–10 min)
+  You write a PM artifact: a memo, a release recommendation, a prioritization call.
+  The tutor scores it against a rubric and gives you specific feedback.
+
+  ~30–40 minutes a day. One lesson. Real skills.
+
+───────────────────────────────────────────────────────
+
+  YOUR FILES
+
+  When you cloned this repo, you downloaded everything to your computer.
+  Open Finder (Mac) or File Explorer (Windows), navigate to the
+  the-eval-bootcamp folder, and you'll see:
+
+  lessons/      ← the lesson content Claude teaches from
+  exercises/    ← CSV datasets — open these in Excel, Numbers, or Google Sheets
+  tutor/        ← tutor instructions (you don't need to touch this)
+  progress/     ← your progress log (auto-updated after each lesson)
+
+  During exercises, the tutor reads the CSV and runs the numbers for you.
+  But you can — and should — open the file yourself in a spreadsheet
+  to see the raw data. It makes the analysis feel real.
+
+  The tutor will tell you which file to open at the start of each exercise.
+
+───────────────────────────────────────────────────────
+
+  A FEW THINGS WORTH KNOWING
+
+  → Your progress saves automatically after each lesson. Come back tomorrow
+    and the tutor picks up exactly where you left off.
+
+  → Ask questions any time — mid-concept, mid-exercise, anywhere. Just type.
+    If it's covered in a later lesson, you'll get a brief answer and a pointer.
+
+  → This course works best on Claude Sonnet. Type /model to check or switch.
+
+  → On Mac, press the microphone key (or Fn Fn) to dictate your answers
+    instead of typing. Most learners prefer it during exercises.
+
+───────────────────────────────────────────────────────
+
+Any questions before we start?
+
+Otherwise, type  go  and Day 1 begins.
+
+---
 
 **Recap & bridge — read from the lesson file's `Previous lesson` section:**
 - If the lesson has a `Previous lesson` field: summarise the key concepts from the prior lesson in 2-3 sentences, then explain in 1 sentence how it leads into the current lesson.

@@ -16,31 +16,32 @@ The learner should be able to explain:
 
 3. **Reading traces** — Every column in a trace log maps to a pipeline stage. Knowing which stage a column belongs to tells you what that column can and can't diagnose.
 
-### Exercise Answers (from menu-verification-dataset.csv)
+### Exercise Answers (from menu-verification-d1.csv)
 
-Expected column-to-pipeline-stage mapping:
+Expected column-to-pipeline-stage mapping (12 columns):
 
 | Pipeline stage | Columns |
 |---------------|---------|
-| Input parsing | change_type, old_price, new_price, old_description, new_description, old_allergen_dietary, new_allergen_dietary, old_image, new_image, old_category, new_category |
-| Context retrieval | last_verified_price, price_markup_pct |
+| Input parsing | restaurant_name, item_name, change_type, old_value, new_value |
+| Context retrieval | reference_data |
 | LLM reasoning & output | llm_decision, llm_confidence, llm_reasoning |
 | Human review | human_decision, human_agrees_with_llm |
-| Metadata | change_id, restaurant_id, restaurant_name, item_name, item_category, processing_time_ms, model_version, timestamp, failure_type |
+| Metadata | change_id |
 
-Column isolation pattern the learner should spot: Only the old/new pair for the relevant `change_type` is populated. All other old/new column pairs are blank. This is a deliberate design — the system isolates inputs by change type.
+Reference data pattern the learner should spot (Step 3): The `reference_data` column varies by change type. Price changes often have a last verified price and markup percentage — something external to check against. Allergen changes have the current allergen record on file. But description and category changes have no reference data — the system has nothing external to verify the claim against. This means the system is fundamentally better equipped to evaluate some change types (verifiable) than others (judgment-based).
 
 Things that should appear in Step 4 (what's invisible):
 - The prompt/instructions given to the LLM (can't see what rules it was given)
 - How context retrieval actually works (what queries were run, what was considered but not retrieved)
 - The human reviewer's reasoning or criteria (only the decision, not the rationale)
-- Per-stage latency breakdown (`processing_time_ms` is total pipeline time, not broken down by stage)
+- Processing time or latency (no performance data in this dataset)
+- Model version (can't tell if different model versions perform differently)
 
 Accept any 2-3 of these or reasonable alternatives. Flag if the learner lists things that ARE visible in the data.
 
 ### PM Decision Point Evaluation
 
-The learner writes 5 questions targeting each pipeline stage.
+The learner writes 2 questions targeting different pipeline stages.
 
 **Strong response includes:**
 - Each question targets a specific stage (not generic "is it working?" questions)
@@ -49,7 +50,7 @@ The learner writes 5 questions targeting each pipeline stage.
 
 Examples of strong questions by stage:
 - Input parsing: "How does the system handle changes that span multiple types — e.g., a price AND description change submitted together?"
-- Context retrieval: "When `last_verified_price` is missing, what does the system do — fall back to something else or proceed without context?"
+- Context retrieval: "When `reference_data` is missing, what does the system do — fall back to something else or proceed without context?"
 - LLM reasoning: "Does the model apply the same policy rules consistently, or does the same change type get different verdicts on different days?"
 - Output generation: "Is `llm_confidence` calibrated — i.e., do higher-confidence decisions actually have higher accuracy?"
 - Human review: "What criteria do reviewers use for items flagged for review — is there a rubric, or is it judgment-based?"
@@ -57,7 +58,7 @@ Examples of strong questions by stage:
 **Weak response:**
 - Questions that can be answered by looking at existing columns (not actually probing gaps)
 - Generic questions not tied to a specific stage
-- Fewer than 5 questions or multiple questions targeting the same stage
+- Fewer than 2 questions or both questions targeting the same stage
 
 ---
 
@@ -1498,3 +1499,223 @@ The response makes the CEO's trade-off explicit: Monday is achievable *for the n
 - Promises timelines that are not realistic (e.g., "we'll fix Mexican subgroup by Monday" for a 2-3 week fix)
 - Doesn't name owners or rollback triggers
 - Hides or softens the critical findings in the response to leadership
+
+---
+
+## D20: Regulatory and Legal Context for AI Evaluation
+
+### Exercise Evaluation
+
+**Step 1 — Classify AI products by risk tier:**
+
+| Product | Correct Tier | Reasoning |
+|---------|-------------|-----------|
+| P-01 Resume screening bot | **High** | Employment decisions — explicitly listed in Annex III |
+| P-02 Customer support chatbot | **Limited** | User-facing AI interaction — transparency obligation only |
+| P-03 Credit scoring model | **High** | Creditworthiness assessment — explicitly listed in Annex III |
+| P-04 Social media recommender | **Limited** | Content recommendation — transparency obligations; not high-risk unless manipulative |
+| P-05 Emergency triage assistant | **High** | Healthcare safety-critical — affects patient outcomes |
+| P-06 Menu verification system | **Debatable: high or limited** | See Step 2 for detailed analysis |
+| P-07 Subliminal ad optimizer | **Unacceptable (banned)** | Subliminal manipulation below conscious awareness — explicitly prohibited |
+| P-08 Internal code review assistant | **Minimal** | Internal productivity tool, no external user impact, no safety implications |
+
+**Strong response:** correctly classifies at least 6 of 8; identifies P-07 as banned (not just high-risk); recognizes P-06 as debatable with reasoning.
+
+**Weak response:** confuses limited and minimal risk; classifies P-07 as high-risk instead of banned; classifies P-02 (FAQ chatbot) as high-risk.
+
+**Step 2 — Menu verification system classification:**
+
+The menu verification system is genuinely debatable. Arguments for each:
+
+**Case for high-risk:**
+- Incorrect allergen approvals can cause severe allergic reactions (anaphylaxis — potentially fatal)
+- The system is a *safety component* of the food delivery platform — it's the last check before a menu reaches consumers
+- Food safety is regulated by EU food-safety legislation; an AI system serving as a safety component of a regulated product is high-risk under Article 6
+
+**Case for limited risk:**
+- The system is B2B (used by the platform, not directly consumer-facing)
+- It's an *advisory* tool — human restaurant managers ultimately control menu content
+- Allergen disclosure is the restaurant's legal responsibility, not the platform's AI
+
+**Best answer:** classify as high-risk, based on the precautionary principle. The cost of classifying too high is extra compliance work (documentation, monitoring formalization). The cost of classifying too low is: if a regulator later determines it's high-risk, you're retroactively non-compliant with potential penalties up to 7% of revenue, plus reputational damage from an allergen incident that wasn't properly monitored.
+
+**Strong response:** argues both sides; picks high-risk with explicit reasoning about asymmetric cost of misclassification; names the "safety component" argument as the tipping factor.
+
+**Weak response:** picks a tier without reasoning; doesn't consider the asymmetric cost; or picks limited risk without acknowledging the health/safety angle.
+
+**Step 3 — Audit eval practices against requirements:**
+
+| Requirement | Coverage Status | What You Have | What's Missing |
+|-------------|----------------|---------------|----------------|
+| R-01 Risk management | **Partial** | D2 surface map, D10 criteria, D19 ship memo | No single maintained risk-management document; scattered across exercises |
+| R-02 Data governance | **Partial** | D7 golden datasets, D12 fairness | No formal data sheet documenting sourcing, representativeness, bias assessment |
+| R-03 Technical documentation | **Partial** | D10 thresholds, D16 experiments, D18 red-team, D19 memo | No versioned artifact linking methodology → dataset → results → thresholds |
+| R-04 Logging/traceability | **Partial** | D14 observability framework designed | Implementation, retention policies, and audit access controls not confirmed |
+| R-05 Human oversight | **Partial** | D5 human graders, D17 rollback + human-review layer | Override capability not formally documented; escalation chain not formalized |
+| R-06 Accuracy/robustness | **Partial** | D4 CIs, D16 experiments, D18 red teaming | Results exist as exercise outputs, not as formal test reports |
+| R-07 Post-deployment monitoring | **Partial** | D17 drift detection, rollback triggers, online eval | Monitoring plan not a standalone document linked to conformity assessment |
+| R-08 Incident reporting | **Gap** | D17 covers rollback for product purposes | No incident classification scheme; no regulatory notification workflow |
+| R-09 Transparency | **Gap** | Not covered in D1–D19 | No user-facing transparency notice; no documentation of system limitations for affected persons |
+| R-10 Conformity declaration | **Gap** | D19 ship memo is structurally similar | Ship memo is internal; conformity declaration is a legal filing with specific format |
+
+Pattern: most items are **partial** — the eval *practice* exists but the *documentation* is not formalized for audit. Three items are full **gaps** (R-08 incident reporting, R-09 transparency, R-10 conformity declaration).
+
+**Strong response:** identifies the pattern (practice exists, documentation doesn't); correctly marks R-08, R-09, R-10 as gaps; distinguishes "we do this" from "we can prove this to a regulator."
+
+**Weak response:** marks everything as "covered" because the course addressed the concept; doesn't distinguish practice from documentation; misses R-08 and R-09 as gaps.
+
+**Step 4 — Prioritize gaps:**
+
+By regulatory risk (highest first):
+1. **R-08 Incident reporting (gap)** — highest risk because failure to report a serious incident is itself a violation with separate penalties. Effort: weeks (build classification scheme + notification workflow + test it).
+2. **R-09 Transparency (gap)** — required before any EU deployment. Effort: days (write transparency notice + system limitation disclosure).
+3. **R-03 Technical documentation (partial)** — the conformity assessment depends on this. Effort: 1–2 weeks (consolidate existing eval artifacts into a versioned document).
+4. **R-01 Risk management (partial)** — must be a maintained document, not scattered outputs. Effort: 1 week (consolidate D2/D10/D19 into a single risk-management artifact).
+5. **R-02 Data governance (partial)** — formal data sheet required. Effort: 1 week.
+6. **R-06 Accuracy/robustness (partial)** — formalize test reports. Effort: days.
+7. **R-07 Monitoring plan (partial)** — extract from D17 exercise into standalone document. Effort: days.
+8. **R-05 Human oversight (partial)** — document override and escalation. Effort: days.
+9. **R-04 Logging (partial)** — confirm implementation and retention. Effort: days to verify.
+10. **R-10 Conformity declaration (gap)** — legal drafts this based on PM's eval evidence. Effort: depends on legal, but PM provides evidence in 1–2 weeks.
+
+**Strong response:** prioritizes R-08 (incident reporting) as highest risk because it's both a gap and a separate violation; identifies that most partial-coverage items are documentation efforts (days to weeks); separates cheap doc work from expensive capability-building.
+
+**Weak response:** prioritizes by effort instead of risk; doesn't distinguish documentation gaps from capability gaps; puts R-10 first without recognizing it depends on all other items.
+
+### PM Decision Point Evaluation
+
+**Strong response:**
+
+1. **Risk classification:** High-risk, because the system is a safety component affecting consumer health (allergen decisions). The "safety component" argument under Article 6 tips the classification, even though the system is B2B. Cost of under-classifying is asymmetrically worse than over-classifying.
+
+2. **At least three specific gaps:**
+   - R-08 Incident reporting: no incident classification scheme maps system failures (allergen breach, false approval) to EU-reportable categories. No regulatory notification workflow. If a user has an allergic reaction traceable to a model error, we currently have no process to report within 72 hours.
+   - R-03 Technical documentation: eval methodology exists across D10 thresholds, D16 experiment results, D18 red-team findings, D19 ship memo — but no single versioned artifact ties methodology → dataset → results → thresholds in an auditable format. An auditor would have to reconstruct from multiple sources.
+   - R-09 Transparency: no user-facing notice that an AI system checks allergen disclosures. No documentation of system limitations (e.g., "system has not been evaluated on Mexican, Korean, or Vietnamese cuisines") available to affected persons. This is a hard requirement even for limited-risk classification.
+   - Bonus: R-02 Data governance — no formal data sheet documenting how golden datasets were sourced, how representativeness was assessed (D12 showed Thai was under-covered), or how contamination is prevented (D7).
+
+3. **Compliance roadmap:**
+   - **Phase 1 (2 weeks — documentation):** Consolidate existing eval artifacts into regulatory format: (a) risk management document from D2/D10/D19 outputs; (b) technical documentation linking methodology → dataset → results → thresholds; (c) monitoring plan extracted from D17; (d) transparency notice for user-facing disclosure; (e) formal test reports from D16/D18 results. Owner: PM + tech writer.
+   - **Phase 2 (4–8 weeks — new capabilities):** (a) Build incident classification and regulatory notification workflow (R-08) — requires legal + eng collaboration; (b) formalize data governance documentation with data sheets for each dataset (R-02); (c) implement and test human-override mechanisms end-to-end (R-05); (d) set up audit-accessible logging with defined retention (R-04). Owner: PM + eng + legal.
+   - Legal can begin conformity declaration drafting once Phase 1 is complete. CE marking and EU database registration happen after Phase 2.
+
+Engineering is right that the eval practices are strong. The gap is not in what we do — it's in what we can prove. An auditor doesn't attend our tutoring sessions — they read documents.
+
+**Weak response:**
+- Says "we're already compliant" because the course covered the concepts
+- Doesn't distinguish eval practice from audit-ready documentation
+- Names gaps vaguely ("we need better documentation") without specifying which requirement, what exists, and what's missing
+- Proposes a timeline without separating documentation work from capability-building
+- Doesn't name incident reporting (R-08) as the most critical gap
+
+---
+
+## D21: Building an Eval Culture
+
+### Exercise Evaluation
+
+**Step 1 — Assess current state:**
+
+- **not_done:** 7 (A-01, A-02, A-04, A-05, A-06, A-08, A-10, A-11 — actually 8)
+- **ad_hoc:** 3 (A-03, A-09, A-12)
+- **partial:** 1 (A-07)
+
+Only 1 of 12 activities is partially operational. 8 are not done at all. The team is solidly at Level 1. Most L2 activities (golden dataset, error analysis, subgroup review, human review) are not done — meaning the foundation for Level 3 doesn't exist yet. You can't automate regression suites (L3) if you don't have a golden dataset (L2) to run them against.
+
+**Strong response:** counts accurately; recognizes the L2 gaps as the foundation that must be built before L3 automation; notes that "partial" on drift monitoring (A-07) without a golden dataset or human review loop means the monitoring isn't anchored to ground truth.
+
+**Weak response:** counts but doesn't analyze the implication; or focuses on the L3/L4 gaps without recognizing the missing L2 foundation.
+
+**Step 2 — Ownership and cadence assignments:**
+
+| Activity | Target Owner | Target Cadence | Reasoning |
+|----------|-------------|---------------|-----------|
+| A-01 Error analysis | PM | monthly | PM decides what to investigate; monthly catches slow trends |
+| A-02 Golden dataset | PM + eng | monthly refresh | PM curates, eng version-controls |
+| A-03 Automated graders | eng | per_change + continuous | Must be automated in pipeline |
+| A-04 Judge recalibration | data science | monthly | Statistical work; monthly catches drift |
+| A-05 Subgroup review | PM | weekly | PM owns fairness; weekly catches regressions fast |
+| A-06 Regression in CI/CD | eng | per_change | Must block merges automatically |
+| A-07 Drift monitoring | PM + eng | continuous | Eng builds, PM reviews alerts |
+| A-08 Incident reporting | PM + legal | event_driven | Triggered by incidents, not scheduled |
+| A-09 Ship memo | PM | every_ship | Required for every non-trivial release |
+| A-10 Stakeholder report | PM | monthly | Monthly cadence for leadership visibility |
+| A-11 Eval cost tracking | PM | monthly | Track alongside stakeholder report |
+| A-12 Human review | QA + PM | weekly | QA executes, PM reviews patterns |
+
+**Strong response:** assigns ownership using the three-role model (PM strategy, eng infra, data science calibration); distinguishes per-change from periodic from event-driven appropriately; doesn't assign everything to PM.
+
+**Weak response:** assigns everything to eng or everything to PM; doesn't distinguish cadences; makes everything "monthly" including things that should be per-change.
+
+**Step 3 — First 30-day priorities (pick 4):**
+
+The highest-leverage four are:
+
+1. **A-02 Golden dataset** — everything depends on this. You can't run automated graders, regression suites, or judge recalibration without a curated dataset. This unblocks A-03, A-04, A-06. Effort: weeks.
+
+2. **A-12 Human review sampling** — starts the ground-truth feedback loop immediately. Gives you real data to build the golden dataset from. Also catches urgent quality issues in production now. Effort: days.
+
+3. **A-01 Error analysis** — the first trace review reveals the failure modes you don't know about. Feeds the golden dataset curation and tells you which metrics to track. Effort: weeks for first pass.
+
+4. **A-05 Subgroup performance review** — once you have even a basic golden dataset, slicing by subgroup reveals hidden regressions immediately. This is a quick win that demonstrates value to leadership. Effort: days.
+
+Alternative acceptable picks: A-03 (automated graders) or A-09 (ship memo) could replace A-05 if the learner provides strong reasoning.
+
+**Strong response:** picks A-02 as the foundation; recognizes the dependency chain (golden dataset → graders → regression suite); includes A-12 or A-01 as the data-collection mechanism that feeds the dataset; picks 4 activities that are L2 (foundation), not L3 (automation).
+
+**Weak response:** picks L3 activities (CI/CD, drift monitoring) without the L2 foundation; doesn't explain dependency chains; picks based on "what sounds most impressive" rather than "what unblocks the most."
+
+**Step 4 — 90-day roadmap:**
+
+**Days 1–30 (Foundation):**
+- A-12: Human review sampling — 50 traces/week, structured rubric, start immediately
+- A-01: Error analysis — first 50-trace review, categorize failures, identify top 3 failure modes
+- A-02: Golden dataset — curate initial 200-case dataset from trace review + production logs
+- A-05: Subgroup review — first slice of pass rates by cuisine, flag any subgroup below 70%
+- "Done" looks like: 200-case golden dataset exists, first error taxonomy complete, subgroup baselines established, weekly human review is running
+
+**Days 31–60 (Automation):**
+- A-03: Deploy automated graders (code-based on 100%, LLM-judge on sampled traffic)
+- A-04: First judge recalibration against human labels from A-12
+- A-09: Ship memo template created and used for next release
+- A-07: Drift monitoring enhanced with cuisine-mix alerts and judge/human divergence alerts
+- "Done" looks like: automated graders running on every eval, judge Kappa > 0.6, ship memo used for at least one release, drift alerts configured
+
+**Days 61–90 (Maturity):**
+- A-06: Regression suite in CI/CD — merges blocked if pass rate drops
+- A-10: First stakeholder quality report delivered to leadership
+- A-11: Eval cost baseline established
+- A-08: Incident classification scheme drafted (with legal)
+- "Done" looks like: CI blocks bad changes, leadership receives monthly quality report, eval costs tracked, incident reporting pathway defined
+
+**Strong response:** phases activities in dependency order (L2 → L3 → L4); each phase has concrete "done" criteria; recognizes that Days 1–30 is unglamorous foundation work; Day 90 metric is specific and measurable.
+
+**Weak response:** puts all 12 activities in one phase; no concrete "done" criteria; jumps to CI/CD without the dataset foundation; Day 90 deliverable is vague.
+
+### PM Decision Point Evaluation
+
+**Strong response:**
+
+1. **Three activities with concrete "done" definitions:**
+   - **A-02 Golden dataset:** 200 cases, stratified by cuisine (≥40 per cuisine including Mexican/Korean), version-controlled in git, ground-truth labels reviewed by 2 annotators. Done = dataset exists and first eval suite run against it produces baseline pass rates.
+   - **A-12 Human review sampling:** 50 traces/week graded by QA using a structured rubric (5 dimensions: allergen accuracy, format compliance, reasoning quality, confidence calibration, edge-case handling). Done = 4 weeks of continuous data, weekly report delivered to PM, disagreements with any automated check logged.
+   - **A-06 Regression suite in CI/CD:** full eval suite runs on every prompt/model/pipeline PR. Merge blocked if aggregate pass rate drops >2pp or any guardrail metric breaches. Done = CI pipeline configured, tested with a deliberately regressive prompt change, documented in eng runbook.
+
+   (Alternative strong picks: A-01 instead of A-06 if argued that error analysis is prerequisite to building a good golden dataset. A-03 instead of A-06 if argued that automated graders are the prerequisite for CI/CD.)
+
+2. **Prioritization logic:**
+   - A-02 is the foundation — nothing else works without test data. You can't run graders, judge recalibration, regression suites, or subgroup reviews without a dataset.
+   - A-12 is the ground-truth signal — it feeds the golden dataset, catches production issues now, and creates the human baseline for judge recalibration later.
+   - A-06 is the mechanism that makes eval gains permanent — without CI/CD blocking, any improvement you make can be silently regressed by the next prompt change. This is the difference between "we did evals once" and "evals are part of how we ship."
+   - The other nine activities either depend on these three (A-03, A-04, A-05 need the dataset; A-07, A-09 need the process maturity) or are lower-leverage (A-10, A-11 are reporting, not infrastructure).
+
+3. **Day 90 metric:**
+   "Before: zero regression tests, every prompt change was a gamble, last quarter we had 3 production incidents from untested changes. After: every PR runs against 200 eval cases in CI, 2 regressions caught and blocked before they reached production, zero production incidents from untested changes in the past 60 days."
+
+   Or: "Before: quality was assessed by 'looks fine.' After: we have a weekly quality number (human-review pass rate) tracked over 12 weeks, currently at 84% and trending up from 71% at week 1."
+
+**Weak response:**
+- Picks activities that sound impressive but aren't foundational (drift monitoring, stakeholder reports, incident reporting — all important but depend on the foundation)
+- "Done" definitions are vague ("we'll have a golden dataset" without case count, stratification, or version control)
+- Can't state the Day 90 metric — or states something unmeasurable ("we'll have better quality")
+- Picks three activities that don't form a logical chain (e.g., error analysis + incident reporting + eval cost tracking — no dependency between them, no compounding leverage)

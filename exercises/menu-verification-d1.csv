@@ -1,0 +1,31 @@
+change_id,restaurant_name,item_name,change_type,old_value,new_value,reference_data,llm_decision,llm_confidence,llm_reasoning,human_decision,human_agrees_with_llm
+CHG-001,Myeongdong Kyoja,Tacos,price,$9.23,$12.38,,reject,0.73,34% above last verified price. Exceeds policy threshold.,reject,TRUE
+CHG-002,Doyum Grillhaus,Sushi Set,price,$16.24,$21.09,,reject,0.89,30% above last verified price. Exceeds policy threshold.,reject,TRUE
+CHG-003,Al Baik,Currywurst,price,$3.91,$4.27,Last verified price: $4.00. Markup: 6.7%,reject,0.54,Price increased 7% above last verified price. Above maximum allowed price threshold. Rejected.,approve,FALSE
+CHG-004,Anadolu Restaurant,Falafel Teller,price,$7.59,$9.18,,reject,0.54,Price increased 21% above last verified price. Exceeds acceptable price variance per policy. Rejected.,approve,FALSE
+CHG-005,Tangs Living,Classic Burger,price,$9.92,$10.98,Last verified price: $9.90. Markup: 10.9%,approve,0.80,11% above last verified price. Within policy bounds.,approve,TRUE
+CHG-006,Operation Falafel,Doner Kebab,price,$7.64,$7.93,,approve,0.81,4% above last verified price. Within policy bounds.,approve,TRUE
+CHG-007,Five Guys,Pho,price,$11.93,$17.87,Last verified price: $11.50. Markup: 55.4%,reject,0.71,55% above last verified price. Exceeds policy threshold.,reject,TRUE
+CHG-008,Gwangjang Market,Butter Chicken,price,$11.88,$18.16,Last verified price: $12.50. Markup: 45.3%,reject,0.76,45% above last verified price. Exceeds policy threshold.,reject,TRUE
+CHG-009,Bebek Balikci,Wiener Schnitzel,price,$15.28,$22.62,Last verified price: $14.90. Markup: 51.8%,reject,0.68,52% above last verified price. Exceeds policy threshold.,reject,TRUE
+CHG-010,Myeongdong Kyoja,Pho,price,$11.08,$16.28,Last verified price: $11.50. Markup: 41.5%,reject,0.83,42% above last verified price. Exceeds policy threshold.,reject,TRUE
+CHG-011,Pizza Dach,Wiener Schnitzel,price,$14.23,$16.90,Last verified price: $14.90. Markup: 13.4%,approve,0.82,13% above last verified price. Within policy bounds.,approve,TRUE
+CHG-012,Al Mallah,Shawarma Plate,price,$12.05,$18.72,Last verified price: $12.00. Markup: 56.0%,reject,0.79,56% above last verified price. Exceeds policy threshold.,reject,TRUE
+CHG-013,Pizza Dach,Naan,description,Homemade hummus with pita,Authentic Lebanese hummus with warm pita bread and olive oil drizzle,,flag_for_review,0.57,Description changed from 'Homemade hummus with pita' to 'Authentic Lebanese hummus with warm pita bread and za'atar'. Contains origin claim ('Lebanese') — flagging for verification.,approve,FALSE
+CHG-014,Curry 36,Pommes Frites,description,Crispy fries with sea salt,Hand-cut triple-cooked Belgian frites with high-altitude Himalayan pink salt and black truffle oil,,approve,0.44,Description updated from 'Crispy fries with sea salt' to include preparation method and premium ingredients. Standard menu enhancement. No misleading claims detected. Approved.,reject,FALSE
+CHG-015,Meshur Kofte,Hummus,description,Pasta carbonara,Authentic Roman carbonara with guanciale and Pecorino Romano DOP,,approve,0.76,Description enhancement. No misleading claims detected.,approve,TRUE
+CHG-016,Durumcu Baba,Butter Chicken,description,Chicken curry,Slow-simmered 24-hour chicken curry with hand-ground spice blend,,approve,0.88,Description enhancement. No misleading claims detected.,approve,TRUE
+CHG-017,Bosporus Grill,Sushi Set,description,Chocolate cake,Single-origin Valrhona dark chocolate cake with gold leaf,,approve,0.91,Description enhancement. No misleading claims detected.,approve,TRUE
+CHG-018,Five Guys,Pad Thai,description,Tomato soup,San Marzano tomato bisque with basil cream,,approve,0.94,Description enhancement. No misleading claims detected.,approve,TRUE
+CHG-019,Ravi Restaurant,Fried Chicken Box,description,Grilled salmon,Line-caught Norwegian salmon with herb butter,,approve,0.88,Description enhancement. No misleading claims detected.,approve,TRUE
+CHG-020,Schnitzel Fritz,Bibimbap,allergen_dietary,,"Vegan, Gluten-free",Current allergen record: ,approve,0.47,"New dietary tags added: 'Vegan, Gluten-free'. Tags appear reasonable for this item category. No safety concern detected. Approved.",reject,FALSE
+CHG-021,Bebek Balikci,Classic Burger,allergen_dietary,,"Vegan, Gluten-free",Current allergen record: ,flag_for_review,0.75,New dietary claims added without prior history. Needs ingredient verification.,reject,TRUE
+CHG-022,Karadeniz Pide,Tacos,allergen_dietary,"Contains: nuts, dairy",Contains: dairy,"Current allergen record: Contains: nuts, dairy",flag_for_review,0.96,Nut allergen removed. Safety-critical — must verify recipe change.,reject,TRUE
+CHG-023,Gwangjang Market,Gelato,allergen_dietary,,"Contains: soy, sesame",Current allergen record: ,approve,0.88,New allergen disclosure. Adding warnings is the safe direction.,approve,TRUE
+CHG-024,Curry 36,Doner Kebab,allergen_dietary,"Contains: nuts, dairy",Contains: dairy,"Current allergen record: Contains: nuts, dairy",reject,0.45,Allergen change flagged for potential inconsistency.,reject,TRUE
+CHG-025,Ciya Sofrasi,Pommes Frites,image,salad_old.jpg,salad_updated.jpg,"Image analysis: Old image is a slightly blurry photo of fries in dim lighting. New image is a clear, well-lit photo of the same style of fries with better composition.",reject,0.62,Image change detected for Pommes Frites. New image differs from original — rejecting pending manual review.,approve,FALSE
+CHG-026,Burgermeister,Hummus,image,chicken_plate_v1.jpg,stock_photo_chicken_12345.jpg,,reject,0.77,New image detected as stock photo. Platform policy requires actual dish photos.,reject,TRUE
+CHG-027,Sahara Imbiss,Mixed Grill Plate,image,kebab_real.jpg,kebab_ai_generated.jpg,,reject,0.78,"Image shows signs of AI generation (artifacts, impossible plating). Policy requires real photos.",reject,TRUE
+CHG-028,Zabeel House Kitchen,Currywurst,image,fish_chips.jpg,unrelated_dessert.jpg,,reject,0.93,New image is a dessert for a fish dish. Obvious mismatch.,reject,TRUE
+CHG-029,Zabeel House Kitchen,Truffle Burger,category,Starters,Sharing Plates,,approve,0.86,Subcategory refinement. Common menu pattern.,approve,TRUE
+CHG-030,Al Baik,Vegan Bowl,category,Extras,Sides,,approve,0.87,Reasonable reclassification within similar tier.,approve,TRUE
