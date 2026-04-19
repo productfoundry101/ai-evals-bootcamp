@@ -1,8 +1,8 @@
-# D20: Regulatory and Legal Context for AI Evaluation
+# D20 - Regulatory Context
 
 **Week 3, Day 20** | ~45 min
 **Part times:** Concepts ~15 min | Exercise ~20 min | Decision Point ~10 min
-**Previous lesson:** D19 — you learned to synthesize eval signals into a single ship call, distinguishing ship/hold/conditional ship outcomes. You applied AND logic to guardrails, drafted a ship memo, and communicated a conditional-ship recommendation to your CEO under Q2 launch pressure. Today we step outside the evaluation framework and ask: *what does the law require?* The eval practices you've built across D1–D19 are good engineering. Some of them are also legal obligations — and knowing which ones changes how you prioritize, document, and defend your eval work.
+**Previous lesson:** D19 - Ship Decisions — you learned to synthesize eval signals into a single ship call, distinguishing ship/hold/conditional ship outcomes. You applied AND logic to guardrails, drafted a ship memo, and communicated a conditional-ship recommendation to your CEO under Q2 launch pressure. Today we step outside the evaluation framework and ask: *what does the law require?* The eval practices you've built across D1–D19 are good engineering. Some of them are also legal obligations — and knowing which ones changes how you prioritize, document, and defend your eval work.
 
 This lesson assumes familiarity with the full eval toolkit (D1–D19). It does not require legal expertise. The goal is to give PMs enough regulatory literacy to guide compliance conversations with legal and engineering — not to replace legal counsel.
 
@@ -51,12 +51,12 @@ If your system is classified as high-risk, the EU AI Act requires six categories
 
 | EU AI Act Requirement | What it means | Course practice that covers it |
 |----------------------|---------------|-------------------------------|
-| **Risk management system** | Documented process for identifying, assessing, and mitigating risks throughout the system lifecycle | D2 evaluation surface map, D10 release criteria, D19 ship memo |
-| **Data governance** | Training and evaluation data must be relevant, representative, and free from errors. Bias in data must be addressed. | D7 golden datasets, D12 fairness and subgroup evaluation |
-| **Technical documentation** | Eval methodology, metrics, results, and system design must be documented before deployment | D10 thresholds, D16 experiment design, D19 ship memo |
-| **Logging and traceability** | Automatic recording of events for post-hoc audit and incident investigation | D14 observability (metrics, logs, traces) |
-| **Human oversight** | Effective mechanisms for human control, including the ability to override or shut down | D5 human graders, D17 online eval human-review layer, D17 rollback criteria |
-| **Accuracy, robustness, cybersecurity** | System must be tested for accuracy under normal and adversarial conditions, with results documented | D4 distributions and CIs, D16 experiments, D18 red teaming |
+| **Risk management system** | Documented process for identifying, assessing, and mitigating risks throughout the system lifecycle | D2 - Failure Surface Mapping evaluation surface map, D10 - Release Criteria release criteria, D19 - Ship Decisions ship memo |
+| **Data governance** | Training and evaluation data must be relevant, representative, and free from errors. Bias in data must be addressed. | D7 - Golden Datasets golden datasets, D12 - Fairness & Subgroups fairness and subgroup evaluation |
+| **Technical documentation** | Eval methodology, metrics, results, and system design must be documented before deployment | D10 - Release Criteria thresholds, D16 - AI Experiments experiment design, D19 - Ship Decisions ship memo |
+| **Logging and traceability** | Automatic recording of events for post-hoc audit and incident investigation | D14 - Observability observability (metrics, logs, traces) |
+| **Human oversight** | Effective mechanisms for human control, including the ability to override or shut down | D5 - Grader Types human graders, D17 - Launch Readiness online eval human-review layer, D17 - Launch Readiness rollback criteria |
+| **Accuracy, robustness, cybersecurity** | System must be tested for accuracy under normal and adversarial conditions, with results documented | D4 - Thinking in Distributions distributions and CIs, D16 - AI Experiments experiments, D18 - Red Teaming red teaming |
 
 The *gap* is not in the eval practices themselves — it's in the **documentation and formalization**. You may have done all of this work, but if it's not written down in a format that survives an audit, it doesn't count. A conformity assessment requires evidence, not just practice.
 
@@ -69,11 +69,11 @@ For most Annex III systems, this is an **internal self-assessment** (you assess 
 The conformity documentation package must include:
 
 1. **System description** — what the system does, its intended purpose, who the users are, what inputs/outputs it handles.
-2. **Risk assessment** — identified risks, their severity, and what mitigations are in place. Maps to your D2 evaluation surface map.
-3. **Data documentation** — how training and evaluation data was sourced, curated, and checked for bias. Maps to D7 and D12.
-4. **Evaluation methodology and results** — what metrics, what thresholds, what test sets, what results. This is your D10 release criteria + D16 experiment results + D18 red-team findings. Must include confidence intervals, not point estimates.
-5. **Monitoring plan** — how the system will be monitored post-deployment for drift, degradation, and incidents. Maps to D17 production monitoring.
-6. **Human oversight design** — how humans can intervene, override, or shut down the system. Maps to D17 rollback criteria and on-call ownership.
+2. **Risk assessment** — identified risks, their severity, and what mitigations are in place. Maps to your D2 - Failure Surface Mapping evaluation surface map.
+3. **Data documentation** — how training and evaluation data was sourced, curated, and checked for bias. Maps to D7 - Golden Datasets and D12 - Fairness & Subgroups.
+4. **Evaluation methodology and results** — what metrics, what thresholds, what test sets, what results. This is your D10 - Release Criteria release criteria + D16 - AI Experiments experiment results + D18 - Red Teaming red-team findings. Must include confidence intervals, not point estimates.
+5. **Monitoring plan** — how the system will be monitored post-deployment for drift, degradation, and incidents. Maps to D17 - Launch Readiness production monitoring.
+6. **Human oversight design** — how humans can intervene, override, or shut down the system. Maps to D17 - Launch Readiness rollback criteria and on-call ownership.
 7. **Incident reporting plan** — how serious incidents will be detected, reported to authorities, and corrected. EU AI Act requires notification of serious incidents to market surveillance authorities.
 
 After completing this package, the provider issues an **EU Declaration of Conformity**, affixes the **CE marking**, and registers the system in the EU database.
@@ -89,9 +89,9 @@ Compliance is not a one-time gate. High-risk system providers must:
 3. **Take corrective action** — if non-compliance is identified (by you or by an authority), you must bring the system back into compliance or withdraw it from the market.
 4. **Cooperate with authorities** — provide information, access to logs, and system documentation upon request.
 
-This is D17 production monitoring with legal teeth. The monitoring plan you designed in D17 (alerts, rollback triggers, drift detection) is exactly what the regulation requires — but it must be documented, maintained, and connected to a regulatory reporting pathway.
+This is D17 - Launch Readiness production monitoring with legal teeth. The monitoring plan you designed in D17 - Launch Readiness (alerts, rollback triggers, drift detection) is exactly what the regulation requires — but it must be documented, maintained, and connected to a regulatory reporting pathway.
 
-The implication: **if you detect a guardrail breach (D10) or a drift pattern (D17) and don't act on it, you're not just making a bad product decision — you may be in regulatory non-compliance.** The regulation requires that you act on what your monitoring detects.
+The implication: **if you detect a guardrail breach (D10 - Release Criteria) or a drift pattern (D17 - Launch Readiness) and don't act on it, you're not just making a bad product decision — you may be in regulatory non-compliance.** The regulation requires that you act on what your monitoring detects.
 
 ---
 
@@ -103,7 +103,7 @@ Your food delivery company is preparing to launch its menu verification system i
 
 ### Dataset
 
-Open `exercises/regulatory-audit-dataset.csv`. The dataset has two sections:
+Open `exercises/D20-regulatory-audit-dataset.csv`. The dataset has two sections:
 
 **Section A (rows P-01 through P-08):** Eight AI products to classify by EU AI Act risk tier. This builds your classification intuition.
 

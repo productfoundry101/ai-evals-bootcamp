@@ -1,8 +1,8 @@
-# D21: Building an Eval Culture
+# D21 - Eval Culture
 
 **Week 3, Day 21** | ~45 min
 **Part times:** Concepts ~15 min | Exercise ~20 min | Decision Point ~10 min
-**Previous lesson:** D20 — you learned that the EU AI Act creates binding obligations for high-risk AI systems, that your eval practices from D1–D19 map to the six compliance requirements but need formalization, and that the gap between doing evals and proving you do evals is where most teams fail an audit. Today is the final lesson. You have the full toolkit — error analysis, graders, metrics, experiments, monitoring, red teaming, ship decisions, regulatory context. The question is no longer *what* to evaluate. It's *how to make evaluation stick* in an organization that will always have reasons to skip it.
+**Previous lesson:** D20 - Regulatory Context — you learned that the EU AI Act creates binding obligations for high-risk AI systems, that your eval practices from D1–D19 map to the six compliance requirements but need formalization, and that the gap between doing evals and proving you do evals is where most teams fail an audit. Today is the final lesson. You have the full toolkit — error analysis, graders, metrics, experiments, monitoring, red teaming, ship decisions, regulatory context. The question is no longer *what* to evaluate. It's *how to make evaluation stick* in an organization that will always have reasons to skip it.
 
 This lesson is about the organizational side of evals: who owns what, when things run, how you pitch the investment, and how you communicate results to people who will never read a scoring rubric.
 
@@ -16,11 +16,11 @@ The most common organizational failure in AI evaluation is not a lack of tools o
 
 Clear ownership means three things:
 
-1. **PM owns eval strategy.** Which metrics matter (D10), what thresholds to set, what subgroups to monitor (D12), when to ship or hold (D19), and what regulatory documentation to maintain (D20). The PM decides *what* to evaluate and *what the bar is*.
+1. **PM owns eval strategy.** Which metrics matter (D10 - Release Criteria), what thresholds to set, what subgroups to monitor (D12 - Fairness & Subgroups), when to ship or hold (D19 - Ship Decisions), and what regulatory documentation to maintain (D20 - Regulatory Context). The PM decides *what* to evaluate and *what the bar is*.
 
-2. **Engineering owns eval infrastructure.** CI/CD integration, automated grader pipelines (D5), monitoring dashboards (D14), logging and tracing (D14), regression suites, and LLM-judge deployment (D6). Eng decides *how* evals run and *how fast* the feedback loop is.
+2. **Engineering owns eval infrastructure.** CI/CD integration, automated grader pipelines (D5 - Grader Types), monitoring dashboards (D14 - Observability), logging and tracing (D14 - Observability), regression suites, and LLM-judge deployment (D6 - LLM-as-Judge). Eng decides *how* evals run and *how fast* the feedback loop is.
 
-3. **Data science / ML owns eval calibration.** LLM-judge alignment with human labels (D6), meta-evaluation, golden dataset curation (D7), statistical analysis of experiments (D16), and fairness audits (D12). Data science decides *whether the evaluators themselves are trustworthy*.
+3. **Data science / ML owns eval calibration.** LLM-judge alignment with human labels (D6 - LLM-as-Judge), meta-evaluation, golden dataset curation (D7 - Golden Datasets), statistical analysis of experiments (D16 - AI Experiments), and fairness audits (D12 - Fairness & Subgroups). Data science decides *whether the evaluators themselves are trustworthy*.
 
 The anti-pattern: "the whole team owns quality." In practice this means the PM doesn't set thresholds, eng doesn't automate the suite, and data science doesn't recalibrate the judges. Everyone assumes someone else is doing it. The result: evals exist on paper but don't run in practice.
 
@@ -30,11 +30,11 @@ Ownership does not mean doing the work alone. It means being the person who noti
 
 Not every eval runs at the same frequency. A common mistake is treating evals as a one-time pre-launch activity. In a healthy eval culture, three cadences coexist:
 
-**Per-change (CI/CD):** runs automatically on every prompt change, model update, or code change that touches the AI pipeline. This is your regression suite (D13) and your red-team regression probes (D18). If it doesn't run automatically, it won't run. Blocking CI on eval failure is the single most effective way to prevent regressions.
+**Per-change (CI/CD):** runs automatically on every prompt change, model update, or code change that touches the AI pipeline. This is your regression suite (D13 - Eval-Driven Development) and your red-team regression probes (D18 - Red Teaming). If it doesn't run automatically, it won't run. Blocking CI on eval failure is the single most effective way to prevent regressions.
 
-**Periodic (weekly/monthly):** runs on a schedule regardless of changes. This includes human review sampling (D17 Concept 4), LLM-judge recalibration against human labels (D6), subgroup performance reviews (D12), golden dataset freshness checks (D7), production drift monitoring reviews (D17), and eval cost tracking (D11). These catch slow degradation that per-change evals miss.
+**Periodic (weekly/monthly):** runs on a schedule regardless of changes. This includes human review sampling (D17 - Launch Readiness Concept 4), LLM-judge recalibration against human labels (D6 - LLM-as-Judge), subgroup performance reviews (D12 - Fairness & Subgroups), golden dataset freshness checks (D7 - Golden Datasets), production drift monitoring reviews (D17 - Launch Readiness), and eval cost tracking (D11 - Metric Design). These catch slow degradation that per-change evals miss.
 
-**Event-driven:** runs when a specific trigger fires. Drift alerts (D17), customer complaints, regulatory changes (D20), new cuisine or input-category onboarding, security incidents, or model-provider version updates. These catch unexpected changes that scheduled checks miss.
+**Event-driven:** runs when a specific trigger fires. Drift alerts (D17 - Launch Readiness), customer complaints, regulatory changes (D20 - Regulatory Context), new cuisine or input-category onboarding, security incidents, or model-provider version updates. These catch unexpected changes that scheduled checks miss.
 
 Map every eval activity in your portfolio to one of these three cadences. If an activity doesn't have a cadence, it's aspirational, not operational.
 
@@ -79,11 +79,11 @@ Most AI teams are at Level 0 or Level 1. Knowing where you are helps you set a r
 
 **Level 1 — Manual spot checks.** Someone reviews a handful of outputs before each release. No structured dataset. No metrics. Better than vibes, but not repeatable — results depend on who reviewed and what they happened to look at.
 
-**Level 2 — Golden dataset + automated checks.** A curated test set exists (D7). Code-based and model-based graders run on it (D5, D6). Pass rates are tracked. Subgroups are sliced (D12). This is the minimum viable eval infrastructure. Most of what you learned in D1–D12 lives here.
+**Level 2 — Golden dataset + automated checks.** A curated test set exists (D7 - Golden Datasets). Code-based and model-based graders run on it (D5 - Grader Types, D6 - LLM-as-Judge). Pass rates are tracked. Subgroups are sliced (D12 - Fairness & Subgroups). This is the minimum viable eval infrastructure. Most of what you learned in D1–D12 lives here.
 
-**Level 3 — CI/CD evals + monitoring + drift detection.** Regression suites block bad changes (D13). Production monitoring catches drift (D17). Red-team probes run on every change (D18). Human review samples recalibrate judges (D6). Experiments use proper statistical methods (D16). Ship decisions follow a framework (D19). This is where good AI teams operate.
+**Level 3 — CI/CD evals + monitoring + drift detection.** Regression suites block bad changes (D13 - Eval-Driven Development). Production monitoring catches drift (D17 - Launch Readiness). Red-team probes run on every change (D18 - Red Teaming). Human review samples recalibrate judges (D6 - LLM-as-Judge). Experiments use proper statistical methods (D16 - AI Experiments). Ship decisions follow a framework (D19 - Ship Decisions). This is where good AI teams operate.
 
-**Level 4 — Eval-driven development with regulatory compliance.** Evals are written before features (D13). Conformity documentation is maintained (D20). Incident reporting is automated (D20). Eval results drive roadmap prioritization. The eval portfolio is a first-class product artifact, not a side process.
+**Level 4 — Eval-driven development with regulatory compliance.** Evals are written before features (D13 - Eval-Driven Development). Conformity documentation is maintained (D20 - Regulatory Context). Incident reporting is automated (D20 - Regulatory Context). Eval results drive roadmap prioritization. The eval portfolio is a first-class product artifact, not a side process.
 
 Most teams should aim for Level 3 within 6 months of their first AI launch. Level 4 is required for high-risk regulated products and is aspirational for others.
 
@@ -99,7 +99,7 @@ Leadership has given you 90 days to "get evaluation sorted." You need to design 
 
 ### Dataset
 
-Open `exercises/eval-culture-dataset.csv`. Each row is one eval activity from the course, mapped to the organizational context.
+Open `exercises/D21-eval-culture-dataset.csv`. Each row is one eval activity from the course, mapped to the organizational context.
 
 | Column | What it means |
 |--------|---------------|

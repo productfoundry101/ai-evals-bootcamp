@@ -1,8 +1,8 @@
-# D6: LLM-as-Judge — Building and Trusting Automated Quality Checks
+# D6 - LLM-as-Judge
 
 **Week 1, Day 6** | ~40 min
 **Part times:** Concepts ~15 min | Exercise ~20 min | Decision Point ~5 min
-**Previous lesson:** D5 — you learned the three grader types (code-based, model-based, human) and when to use each. You discovered that code graders are blind to meaning (they missed unverifiable claims), model graders align better with humans on nuanced cases (80% vs 65%), but no single grader catches everything. You designed a layering strategy: code on everything, model on what requires judgment, human for calibration and safety-critical review. Now the question becomes: how do you actually build a model-based grader you can trust — and how do you know when you can't?
+**Previous lesson:** D5 - Grader Types — you learned the three grader types (code-based, model-based, human) and when to use each. You discovered that code graders are blind to meaning (they missed unverifiable claims), model graders align better with humans on nuanced cases (80% vs 65%), but no single grader catches everything. You designed a layering strategy: code on everything, model on what requires judgment, human for calibration and safety-critical review. Now the question becomes: how do you actually build a model-based grader you can trust — and how do you know when you can't?
 
 ---
 
@@ -89,7 +89,7 @@ Both judges evaluated the same 20 menu verification decisions. A domain expert a
 
 ### Setup
 
-Open `exercises/judge-calibration-dataset.csv`.
+Open `exercises/D6-judge-calibration-dataset.csv`.
 
 Key columns: `case_id`, `change_type`, `change_summary`, `llm_decision`, `llm_reasoning` (what the menu verifier decided), `human_verdict` (PASS/FAIL ground truth), `human_critique`, `judge_v1_verdict`, `judge_v1_reasoning`, `judge_v2_verdict`, `judge_v2_reasoning`.
 

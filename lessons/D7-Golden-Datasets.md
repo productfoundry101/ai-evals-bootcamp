@@ -1,8 +1,8 @@
-# D7: Ground Truth, Golden Datasets, and the Eval Dataset Lifecycle
+# D7 - Golden Datasets
 
 **Week 1, Day 7** | ~40 min
 **Part times:** Concepts ~15 min | Exercise ~20 min | Decision Point ~5 min
-**Previous lesson:** D6 — you learned how to build and calibrate an LLM judge using Critique Shadowing, discovered that a vague prompt produces a useless judge (35% agreement) while a specific rubric produces a strong one (85%), and identified three types of judge limitations: rubric gaps, context gaps, and policy ambiguity. But every grader — code, model, or human — needs something to measure against. The judge checks whether a decision is correct. But what does "correct" mean? Today you learn how to build the ground truth that makes all your graders meaningful.
+**Previous lesson:** D6 - LLM-as-Judge — you learned how to build and calibrate an LLM judge using Critique Shadowing, discovered that a vague prompt produces a useless judge (35% agreement) while a specific rubric produces a strong one (85%), and identified three types of judge limitations: rubric gaps, context gaps, and policy ambiguity. But every grader — code, model, or human — needs something to measure against. The judge checks whether a decision is correct. But what does "correct" mean? Today you learn how to build the ground truth that makes all your graders meaningful.
 
 ---
 
@@ -81,7 +81,7 @@ Your team built an eval dataset for the menu verification system six months ago.
 
 ### Dataset
 
-Open `exercises/eval-dataset-audit.csv`. This is metadata about the eval dataset — one row per test case.
+Open `exercises/D7-eval-dataset-audit.csv`. This is metadata about the eval dataset — one row per test case.
 
 Each row represents a menu change that was run through the system. Someone labeled each case as PASS (the system's decision was correct) or FAIL (the system's decision was wrong). Your job is to determine whether those labels can be trusted.
 

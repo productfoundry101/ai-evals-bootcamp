@@ -1,8 +1,8 @@
-# D14: The Observability Landscape
+# D14 - Observability
 
 **Week 2, Day 14** | ~45 min
 **Part times:** Concepts ~15 min | Exercise ~22 min | Decision Point ~12 min
-**Previous lesson:** D13 — you learned to write evals before code (evals-as-spec), keep tight feedback loops, grow regression suites with every bug fix, and use eval gaps as a prioritization signal. You audited a 25-case eval suite across six sprints and identified a critical allergen regression as the sprint 7 must-fix. Today we close Week 2 by crossing the production line: once the system is live, evals alone aren't enough. You need observability — the live signals that tell you what's actually happening right now.
+**Previous lesson:** D13 - Eval-Driven Development — you learned to write evals before code (evals-as-spec), keep tight feedback loops, grow regression suites with every bug fix, and use eval gaps as a prioritization signal. You audited a 25-case eval suite across six sprints and identified a critical allergen regression as the sprint 7 must-fix. Today we close Week 2 by crossing the production line: once the system is live, evals alone aren't enough. You need observability — the live signals that tell you what's actually happening right now.
 
 ---
 
@@ -51,7 +51,7 @@ Everything else is dashboard-only. Dashboards are for investigation and trend-wa
 
 ### Observability closes the loop to evaluation
 
-The final discipline: when observability catches a new failure mode in production, that failure becomes an eval case. The user who complained about Thai restaurant rejections (D12) isn't just a support ticket — they're a specification of a failure mode your eval suite didn't cover. Once you translate their complaint into an eval case, you've prevented it from ever recurring silently.
+The final discipline: when observability catches a new failure mode in production, that failure becomes an eval case. The user who complained about Thai restaurant rejections (D12 - Fairness & Subgroups) isn't just a support ticket — they're a specification of a failure mode your eval suite didn't cover. Once you translate their complaint into an eval case, you've prevented it from ever recurring silently.
 
 This is how the eval suite grows. Observability is the input; evaluation is where you lock the lesson in. Teams that don't close this loop learn the same lessons over and over. Teams that do close it watch their regression suite become an increasingly accurate map of every way their system has ever failed.
 
@@ -65,7 +65,7 @@ Your menu verification system is about to go GA. Engineering is building the fir
 
 ### Dataset
 
-Open `exercises/observability-signals-dataset.csv`. Each row is one proposed observability signal.
+Open `exercises/D14-observability-signals-dataset.csv`. Each row is one proposed observability signal.
 
 | Column | What it means |
 |--------|---------------|
@@ -96,15 +96,15 @@ Of the 15 signals, which should fire alerts and which should just go on the dash
 
 ### Step 3: Identify coverage gaps
 
-What failure modes or subgroup signals are *missing* from the 15? Think back to earlier lessons (D9 hallucinations, D12 subgroup fairness including restaurant size and intersectional slicing, D13 regression patterns). Which failure modes would this dashboard fail to catch?
+What failure modes or subgroup signals are *missing* from the 15? Think back to earlier lessons (D9 - Hallucination Detection hallucinations, D12 - Fairness & Subgroups subgroup fairness including restaurant size and intersectional slicing, D13 - Eval-Driven Development regression patterns). Which failure modes would this dashboard fail to catch?
 
 ### Step 4: Close the loop back to evaluation
 
-Observability catches new failure modes in production; evaluation is how you prevent them from silently recurring. When a signal fires, the team translates the incident into a permanent eval case — this is how the regression suite grows (from D13).
+Observability catches new failure modes in production; evaluation is how you prevent them from silently recurring. When a signal fires, the team translates the incident into a permanent eval case — this is how the regression suite grows (from D13 - Eval-Driven Development).
 
 Consider **S-08** (`allergen_false_approval_count`). Imagine the first time it fires: a menu change was approved last week, a customer reported an allergic reaction, and auditors confirmed the item had an undisclosed allergen. What eval case gets added to the regression suite so this scenario is caught pre-deployment next time?
 
-Write a brief eval spec using the D13 format: input, expected output, pass criteria, failure mode area, severity. This is observability-to-evaluation loop closure in practice.
+Write a brief eval spec using the D13 - Eval-Driven Development format: input, expected output, pass criteria, failure mode area, severity. This is observability-to-evaluation loop closure in practice.
 
 ---
 

@@ -1,8 +1,8 @@
-# D5: The Three Types of Quality Checks
+# D5 - Grader Types
 
 **Week 1, Day 5** | ~35 min
 **Part times:** Concepts ~12 min | Exercise ~18 min | Decision Point ~5 min
-**Previous lesson:** D4 — you learned that a single accuracy number hides problems, and that the gap between pass@k and reliable@k reveals where production risk lives. You found that 9 of 20 test cases were "sometimes right" — capable but unreliable. Now the question: when this system is running thousands of decisions per day, how do you check quality automatically?
+**Previous lesson:** D4 - Thinking in Distributions — you learned that a single accuracy number hides problems, and that the gap between pass@k and reliable@k reveals where production risk lives. You found that 9 of 20 test cases were "sometimes right" — capable but unreliable. Now the question: when this system is running thousands of decisions per day, how do you check quality automatically?
 
 ---
 
@@ -10,7 +10,7 @@
 
 ### You can't review everything by hand
 
-In D4, you sampled 10 failure cases and worked through each one. That was possible because it was a controlled exercise. In production, your system will make thousands of decisions per day. You need automated ways to check whether those decisions are correct — and different types of checks catch different types of problems.
+In D4 - Thinking in Distributions, you sampled 10 failure cases and worked through each one. That was possible because it was a controlled exercise. In production, your system will make thousands of decisions per day. You need automated ways to check whether those decisions are correct — and different types of checks catch different types of problems.
 
 The industry has converged on three types of automated quality checks, called **graders**. Each has a different cost, speed, and coverage profile. Understanding when to use which is one of the most practical skills in AI product management.
 
@@ -69,7 +69,7 @@ Your team has built a prototype quality-checking system for the menu verifier. T
 
 ### Setup
 
-Open `exercises/grader-comparison-dataset.csv`.
+Open `exercises/D5-grader-comparison-dataset.csv`.
 
 Key columns: `eval_id`, `change_type`, `change_summary`, `llm_decision`, `llm_reasoning`, `ground_truth`, `code_grader` (PASS/FAIL), `code_rule` (which rule triggered), `model_grader` (PASS/FAIL), `model_critique` (the judge's reasoning), `human_grader` (PASS/FAIL), `human_note` (the reviewer's reasoning)
 

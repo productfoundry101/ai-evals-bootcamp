@@ -1,10 +1,10 @@
-# D17: Launch Readiness and Production Monitoring
+# D17 - Launch Readiness
 
 **Week 3, Day 17** | ~45 min
 **Part times:** Concepts ~15 min | Exercise ~20 min | Decision Point ~10 min
-**Previous lesson:** D16 — you learned that AI experiments break traditional A/B assumptions: model stochasticity, test-case selection, and clustering all add variance traditional tests ignore. You analyzed a prompt experiment where v2 scored +10pp on aggregate but hid a 40pp regression on American cuisine, hidden by a Thai improvement on a different subgroup. You held the ship on a guardrail breach. Today we pick up right after that ship decision — the system is live. What monitoring and readiness mechanisms keep it safe in production, and how do you detect when live quality is quietly eroding?
+**Previous lesson:** D16 - AI Experiments — you learned that AI experiments break traditional A/B assumptions: model stochasticity, test-case selection, and clustering all add variance traditional tests ignore. You analyzed a prompt experiment where v2 scored +10pp on aggregate but hid a 40pp regression on American cuisine, hidden by a Thai improvement on a different subgroup. You held the ship on a guardrail breach. Today we pick up right after that ship decision — the system is live. What monitoring and readiness mechanisms keep it safe in production, and how do you detect when live quality is quietly eroding?
 
-This lesson assumes D10 (release criteria), D12 (subgroup evaluation), and D14 (observability landscape). D14 gave you the signal pillars — metrics, logs, traces, human feedback. D17 uses those pillars to answer two specific questions: *am I ready to launch?* and *once launched, how do I detect when something is quietly breaking?*
+This lesson assumes D10 - Release Criteria (release criteria), D12 - Fairness & Subgroups (subgroup evaluation), and D14 - Observability (observability landscape). D14 - Observability gave you the signal pillars — metrics, logs, traces, human feedback. D17 - Launch Readiness uses those pillars to answer two specific questions: *am I ready to launch?* and *once launched, how do I detect when something is quietly breaking?*
 
 ---
 
@@ -16,10 +16,10 @@ This lesson assumes D10 (release criteria), D12 (subgroup evaluation), and D14 (
 
 A minimum PM launch readiness checklist looks like:
 
-1. **Offline eval benchmarks passed** — with confidence intervals, not point estimates (D16). CI lower bound must clear the threshold, not just the mean.
-2. **Guardrails clean on hold-out** — safety, fairness, and subgroup floors all green on data the model hasn't seen (D10, D12).
+1. **Offline eval benchmarks passed** — with confidence intervals, not point estimates (D16 - AI Experiments). CI lower bound must clear the threshold, not just the mean.
+2. **Guardrails clean on hold-out** — safety, fairness, and subgroup floors all green on data the model hasn't seen (D10 - Release Criteria, D12 - Fairness & Subgroups).
 3. **Rollback plan exists and is tested** — who pulls the trigger, what command, how fast. If you haven't tested rollback in staging, it doesn't exist.
-4. **Monitoring dashboard live before traffic hits** — the leading/lagging indicators from D14 must be instrumented, dashboarded, and alerting *before* launch, not after.
+4. **Monitoring dashboard live before traffic hits** — the leading/lagging indicators from D14 - Observability must be instrumented, dashboarded, and alerting *before* launch, not after.
 5. **On-call coverage defined** — who gets paged when the first guardrail breach happens at 2am on a Saturday.
 6. **Staged rollout plan** — not 0 to 100%. See next concept.
 
@@ -53,13 +53,13 @@ The three matter because the fix is different for each. Input drift → expand y
 
 You cannot hand-grade every production request. You also cannot ignore production traffic and only trust pre-launch evals. The solution is a layered online-eval strategy:
 
-1. **100% lightweight automated checks** — fast, cheap rule-based checks on every request (JSON schema, profanity filters, PII detectors, hard safety blocks). These are guardrails, not quality measurements. D5 called these "code-based graders."
+1. **100% lightweight automated checks** — fast, cheap rule-based checks on every request (JSON schema, profanity filters, PII detectors, hard safety blocks). These are guardrails, not quality measurements. D5 - Grader Types called these "code-based graders."
 
-2. **Stratified sampling for deeper checks** — sample 1–5% of production traffic, biased toward interesting segments (edge cases, flagged responses, new input categories, subgroups with low volume). Run LLM-as-judge (D6) on this sample. This is your continuous quality signal.
+2. **Stratified sampling for deeper checks** — sample 1–5% of production traffic, biased toward interesting segments (edge cases, flagged responses, new input categories, subgroups with low volume). Run LLM-as-judge (D6 - LLM-as-Judge) on this sample. This is your continuous quality signal.
 
-3. **Human review of a smaller slice** — take 20–50 traces per week from the LLM-judge sample, grade manually, and use the agreement/disagreement to recalibrate the judge. This is your meta-evaluation loop (D6).
+3. **Human review of a smaller slice** — take 20–50 traces per week from the LLM-judge sample, grade manually, and use the agreement/disagreement to recalibrate the judge. This is your meta-evaluation loop (D6 - LLM-as-Judge).
 
-4. **Feedback loop into golden dataset** — production failures found through sampling become new cases in your golden dataset (D7). Without this loop, your golden dataset grows stale and stops catching what production now produces.
+4. **Feedback loop into golden dataset** — production failures found through sampling become new cases in your golden dataset (D7 - Golden Datasets). Without this loop, your golden dataset grows stale and stops catching what production now produces.
 
 The PM discipline: **online eval coverage should be decided by risk, not by budget.** A safety-critical subgroup with low volume (e.g., allergen-sensitive Thai cases) needs deeper sampling than the high-volume easy cases, even though it costs more per sample.
 
@@ -83,13 +83,13 @@ One subtle but important point: rollback is not always "revert to the old versio
 
 ### Scenario
 
-You shipped the v2 menu verification prompt from D16 (after fixing the American cuisine regression with additional training cases, which cleared the guardrail on the hold-out set). The system went live under a progressive rollout: 10% Week 1, 50% Week 2, 100% from Week 3 onward.
+You shipped the v2 menu verification prompt from D16 - AI Experiments (after fixing the American cuisine regression with additional training cases, which cleared the guardrail on the hold-out set). The system went live under a progressive rollout: 10% Week 1, 50% Week 2, 100% from Week 3 onward.
 
 It's now six weeks post-launch. The CEO asks you: *"How's the new system doing?"* Engineering says *"Looks fine, aggregate quality is steady."* Your CTO forwards you a customer complaint about a Mexican menu approving a shellfish dish with no disclosure. You need to investigate before answering either of them.
 
 ### Dataset
 
-Open `exercises/production-monitoring-dataset.csv`. Each row is one week of production monitoring data.
+Open `exercises/D17-production-monitoring-dataset.csv`. Each row is one week of production monitoring data.
 
 | Column | What it means |
 |--------|---------------|
@@ -137,7 +137,7 @@ For each type you identify, pinpoint the week it starts and describe what eviden
 
 ### Step 3: Check the guardrails
 
-Using the D10 framework for setting pre-committed thresholds, the following guardrails were established before v2 launched:
+Using the D10 - Release Criteria framework for setting pre-committed thresholds, the following guardrails were established before v2 launched:
 - Allergen breaches: **0 per week** (hard guardrail — safety critical)
 - Aggregate human review pass rate: **≥ 75%** (quality threshold)
 - p95 latency: **≤ 1000ms** (performance SLO)

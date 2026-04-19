@@ -4,7 +4,7 @@ Use these rubrics to evaluate learner responses during PM Decision Points. Do no
 
 ---
 
-## D1: What Does This System Actually Do?
+## D1 - Pipeline Mapping
 
 ### Concept Checks
 
@@ -16,7 +16,7 @@ The learner should be able to explain:
 
 3. **Reading traces** — Every column in a trace log maps to a pipeline stage. Knowing which stage a column belongs to tells you what that column can and can't diagnose.
 
-### Exercise Answers (from menu-verification-d1.csv)
+### Exercise Answers (from D1-menu-verification-d1.csv)
 
 Expected column-to-pipeline-stage mapping (12 columns):
 
@@ -62,7 +62,7 @@ Examples of strong questions by stage:
 
 ---
 
-## D2: Mapping Every Way Your AI System Can Fail
+## D2 - Failure Surface Mapping
 
 ### Concept Checks
 
@@ -74,7 +74,7 @@ The learner should be able to explain:
 
 3. **Can evaluate now vs needs engineering** — Every item on the surface map splits into one of two buckets. The "needs engineering" column becomes the instrumentation roadmap — it turns a risk list into an action plan.
 
-### Exercise Answers (from menu-verification-dataset.csv)
+### Exercise Answers (from D2-menu-verification-dataset.csv)
 
 Failure type counts (approximate — read from CSV):
 
@@ -112,7 +112,7 @@ The learner writes a one-paragraph surface map summary.
 
 ---
 
-## D3: Error Analysis — The Skill That Separates Good AI PMs
+## D3 - Error Analysis
 
 ### Concept Checks
 
@@ -124,7 +124,7 @@ The learner should be able to explain:
 
 3. **Triage** — Every failure category gets one label: prompt-fix (change instructions this sprint), evaluator-needed (build a metric for automated detection), system-fix (requires code/architecture change). This turns a taxonomy into an action plan with every category assigned a home.
 
-### Exercise Answers (from menu-verification-dataset.csv)
+### Exercise Answers (from D2-menu-verification-dataset.csv)
 
 During open coding of 10 failure rows, the learner reads `llm_reasoning` against actual data. The tutor presents traces one at a time by reading the CSV. Common patterns the learner should discover:
 
@@ -164,7 +164,7 @@ The learner writes a short recommendation for what to fix first.
 
 ---
 
-## D4: Thinking in Distributions
+## D4 - Thinking in Distributions
 
 ### Concept Checks
 
@@ -180,55 +180,62 @@ The learner should be able to explain:
 
 5. **The gap** — The difference between pass@k and reliable@k is where production risk lives. High pass@k + low reliable@k = "sometimes right" cases that pass demos and spot checks but fail at scale.
 
-### Exercise Answers (from repeated-runs-dataset.csv)
+### Exercise Answers (from D4-multirun-test.csv)
 
 **Step 1 — Shape:**
 - 100 rows total. 20 test cases × 5 runs each.
-- 10 test cases on v1, 10 on v2. Balanced.
-- By change_type: price (4 per model = 8 total), description (3 per model = 6 total), allergen_dietary (2 per model = 4 total), image (1 per model = 2 total).
-- Image is thin (only 2 test cases) — conclusions about image performance will be weak.
+- v1: T-01–T-10 (10 test cases). v2: T-11–T-20 (10 test cases). Balanced.
+- change_type distribution across both models: price=11, description=3, allergen_dietary=3, image=2, category=1.
+- Thin slices: category (1 test case — v2 only) and image (2 test cases) — weak signal, be cautious drawing conclusions.
 
 **Step 2 — Aggregate and segments:**
-- Overall accuracy: 78/100 = 78%
-- v1: 33/50 = 66%. v2: 45/50 = 90%. Clear improvement.
-- By change_type + model version:
-  - Price: v1 80% (16/20), v2 95% (19/20)
-  - Description: v1 53% (8/15), v2 87% (13/15)
-  - Allergen: v1 50% (5/10), v2 80% (8/10)
-  - Image: v1 80% (4/5), v2 100% (5/5)
-- Key insight: allergen on v1 (50%) and description on v1 (53%) are the weakest segments. The 78% aggregate hides these.
+- Overall accuracy: 76/100 = 76%
+- By model version: v1 = 50/50 = **100%**. v2 = 26/50 = **52%**. The aggregate hides a catastrophic model quality gap.
+- By change_type:
+  - Price (55 runs): 42/55 = 76%
+  - Description (15 runs): 12/15 = 80%
+  - Allergen/dietary (15 runs): 8/15 = 53%
+  - Image (10 runs): 9/10 = 90%
+  - Category (5 runs): 5/5 = 100%
+- Key insight: 76% looks acceptable. Slicing by model reveals v2 is failing at a rate that makes it unshippable. Allergen_dietary at 53% is a secondary concern — all failures are in v2.
 
 **Step 3 — pass@5 and reliable@5:**
-- pass@5: 19/20 = 95% (only T-07, v1 allergen "vegan" case, is always wrong)
-- reliable@5: 10/20 = 50%
-- Gap: 45 percentage points
+- pass@5: 18/20 = 90% (T-19 and T-20 always wrong — systematic failures)
+- reliable@5: 11/20 = 55% (only T-01–T-11 are perfect across all 5 runs)
+- Gap: 35 percentage points
 
 **Step 4 — Gap cases (pass@5=1, reliable@5=0):**
-9 test cases are in the gap:
-- v1: T-02 (price 45%, 4/5), T-03 (price borderline 24%, 2/5), T-05 (description "organic", 1/5), T-08 (image, 4/5), T-10 (description "wagyu", 2/5)
-- v2: T-13 (price borderline 24%, 4/5), T-15 (description "organic", 4/5), T-17 (allergen "vegan", 3/5), T-20 (description "wagyu", 4/5)
+7 test cases in the gap, all in v2 (T-12–T-18):
+- T-12 (price, 36.4% markup, gt=reject): model inconsistently applies threshold — sometimes rejects, sometimes doesn't
+- T-13 (price, 27.3% markup, gt=reject): borderline just above 25% — model flip-flops
+- T-14 (price, 20.2% markup, gt=approve): near threshold, model over-cautious on some runs
+- T-15 (price, 26.3% markup, gt=reject): model wrongly classifies as "premium segment exception" on some runs
+- T-16 (description, gt=reject): unverifiable premium claims — inconsistent detection
+- T-17 (allergen_dietary, gt=reject): safety-critical change — inconsistent flagging
+- T-18 (image, gt=reject): stock photo detection — sometimes misses it
 
-Common pattern: gap cases cluster around borderline inputs (prices near 25% threshold) and unverifiable claims (sourcing, dietary). These are inputs where the policy requires judgment — not clear-cut approves or rejects. v2 has fewer gap cases and higher scores within them, but still inconsistent on the same types of inputs.
+Two cases are always wrong (not in gap): T-19 (price 30.8%, model consistently misapplies premium exception) and T-20 (allergen change, model consistently misses safety signal). These are systematic failures, not bad luck.
 
 ### PM Decision Point Evaluation
 
 **Strong response includes:**
-- v2 is clearly better (90% vs 66%) — should replace v1
-- But shipping v2 alone isn't sufficient: the pass@5/reliable@5 gap (95% vs 50%) means half the test cases still produce wrong answers sometimes
-- Names the specific weak areas: borderline price changes near threshold, unverifiable description claims, dietary claims without certification
-- Recommendation has conditions: e.g., ship v2 but add automated checks for borderline cases, or ship v2 for clear-cut cases and keep human review for the gap cases
-- Uses specific numbers from their analysis, not just "v2 is better"
+- v2 must not ship: 52% accuracy vs v1's 100% is a regression, not an improvement
+- The 76% overall masked the problem — explicitly calls out the danger of trusting aggregates
+- pass@5 = 90% vs reliable@5 = 55% shows the system has a consistency problem concentrated in v2
+- Names specific risk areas: near-threshold price changes (27–36% markup), unverifiable description claims, allergen/dietary safety changes
+- Notes that T-19 and T-20 are systematic failures (not in the gap — always wrong), which is a more serious signal than the inconsistent gap cases
+- Recommendation: keep v1 in production, investigate v2's policy application before re-testing
 
 **Weak response:**
-- "Ship v2 because 90% > 66%" — ignores the reliability gap
-- "Don't ship because reliable@5 is only 50%" — ignores that v2 is a clear improvement over v1
-- No segment analysis — treats all change types as equal
-- Doesn't name which specific input types are risky
-- Recommendation is binary (ship/don't ship) without conditions or next steps
+- "v2 needs more work" without specifying why or which inputs — too vague
+- Focuses only on the gap without noting T-19/T-20 are always-wrong (more severe)
+- "76% is decent, let's keep improving" — ignores the model version split entirely
+- Recommendation doesn't distinguish between the gap cases (fixable with calibration) and always-wrong cases (deeper policy failure)
+- No specific numbers cited
 
 ---
 
-## D5: The Three Types of Quality Checks
+## D5 - Grader Types
 
 ### Concept Checks
 
@@ -242,7 +249,7 @@ The learner should be able to explain:
 
 4. **Layering strategy** — Push as much as possible to code-based checks (cheap, runs on everything). Use model-based for what requires judgment (runs on a sample or escalated cases). Reserve human review for calibration, edge cases, and ground truth. No single grader type catches everything — they cover different failure modes.
 
-### Exercise Answers (from grader-comparison-dataset.csv)
+### Exercise Answers (from D5-grader-comparison-dataset.csv)
 
 **Step 1 — Overall agreement:**
 - Code-Human agreement: 13/20 = 65%
@@ -288,7 +295,7 @@ Also notable:
 
 ---
 
-## D6: LLM-as-Judge — Building and Trusting Automated Quality Checks
+## D6 - LLM-as-Judge
 
 ### Concept Checks
 
@@ -304,7 +311,7 @@ The learner should be able to explain:
 
 5. **Meta-evaluation** — Treat the judge as a classifier: measure agreement, precision on FAIL (when the judge flags something, is it real?), and recall on FAIL (of all real failures, how many does the judge catch?). Prioritize recall on FAIL — missing real problems is worse than false alarms. Target >80% agreement before production use.
 
-### Exercise Answers (from judge-calibration-dataset.csv)
+### Exercise Answers (from D6-judge-calibration-dataset.csv)
 
 **Step 1 — Agreement rates:**
 - V1-Human agreement: 7/20 = 35%
@@ -373,7 +380,7 @@ These three remaining failures map to three distinct categories of judge limitat
 
 ---
 
-## D7: Ground Truth, Golden Datasets, and the Eval Dataset Lifecycle
+## D7 - Golden Datasets
 
 ### Concept Checks
 
@@ -389,7 +396,7 @@ The learner should be able to explain:
 
 5. **The dataset lifecycle** — Version in git. Refresh on triggers (model change, policy change, user behavior shift) and on cadence (quarterly minimum). Grow with active learning (focus expert review on low-confidence grader outputs). Monitor for saturation.
 
-### Exercise Answers (from eval-dataset-audit.csv)
+### Exercise Answers (from D7-eval-dataset-audit.csv)
 
 **Step 1 — Dataset composition:**
 - Total: 40 cases
@@ -402,7 +409,7 @@ The learner should be able to explain:
 - 10 cases have contaminated ground truth:
   - 7 cases "copied_from_v1" (DS-24, DS-25, DS-31, DS-32, DS-33, DS-34, DS-35): model outputs used as ground truth. Circular — measures agreement with v1, not correctness.
   - 3 cases "model_generated" (DS-16, DS-17, DS-18): GPT-4 generated the labels without expert calibration. May be wrong on domain-specific edge cases.
-- Especially dangerous: DS-24 and DS-25 are allergen/dietary cases labeled PASS by v1 — but from D5 we know these are safety-critical. Trusting a model's own verdict on allergen claims is exactly the contamination problem.
+- Especially dangerous: DS-24 and DS-25 are allergen/dietary cases labeled PASS by v1 — but from D5 - Grader Types we know these are safety-critical. Trusting a model's own verdict on allergen claims is exactly the contamination problem.
 
 **Step 3 — Staleness:**
 - 11 cases have ground_truth_date before 2026-01-01 (the policy update):
@@ -419,8 +426,8 @@ A strong plan includes:
 2. **Relabel stale cases** (11 total, with overlap): Any case from before the policy change needs expert review against current policy.
 3. **Reduce redundancy**: 10 cases have 4+ similar cases. Remove duplicates to make room for underrepresented segments. Don't need 8 easy price cases under 15%.
 4. **Fill coverage gaps**:
-   - More description cases, especially hard (unverifiable claims are where the system fails most per D3)
-   - More allergen cases (safety-critical per D5, currently only 6 and 2 are contaminated)
+   - More description cases, especially hard (unverifiable claims are where the system fails most per D3 - Error Analysis)
+   - More allergen cases (safety-critical per D5 - Grader Types, currently only 6 and 2 are contaminated)
    - More hard cases across all types (currently only 9 out of 40)
    - More FAIL cases overall — need 50%+ failures for the meaningful segments
 5. **Set a refresh cadence**: quarterly relabeling sample + trigger-based refresh on policy changes.
@@ -439,11 +446,11 @@ A strong plan includes:
 - Identifies contamination but not staleness or composition issues — incomplete audit
 - "Just relabel everything" without prioritization — doesn't demonstrate understanding of what's most dangerous (contamination > staleness > composition)
 - No specific target for what the fixed dataset should look like
-- Doesn't connect to prior lessons (e.g., D5 taught that allergens are safety-critical — so contaminated allergen labels are especially dangerous)
+- Doesn't connect to prior lessons (e.g., D5 - Grader Types taught that allergens are safety-critical — so contaminated allergen labels are especially dangerous)
 
 ---
 
-## D8: Retrieval and RAG Evaluation
+## D8 - RAG Evaluation
 
 ### Concept Checks
 
@@ -459,7 +466,7 @@ The learner should be able to explain:
 
 5. **The 2x2 diagnostic matrix** — Every failing query falls into Good-R+Bad-G (generation bottleneck), Bad-R+Good-G (retrieval bottleneck), or Bad-R+Bad-G (both broken). The matrix routes failures to the right team so they stop arguing about whose problem it is.
 
-### Exercise Answers (from rag-eval-dataset.csv)
+### Exercise Answers (from D8-rag-eval-dataset.csv)
 
 **Step 1 — Retrieval metrics:**
 - Avg Precision@5 ≈ 0.14 (very low — on average less than 1 of 5 retrieved docs is relevant; the retriever is mostly fetching noise)
@@ -511,7 +518,7 @@ The learner should be able to explain:
 
 ---
 
-## D9: Hallucination Detection
+## D9 - Hallucination Detection
 
 ### Concept Checks
 
@@ -523,11 +530,11 @@ The learner should be able to explain:
 
 3. **Why hallucination is hard to detect** — Hallucinated outputs are confident, fluent, and specific. They look identical to correct outputs. You cannot detect them from the output alone — only by comparing claims to the source material. No shortcut exists.
 
-4. **Detection strategies** — Claim decomposition + source verification (most thorough, most expensive), citation checking (narrower, partially automatable), self-consistency (cheap, misses consistent hallucinations), entailment verification (automated but introduces its own failure mode). Layer them like graders in D5.
+4. **Detection strategies** — Claim decomposition + source verification (most thorough, most expensive), citation checking (narrower, partially automatable), self-consistency (cheap, misses consistent hallucinations), entailment verification (automated but introduces its own failure mode). Layer them like graders in D5 - Grader Types.
 
 5. **Correct decisions with hallucinated reasoning** — A system can produce the right approve/reject decision based on fabricated reasoning. This matters for three reasons: liability (citing nonexistent policies in audit trails), latent failure (fabricated rules that are harmless on this input but cause wrong decisions on others), and false confidence (decision accuracy metrics hide the hallucination rate).
 
-### Exercise Answers (from hallucination-detection-dataset.csv)
+### Exercise Answers (from D9-hallucination-detection-dataset.csv)
 
 **Step 1 — Classifications:**
 
@@ -588,7 +595,7 @@ The learner should be able to explain:
 
 ---
 
-## D10: Blocking Metrics and Release Criteria
+## D10 - Release Criteria
 
 ### Concept Checks
 
@@ -604,7 +611,7 @@ The learner should be able to explain:
 
 5. **Threshold evolution** — Thresholds ratchet up as the system matures. Optimization metrics can graduate to guardrails. Watch for metric gaming (optimizing one metric by sacrificing another).
 
-### Exercise Answers (from release-criteria-dataset.csv)
+### Exercise Answers (from D10-release-criteria-dataset.csv)
 
 **Step 1 — Classification:**
 - Guardrail metrics (5): M-01 allergen safety (≥99.0%), M-02 false approval rate (≤2.0%), M-03 system availability (≥99.5%), M-04 response latency (≤800ms), M-05 hallucination rate (≤15%)
@@ -648,7 +655,7 @@ The learner should be able to explain:
 
 ---
 
-## D11: Metric Design and Cost-Aware Evaluation
+## D11 - Metric Design
 
 ### Concept Checks
 
@@ -664,7 +671,7 @@ The learner should be able to explain:
 
 5. **Metric gaming** — when a metric becomes a target, teams optimize for it at the expense of what it was meant to measure. Defense: pair metrics covering opposing failure modes (hallucination rate + answer completeness; false approval rate + false rejection rate). For any guardrail, ask "how could a team hit this number without actually improving the system?"
 
-### Exercise Answers (from metric-design-dataset.csv)
+### Exercise Answers (from D11-metric-design-dataset.csv)
 
 Weekly volume: 10,000 verifications
 
@@ -728,7 +735,7 @@ Scenario: cut Pipeline A spend by 40% (Pipeline A = $1,400/week; target ≤ $840
 
 ---
 
-## D12: Fairness, Bias, and Subgroup Evaluation
+## D12 - Fairness & Subgroups
 
 ### Concept Checks
 
@@ -742,7 +749,7 @@ Scenario: cut Pipeline A spend by 40% (Pipeline A = $1,400/week; target ≤ $840
 
 5. **Mitigation strategies** — Data rebalancing (long-term), threshold tuning (cheap but legally risky), post-processing overrides, human review routing (expensive but immediate). Short-term mitigation plus long-term fix; short-term is a bandage, not a cure.
 
-### Exercise Answers (from fairness-subgroup-dataset.csv)
+### Exercise Answers (from D12-fairness-subgroup-dataset.csv)
 
 **Step 1 — Aggregate accuracy:** 35/45 = 77.8%
 
@@ -798,7 +805,7 @@ Context: Coalition threatens public complaint in two weeks. Analysis confirms Th
 
 ---
 
-## D13: Eval-Driven Development
+## D13 - Eval-Driven Development
 
 ### Concept Checks
 
@@ -912,7 +919,7 @@ Constraint: 3 engineers × 2 weeks. Cannot do everything from the audit.
 
 ---
 
-## D14: The Observability Landscape
+## D14 - Observability
 
 ### Concept Checks
 
@@ -926,7 +933,7 @@ Constraint: 3 engineers × 2 weeks. Cannot do everything from the audit.
 
 5. **Closing the loop to evaluation** — New failure modes found in production become eval cases. Observability → eval → regression suite → safer shipping. Teams that don't close this loop re-learn the same lessons repeatedly.
 
-### Exercise Answers (from observability-signals-dataset.csv)
+### Exercise Answers (from D14-observability-signals-dataset.csv)
 
 **Step 1 — Classify by pillar and by indicator type:**
 
@@ -974,17 +981,17 @@ Dashboard-only (useful to track but not actionable on page, or high FPR):
 
 **Step 3 — Coverage gaps (not in the 15):**
 
-- **No hallucination-specific signal** — despite D9. No detector for factually-wrong reasoning attached to a correct-looking decision.
-- **No approval_rate_by_restaurant_size** — D12 showed size matters; only cuisine is sliced here. Small restaurants could be getting underserved undetected.
+- **No hallucination-specific signal** — despite D9 - Hallucination Detection. No detector for factually-wrong reasoning attached to a correct-looking decision.
+- **No approval_rate_by_restaurant_size** — D12 - Fairness & Subgroups showed size matters; only cuisine is sliced here. Small restaurants could be getting underserved undetected.
 - **No prompt injection / adversarial input counter** — zero visibility into malicious inputs.
-- **No intersectional subgroup slicing** — D12 showed intersections (Thai × Small) are worse than either dimension. Single-dimension-only signals miss this.
+- **No intersectional subgroup slicing** — D12 - Fairness & Subgroups showed intersections (Thai × Small) are worse than either dimension. Single-dimension-only signals miss this.
 - **No model disagreement signal** — when ensembles or cross-checks are available, disagreement is a high-value leading indicator.
 
 **Step 4 — Close the loop back to evaluation:**
 
 Scenario: S-08 fires for the first time. A menu change was approved last week; a customer reported an allergic reaction; auditors confirmed an undisclosed allergen was present. The eval case added to the regression suite should replay that specific failure mode so it cannot recur silently.
 
-Strong eval spec (following D13 format):
+Strong eval spec (following D13 - Eval-Driven Development format):
 
 - **Input:** A menu item described as "shrimp pad thai" with ingredient list showing "peanuts" but no allergen disclosure field set — OR a generalized version: menu changes where the ingredient text contains a common allergen (nuts, shellfish, dairy, soy, gluten) but the `allergen_disclosure` field is empty or inconsistent with the ingredient text.
 - **Expected output:** reject with reason=undisclosed_allergen, OR route to human review with urgency=critical.
@@ -1029,7 +1036,7 @@ Deferred with reasoning:
 
 v2 gaps explicitly named (must include at least one):
 - Hallucination detection signal
-- approval_rate_by_restaurant_size (D12 lesson)
+- approval_rate_by_restaurant_size (D12 - Fairness & Subgroups lesson)
 - Intersectional subgroup slicing
 - Adversarial input counter
 
@@ -1043,7 +1050,7 @@ v2 gaps explicitly named (must include at least one):
 
 ---
 
-## D15: Evaluating AI Agents
+## D15 - Agent Evaluation
 
 ### Exercise Evaluation
 
@@ -1099,7 +1106,7 @@ By task_type (bloat rate ≥ 2x):
 
 Target the R-19 / R-20 failure mode: agent emits a tool call in its log that was never actually made, or fabricates a tool result that wasn't returned by the tool.
 
-**Strong eval spec (D13 format):**
+**Strong eval spec (D13 - Eval-Driven Development format):**
 
 - **Input:** An agent run for a menu verification task (e.g., allergen_dispute) where the tool log includes at least one call that cannot be reconciled with actual executed tool invocations recorded by the tool-call infrastructure.
 - **Expected output:** The trajectory evaluator flags the run as `hallucinated_tool_call` and blocks the final output from being treated as trusted.
@@ -1149,7 +1156,7 @@ Names what to defer: efficiency fixes for inefficient runs that still reach corr
 
 ---
 
-## D16: What's Different About AI Experiments
+## D16 - AI Experiments
 
 ### Exercise Evaluation
 
@@ -1190,7 +1197,7 @@ By cuisine:
 
 The aggregate +10pp is the net of a +40pp Thai improvement plus a −40pp American regression plus a small Indian gain. The mean is hiding a catastrophic subgroup regression.
 
-**Strong response:** identifies the American regression as the story. Recognizes that this is exactly the D12/D10 guardrail-breach scenario — aggregate improvement + subgroup regression = do-not-ship. Connects to the primary-metric-plus-guardrails framework.
+**Strong response:** identifies the American regression as the story. Recognizes that this is exactly the D12 - Fairness & Subgroups/D10 - Release Criteria guardrail-breach scenario — aggregate improvement + subgroup regression = do-not-ship. Connects to the primary-metric-plus-guardrails framework.
 
 **Weak response:** reports subgroup numbers without flagging the American regression as blocking; treats the regression as a minor offset to the Thai gain.
 
@@ -1226,11 +1233,11 @@ The aggregate +10pp is the net of a +40pp Thai improvement plus a −40pp Americ
 - Ships v2 because aggregate looks better
 - Doesn't cite specific numbers — hand-waves about "statistical concerns"
 - Follow-up experiment design copies the flawed one (similar n, no clustering plan, no guardrails)
-- Treats the American regression as acceptable collateral damage for aggregate gain — misses the D10 guardrail-breach framing
+- Treats the American regression as acceptable collateral damage for aggregate gain — misses the D10 - Release Criteria guardrail-breach framing
 
 ---
 
-## D17: Launch Readiness and Production Monitoring
+## D17 - Launch Readiness
 
 ### Exercise Evaluation
 
@@ -1246,7 +1253,7 @@ Trend across W1→W6:
 
 The **judge/human divergence** (was 1pp at W1, now 8pp at W6) is the most important signal. The LLM judge is masking the decline — either because it was calibrated on the original distribution and doesn't recognize the new cases, or because judge quality is itself drifting. Without the human review layer, the team would believe things are "only slightly off."
 
-**Strong response:** identifies the judge/human divergence as a key signal, notes that the degradation accelerates W3→W4, connects this to the production-monitoring framing (you cannot trust a single automated quality signal — you need the meta-eval loop from D6 feeding back).
+**Strong response:** identifies the judge/human divergence as a key signal, notes that the degradation accelerates W3→W4, connects this to the production-monitoring framing (you cannot trust a single automated quality signal — you need the meta-eval loop from D6 - LLM-as-Judge feeding back).
 
 **Weak response:** reads the LLM-judge column only (76% still above 75% threshold — "looks fine"); ignores human review drift; misses the divergence story.
 
@@ -1286,7 +1293,7 @@ Rollback triggers breached:
 All three rollback triggers are breached by W6.
 
 **Recommended action: Targeted fix (not full rollback).** Rationale:
-- Full rollback (to v1) would revert the D16 American-cuisine fix that took effort to build, and v1 doesn't handle the new allergen law either — rollback doesn't solve the concept-drift problem.
+- Full rollback (to v1) would revert the D16 - AI Experiments American-cuisine fix that took effort to build, and v1 doesn't handle the new allergen law either — rollback doesn't solve the concept-drift problem.
 - Hold steady is off the table — all three rollback triggers are breached.
 - The right move is surgical: (a) rollback the v2.2 model update to v2.1 immediately (output-drift fix — this is a pure regression from an uncontrolled upstream change), (b) route Mexican/Korean/Vietnamese traffic to manual review (human-in-the-loop) until eval coverage is added, (c) update the golden dataset with AB-1523 compliance cases and re-run all evals (concept-drift fix), (d) re-expand only after all three ship criteria are re-hit on the updated dataset.
 
@@ -1324,7 +1331,7 @@ PM owns the miss. Specifically: launch readiness was treated as a one-time gate 
 
 ---
 
-## D18: Red Teaming and Adversarial Evaluation
+## D18 - Red Teaming
 
 ### Exercise Evaluation
 
@@ -1349,7 +1356,7 @@ Of the 9 successful attacks:
 - **Medium: 2** (P-08 film-script jailbreak; P-20 system prompt leakage)
 - **Low: 1** (P-11 emoji-encoded jailbreak)
 
-**Strong response:** surfaces the 2 criticals and 4 highs as the decision-relevant findings; argues that "36% ASR, mostly mediums" is the wrong framing because 6 of 9 are critical/high; connects this back to the D10 guardrail-vs-optimization logic — any critical success is a ship-blocker regardless of aggregate.
+**Strong response:** surfaces the 2 criticals and 4 highs as the decision-relevant findings; argues that "36% ASR, mostly mediums" is the wrong framing because 6 of 9 are critical/high; connects this back to the D10 - Release Criteria guardrail-vs-optimization logic — any critical success is a ship-blocker regardless of aggregate.
 
 **Weak response:** treats all 9 successes as equal; or only reports the 2 criticals and ignores that 4 of the remaining 7 are also high-severity.
 
@@ -1378,7 +1385,7 @@ Two thresholds breached (criticals and highs). **Cannot ship to EU in current st
 
 **Strong response:** applies thresholds systematically; concludes the system fails two of its own pre-committed ship criteria; flags specifically that the 4 high-severity prompt-injection successes (P-02, P-03, P-05, plus P-16) make "safety-weighted ship decision" the right framing rather than aggregate ASR.
 
-**Weak response:** ignores pre-committed thresholds; rationalizes the 36% ASR as "industry-standard"; doesn't apply the D10 severity-gating logic to this lesson's adversarial findings.
+**Weak response:** ignores pre-committed thresholds; rationalizes the 36% ASR as "industry-standard"; doesn't apply the D10 - Release Criteria severity-gating logic to this lesson's adversarial findings.
 
 ### PM Decision Point Evaluation
 
@@ -1389,7 +1396,7 @@ Two thresholds breached (criticals and highs). **Cannot ship to EU in current st
 2. **Pushes back on at least two of:**
    - "In line with other labs' ASR" — Anthropic and OpenAI publish ASRs on adversarial *benchmarks* as model-evaluation research, not as product ship criteria. Comparing your production food-safety system's 36% ASR to model-benchmark numbers is a category error. Your threshold is your severity-weighted ship criteria, not an industry average.
    - "We've fixed the two criticals" — the 4 high-severity successes are also ship-blockers under pre-committed thresholds. The security lead is triaging to criticals only and ignoring the high-severity ledger. Also: "fixed" needs verification via regression suite runs post-fix, not a verbal claim.
-   - "Ship and iterate" on prompt injection is especially dangerous because prompt injection is the attack category closest to the safety-critical surface (allergen bypass via P-01). Post-launch iteration on a category that can trigger allergen-disclosure failures is the exact scenario that generated the D17 allergen breaches.
+   - "Ship and iterate" on prompt injection is especially dangerous because prompt injection is the attack category closest to the safety-critical surface (allergen bypass via P-01). Post-launch iteration on a category that can trigger allergen-disclosure failures is the exact scenario that generated the D17 - Launch Readiness allergen breaches.
    - "EU AI Act documentation drafted" is not the same as "EU AI Act documentation passes conformity assessment." Drafted docs that don't evidence systematic coverage, attack taxonomy, and mitigation tracking will fail a third-party audit.
 
 3. **States specific EU AI Act documentation requirements:**
@@ -1412,7 +1419,7 @@ PM owns signing the attestation. "Security eng said it was fine" is not a defens
 
 ---
 
-## D19: The Ship Decision Framework
+## D19 - Ship Decisions
 
 ### Exercise Evaluation
 
@@ -1439,7 +1446,7 @@ All 10 guardrails (C-01, C-02, C-03, C-04, C-05, C-06, C-07, C-08, C-09, C-10, C
 
 Initial answer: **Hold.** Two critical failures rule out an unconditional ship.
 
-A strong +8pp paired improvement over v1 (C-11) does *not* offset the criticals because that's an optimization metric trading against guardrails — the whole point of the D10 distinction.
+A strong +8pp paired improvement over v1 (C-11) does *not* offset the criticals because that's an optimization metric trading against guardrails — the whole point of the D10 - Release Criteria distinction.
 
 **Strong response:** states initial answer is hold; articulates why the C-11 optimization win cannot offset C-05/C-09 guardrail breaches; explicitly references AND logic.
 
@@ -1447,8 +1454,8 @@ A strong +8pp paired improvement over v1 (C-11) does *not* offset the criticals 
 
 **Step 3 — Conditional ship paths:**
 
-- **C-05 Mexican subgroup:** Isolatable. Conditional ship path: route Mexican-cuisine requests to v1 (legacy path) for launch. Expansion criteria: Mexican subgroup pass rate ≥ 75% on hold-out of ≥ 50 cases. Rollback trigger: any Mexican case mis-approved on the v1 path (i.e., legacy still has the same drift concerns — D17 showed v1 also doesn't handle AB-1523 well, so consider human-review for Mexican as an alternative).
-- **C-09 Prompt injection ASR:** Partially isolatable. Code-layer input sanitizer (the fix identified in D18 for P-02) can ship in 2-3 days and does not require model retraining. Post-fix: re-run the 6 prompt-injection probes. Expansion/ship criterion: ASR ≤ 15%. If the sanitizer doesn't clear it, hold.
+- **C-05 Mexican subgroup:** Isolatable. Conditional ship path: route Mexican-cuisine requests to v1 (legacy path) for launch. Expansion criteria: Mexican subgroup pass rate ≥ 75% on hold-out of ≥ 50 cases. Rollback trigger: any Mexican case mis-approved on the v1 path (i.e., legacy still has the same drift concerns — D17 - Launch Readiness showed v1 also doesn't handle AB-1523 well, so consider human-review for Mexican as an alternative).
+- **C-09 Prompt injection ASR:** Partially isolatable. Code-layer input sanitizer (the fix identified in D18 - Red Teaming for P-02) can ship in 2-3 days and does not require model retraining. Post-fix: re-run the 6 prompt-injection probes. Expansion/ship criterion: ASR ≤ 15%. If the sanitizer doesn't clear it, hold.
 - **C-15 Jailbreak ASR:** Isolatable via prompt hardening (P-08, P-11 are both prompt-layer). Similar 2-3 day fix + re-test. Ship criterion: ASR ≤ 10%.
 
 Breaches that would NOT be conditional-shippable: a fail on C-08 (harmful content ASR) or C-06 (allergen breaches on hold-out) — those are absolute safety guardrails where "isolate and ship" would still expose some users.
@@ -1502,7 +1509,7 @@ The response makes the CEO's trade-off explicit: Monday is achievable *for the n
 
 ---
 
-## D20: Regulatory and Legal Context for AI Evaluation
+## D20 - Regulatory Context
 
 ### Exercise Evaluation
 
@@ -1547,16 +1554,16 @@ The menu verification system is genuinely debatable. Arguments for each:
 
 | Requirement | Coverage Status | What You Have | What's Missing |
 |-------------|----------------|---------------|----------------|
-| R-01 Risk management | **Partial** | D2 surface map, D10 criteria, D19 ship memo | No single maintained risk-management document; scattered across exercises |
-| R-02 Data governance | **Partial** | D7 golden datasets, D12 fairness | No formal data sheet documenting sourcing, representativeness, bias assessment |
-| R-03 Technical documentation | **Partial** | D10 thresholds, D16 experiments, D18 red-team, D19 memo | No versioned artifact linking methodology → dataset → results → thresholds |
-| R-04 Logging/traceability | **Partial** | D14 observability framework designed | Implementation, retention policies, and audit access controls not confirmed |
-| R-05 Human oversight | **Partial** | D5 human graders, D17 rollback + human-review layer | Override capability not formally documented; escalation chain not formalized |
-| R-06 Accuracy/robustness | **Partial** | D4 CIs, D16 experiments, D18 red teaming | Results exist as exercise outputs, not as formal test reports |
-| R-07 Post-deployment monitoring | **Partial** | D17 drift detection, rollback triggers, online eval | Monitoring plan not a standalone document linked to conformity assessment |
-| R-08 Incident reporting | **Gap** | D17 covers rollback for product purposes | No incident classification scheme; no regulatory notification workflow |
+| R-01 Risk management | **Partial** | D2 - Failure Surface Mapping surface map, D10 - Release Criteria criteria, D19 - Ship Decisions ship memo | No single maintained risk-management document; scattered across exercises |
+| R-02 Data governance | **Partial** | D7 - Golden Datasets golden datasets, D12 - Fairness & Subgroups fairness | No formal data sheet documenting sourcing, representativeness, bias assessment |
+| R-03 Technical documentation | **Partial** | D10 - Release Criteria thresholds, D16 - AI Experiments experiments, D18 - Red Teaming red-team, D19 - Ship Decisions memo | No versioned artifact linking methodology → dataset → results → thresholds |
+| R-04 Logging/traceability | **Partial** | D14 - Observability observability framework designed | Implementation, retention policies, and audit access controls not confirmed |
+| R-05 Human oversight | **Partial** | D5 - Grader Types human graders, D17 - Launch Readiness rollback + human-review layer | Override capability not formally documented; escalation chain not formalized |
+| R-06 Accuracy/robustness | **Partial** | D4 - Thinking in Distributions CIs, D16 - AI Experiments experiments, D18 - Red Teaming red teaming | Results exist as exercise outputs, not as formal test reports |
+| R-07 Post-deployment monitoring | **Partial** | D17 - Launch Readiness drift detection, rollback triggers, online eval | Monitoring plan not a standalone document linked to conformity assessment |
+| R-08 Incident reporting | **Gap** | D17 - Launch Readiness covers rollback for product purposes | No incident classification scheme; no regulatory notification workflow |
 | R-09 Transparency | **Gap** | Not covered in D1–D19 | No user-facing transparency notice; no documentation of system limitations for affected persons |
-| R-10 Conformity declaration | **Gap** | D19 ship memo is structurally similar | Ship memo is internal; conformity declaration is a legal filing with specific format |
+| R-10 Conformity declaration | **Gap** | D19 - Ship Decisions ship memo is structurally similar | Ship memo is internal; conformity declaration is a legal filing with specific format |
 
 Pattern: most items are **partial** — the eval *practice* exists but the *documentation* is not formalized for audit. Three items are full **gaps** (R-08 incident reporting, R-09 transparency, R-10 conformity declaration).
 
@@ -1570,10 +1577,10 @@ By regulatory risk (highest first):
 1. **R-08 Incident reporting (gap)** — highest risk because failure to report a serious incident is itself a violation with separate penalties. Effort: weeks (build classification scheme + notification workflow + test it).
 2. **R-09 Transparency (gap)** — required before any EU deployment. Effort: days (write transparency notice + system limitation disclosure).
 3. **R-03 Technical documentation (partial)** — the conformity assessment depends on this. Effort: 1–2 weeks (consolidate existing eval artifacts into a versioned document).
-4. **R-01 Risk management (partial)** — must be a maintained document, not scattered outputs. Effort: 1 week (consolidate D2/D10/D19 into a single risk-management artifact).
+4. **R-01 Risk management (partial)** — must be a maintained document, not scattered outputs. Effort: 1 week (consolidate D2 - Failure Surface Mapping/D10 - Release Criteria/D19 - Ship Decisions into a single risk-management artifact).
 5. **R-02 Data governance (partial)** — formal data sheet required. Effort: 1 week.
 6. **R-06 Accuracy/robustness (partial)** — formalize test reports. Effort: days.
-7. **R-07 Monitoring plan (partial)** — extract from D17 exercise into standalone document. Effort: days.
+7. **R-07 Monitoring plan (partial)** — extract from D17 - Launch Readiness exercise into standalone document. Effort: days.
 8. **R-05 Human oversight (partial)** — document override and escalation. Effort: days.
 9. **R-04 Logging (partial)** — confirm implementation and retention. Effort: days to verify.
 10. **R-10 Conformity declaration (gap)** — legal drafts this based on PM's eval evidence. Effort: depends on legal, but PM provides evidence in 1–2 weeks.
@@ -1590,12 +1597,12 @@ By regulatory risk (highest first):
 
 2. **At least three specific gaps:**
    - R-08 Incident reporting: no incident classification scheme maps system failures (allergen breach, false approval) to EU-reportable categories. No regulatory notification workflow. If a user has an allergic reaction traceable to a model error, we currently have no process to report within 72 hours.
-   - R-03 Technical documentation: eval methodology exists across D10 thresholds, D16 experiment results, D18 red-team findings, D19 ship memo — but no single versioned artifact ties methodology → dataset → results → thresholds in an auditable format. An auditor would have to reconstruct from multiple sources.
+   - R-03 Technical documentation: eval methodology exists across D10 - Release Criteria thresholds, D16 - AI Experiments experiment results, D18 - Red Teaming red-team findings, D19 - Ship Decisions ship memo — but no single versioned artifact ties methodology → dataset → results → thresholds in an auditable format. An auditor would have to reconstruct from multiple sources.
    - R-09 Transparency: no user-facing notice that an AI system checks allergen disclosures. No documentation of system limitations (e.g., "system has not been evaluated on Mexican, Korean, or Vietnamese cuisines") available to affected persons. This is a hard requirement even for limited-risk classification.
-   - Bonus: R-02 Data governance — no formal data sheet documenting how golden datasets were sourced, how representativeness was assessed (D12 showed Thai was under-covered), or how contamination is prevented (D7).
+   - Bonus: R-02 Data governance — no formal data sheet documenting how golden datasets were sourced, how representativeness was assessed (D12 - Fairness & Subgroups showed Thai was under-covered), or how contamination is prevented (D7 - Golden Datasets).
 
 3. **Compliance roadmap:**
-   - **Phase 1 (2 weeks — documentation):** Consolidate existing eval artifacts into regulatory format: (a) risk management document from D2/D10/D19 outputs; (b) technical documentation linking methodology → dataset → results → thresholds; (c) monitoring plan extracted from D17; (d) transparency notice for user-facing disclosure; (e) formal test reports from D16/D18 results. Owner: PM + tech writer.
+   - **Phase 1 (2 weeks — documentation):** Consolidate existing eval artifacts into regulatory format: (a) risk management document from D2 - Failure Surface Mapping/D10 - Release Criteria/D19 - Ship Decisions outputs; (b) technical documentation linking methodology → dataset → results → thresholds; (c) monitoring plan extracted from D17 - Launch Readiness; (d) transparency notice for user-facing disclosure; (e) formal test reports from D16 - AI Experiments/D18 - Red Teaming results. Owner: PM + tech writer.
    - **Phase 2 (4–8 weeks — new capabilities):** (a) Build incident classification and regulatory notification workflow (R-08) — requires legal + eng collaboration; (b) formalize data governance documentation with data sheets for each dataset (R-02); (c) implement and test human-override mechanisms end-to-end (R-05); (d) set up audit-accessible logging with defined retention (R-04). Owner: PM + eng + legal.
    - Legal can begin conformity declaration drafting once Phase 1 is complete. CE marking and EU database registration happen after Phase 2.
 
@@ -1610,7 +1617,7 @@ Engineering is right that the eval practices are strong. The gap is not in what 
 
 ---
 
-## D21: Building an Eval Culture
+## D21 - Eval Culture
 
 ### Exercise Evaluation
 

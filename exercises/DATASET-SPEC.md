@@ -1,8 +1,8 @@
 # Dataset Specifications
 
-## menu-verification-d1.csv (30 rows)
+## D1-menu-verification-d1.csv (30 rows)
 
-Simplified production shadow-mode data for D1. Derived from menu-verification-dataset.csv with columns collapsed for first-day pipeline mapping exercise.
+Simplified production shadow-mode data for D1 - Pipeline Mapping. Derived from D2-menu-verification-dataset.csv with columns collapsed for first-day pipeline mapping exercise.
 
 **Design targets:**
 - 30 rows with change type distribution: 12 price, 7 description, 5 allergen, 4 image, 2 category
@@ -35,7 +35,7 @@ Simplified production shadow-mode data for D1. Derived from menu-verification-da
 
 ---
 
-## menu-verification-dataset.csv (200 rows)
+## D2-menu-verification-dataset.csv (200 rows)
 
 Production shadow-mode data. LLM decisions logged alongside human ground truth.
 
@@ -82,7 +82,7 @@ Production shadow-mode data. LLM decisions logged alongside human ground truth.
 
 ---
 
-## multirun-test.csv (100 rows = 20 test cases × 5 runs)
+## D4-multirun-test.csv (100 rows = 20 test cases × 5 runs)
 
 Controlled test data. Same input run 5 times to measure pass@k and reliable@k.
 
@@ -118,7 +118,7 @@ Controlled test data. Same input run 5 times to measure pass@k and reliable@k.
 
 ---
 
-## grader-comparison-dataset.csv (20 rows)
+## D5-grader-comparison-dataset.csv (20 rows)
 
 Grader comparison data. Same 20 menu verification decisions evaluated by all three grader types.
 
@@ -153,7 +153,7 @@ Grader comparison data. Same 20 menu verification decisions evaluated by all thr
 
 ---
 
-## judge-calibration-dataset.csv (20 rows)
+## D6-judge-calibration-dataset.csv (20 rows)
 
 Judge calibration data. Same 20 menu verification decisions evaluated by two LLM judge prompt versions (V1=vague, V2=specific rubric) plus human expert ground truth.
 
@@ -192,7 +192,7 @@ Judge calibration data. Same 20 menu verification decisions evaluated by two LLM
 
 ---
 
-## eval-dataset-audit.csv (40 rows)
+## D7-eval-dataset-audit.csv (40 rows)
 
 Eval dataset audit data. Metadata for 40 cases in an existing eval dataset, designed for learners to discover quality problems.
 
@@ -223,7 +223,7 @@ Eval dataset audit data. Metadata for 40 cases in an existing eval dataset, desi
 
 ---
 
-## rag-eval-dataset.csv (18 rows)
+## D8-rag-eval-dataset.csv (18 rows)
 
 RAG pipeline evaluation data. 18 queries run through a two-stage retrieval + generation system, with full ground truth for retrieval quality, generation quality, and final decision correctness.
 
@@ -268,7 +268,7 @@ RAG pipeline evaluation data. 18 queries run through a two-stage retrieval + gen
 
 ---
 
-## hallucination-detection-dataset.csv (15 rows)
+## D9-hallucination-detection-dataset.csv (15 rows)
 
 Hallucination detection data. 15 menu change decisions where the system cites a specific policy in its reasoning. The learner compares reasoning against the actual policy text (provided in the lesson) to detect hallucinations.
 
@@ -303,7 +303,7 @@ Hallucination detection data. 15 menu change decisions where the system cites a 
 
 ---
 
-## release-criteria-dataset.csv (12 rows)
+## D10-release-criteria-dataset.csv (12 rows)
 
 Release criteria evaluation data. 12 metrics measured for both v2 (current production) and v3 (release candidate). The learner classifies each as guardrail or optimization, checks guardrails against thresholds, assesses optimization trade-offs, and makes a ship/hold decision.
 

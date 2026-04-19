@@ -1,8 +1,8 @@
-# D13: Eval-Driven Development
+# D13 - Eval-Driven Development
 
 **Week 2, Day 13** | ~45 min
 **Part times:** Concepts ~15 min | Exercise ~18 min | Decision Point ~12 min
-**Previous lesson:** D12 — you learned that aggregate metrics can hide dramatic subgroup disparities. You analyzed a bias complaint, disaggregated by cuisine and restaurant size, discovered intersectional bias (Thai small restaurants at 33% accuracy vs American at 100%), and recommended a human review stopgap plus a longer-term data rebalancing fix. Today we shift from measuring outcomes to shaping process: how do you use evals to drive development, not just grade it after the fact?
+**Previous lesson:** D12 - Fairness & Subgroups — you learned that aggregate metrics can hide dramatic subgroup disparities. You analyzed a bias complaint, disaggregated by cuisine and restaurant size, discovered intersectional bias (Thai small restaurants at 33% accuracy vs American at 100%), and recommended a human review stopgap plus a longer-term data rebalancing fix. Today we shift from measuring outcomes to shaping process: how do you use evals to drive development, not just grade it after the fact?
 
 ---
 
@@ -35,7 +35,7 @@ Signs your eval-as-spec is working:
 
 If you run evals once a month, a regression introduced in week one ships to production before you notice. If you run evals on every change, you catch it within the hour.
 
-The principle: **the faster your eval loop, the smaller your blast radius.** A fast eval you can run locally in 30 seconds will be run often; a slow eval that takes 2 hours will be skipped. This is why tiered evaluation (from D11) matters: cheap code checks run on every commit, expensive human evals run on release candidates.
+The principle: **the faster your eval loop, the smaller your blast radius.** A fast eval you can run locally in 30 seconds will be run often; a slow eval that takes 2 hours will be skipped. This is why tiered evaluation (from D11 - Metric Design) matters: cheap code checks run on every commit, expensive human evals run on release candidates.
 
 Practical consequence: when designing eval pipelines, fight for speed. A 70%-accurate eval you can run 100 times is more valuable than a 95%-accurate eval you run once.
 
@@ -76,7 +76,7 @@ Two connected tasks that reflect how eval-driven development actually works in p
 
 ### Dataset
 
-For the audit (Steps 2 and 3), open `exercises/eval-driven-development-dataset.csv`. Each row is one eval case and its result across six sprints.
+For the audit (Steps 2 and 3), open `exercises/D13-eval-driven-development-dataset.csv`. Each row is one eval case and its result across six sprints.
 
 | Column | What it means |
 |--------|---------------|
@@ -105,7 +105,7 @@ Before engineering starts on menu photo verification, specify the evals. For eac
 
 **Scenario C:** A restaurant uploads a photo showing shellfish in a dish described as "vegan" (undisclosed allergen visible in the photo).
 
-Then — connecting to tight feedback loops from Concept 3 — classify each of your three evals by check type (from D11): code, model, or human. That determines how often you can run it in the feedback loop.
+Then — connecting to tight feedback loops from Concept 3 — classify each of your three evals by check type (from D11 - Metric Design): code, model, or human. That determines how often you can run it in the feedback loop.
 
 If you can't write clear pass criteria for any scenario, the feature isn't ready to build. Go back to engineering with the specific ambiguity first.
 

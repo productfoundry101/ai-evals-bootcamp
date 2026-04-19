@@ -48,72 +48,81 @@ If you've ever asked *"how do I know if this AI is actually working?"* — this 
 
 ## 🚀 Quick Start
 
-> **Already set up?** Skip to the relevant step:
-> - Have an Anthropic account but not Claude Code? → [Step 2](#step-2--install-claude-code)
-> - Have both an account and Claude Code installed? → [Step 3](#step-3--clone-the-course-and-start)
+**Already set up? Skip ahead:**
+- Have Node.js but not Claude Code? → [Step 2](#step-2----install-claude-code)
+- Have Claude Code installed? → [Step 3](#step-3----get-the-course-files)
+- Have the files cloned? → [Step 4](#step-4----start-the-course)
 
 ---
 
-### Step 1 — Create an Anthropic account
+### Step 1 — Get your terminal and Anthropic account ready
 
-Claude Code requires an Anthropic account. If you don't have one yet, create a free account at [claude.ai](https://claude.ai). You'll use it to authenticate Claude Code in Step 3.
+**Open a terminal.** This is where the course runs.
+- **Mac:** Search "Terminal" in Spotlight, or press `` Cmd+Space `` and type Terminal
+- **Cursor:** Go to View → Terminal, or press `` Ctrl+` `` (Windows) / `` Cmd+` `` (Mac)
+- **Windows:** Search "PowerShell" in the Start menu
+
+> ⚠️ **Using Cursor?** Claude Code is a separate tool — Cursor is your editor, Claude Code is what runs the course. Type commands in the terminal (View → Terminal), not Cursor's chat box.
+
+**Create an Anthropic account** (free) at [claude.ai](https://claude.ai) if you don't have one — you'll need it to authenticate Claude Code.
 
 ---
 
 ### Step 2 — Install Claude Code
 
-Claude Code is a command-line tool that lets you talk to Claude directly in your terminal, with access to your local files. It's what powers the tutor.
+First, check if you have Node.js:
+```bash
+node --version
+```
+If you see a version number, skip straight to installing Claude Code. If not, download Node.js from [nodejs.org](https://nodejs.org) (use the LTS version), then come back here.
 
-**Mac / Linux:**
+Install Claude Code:
 ```bash
 npm install -g @anthropic-ai/claude-code
 ```
 
-> **Don't have npm?** Install [Node.js](https://nodejs.org/) first (it includes npm), then run the command above.
-
-**Windows:** Use [Windows Subsystem for Linux (WSL)](https://learn.microsoft.com/en-us/windows/wsl/install), then follow the Mac/Linux steps above.
-
-**Verify the install:**
+Verify it worked:
 ```bash
 claude --version
 ```
+If you see a version number, you're good. ✅
 
-The first time you run `claude`, it will prompt you to log in with your Anthropic account.
+> **Permissions error?** If you're on a managed or corporate laptop, download Node.js directly from [nodejs.org](https://nodejs.org) instead of using npm — this bypasses most IT restrictions. Still stuck? You may need to ask IT to whitelist the install.
 
 ---
 
-### Step 3 — Clone the course and start
+### Step 3 — Get the course files
 
 ```bash
 git clone https://github.com/sanjeevrao1992/the-eval-bootcamp.git
 cd the-eval-bootcamp
-claude
 ```
 
-> **Don't have git?** Download it from [git-scm.com](https://git-scm.com/downloads), or use [GitHub Desktop](https://desktop.github.com/) to clone the repo visually — then open your terminal, navigate to the `the-eval-bootcamp` folder, and run `claude`.
+> **Don't have git?** Download it from [git-scm.com](https://git-scm.com/downloads), then run the commands above.
 
-Claude reads `CLAUDE.md` on startup and introduces itself as your tutor. It checks your progress and suggests your next lesson.
+**If you're using Cursor:** Go to File → Open Folder and select the `the-eval-bootcamp` folder. Your course files — lessons, datasets, everything — will appear in the left sidebar. These are real files sitting on your computer; you can open the CSVs in Excel, Numbers, or Google Sheets anytime.
 
 ---
 
-### 🔄 Resuming after your first session
+### Step 4 — Start the course
 
-Next time, just navigate to the folder and run `claude` again:
+Make sure you're inside the course folder, then run:
+```bash
+claude
+```
+
+You'll see a `>` prompt — that means it worked. Type `go` and your tutor will introduce itself and start Day 1.
+
+---
+
+### 🔄 Returning after your first session
 
 ```bash
 cd the-eval-bootcamp
 claude
 ```
 
-Your progress is saved locally in `progress/progress.json` — gitignored and never leaves your machine.
-
----
-
-### 💻 Works with Terminal, Cursor, or Obsidian
-
-- **Terminal** (Mac/Linux): run `claude` from inside the repo folder
-- **Cursor**: open the repo folder in Cursor, open the built-in terminal (`` Ctrl+` ``), and run `claude`
-- **Obsidian**: open your system terminal, navigate to the repo folder, and run `claude`
+Your progress is saved automatically after each lesson. The tutor will pick up exactly where you left off.
 
 ---
 
@@ -122,10 +131,11 @@ Your progress is saved locally in `progress/progress.json` — gitignored and ne
 | Problem | Fix |
 |---------|-----|
 | `claude: command not found` | Run `npm install -g @anthropic-ai/claude-code` again, then restart your terminal |
-| `permission denied` on install | Try `sudo npm install -g @anthropic-ai/claude-code` |
-| Claude asks to approve file writes | Type `yes` — it needs to save your progress to `progress/progress.json` |
-| Claude doesn't introduce itself as tutor | Make sure you're running `claude` from inside the `the-eval-bootcamp` folder, not a parent directory |
-| Stuck mid-lesson | Type `resume` — Claude will re-read your progress and pick up where you left off |
+| Permissions error during install | Download Node.js directly from [nodejs.org](https://nodejs.org) instead |
+| Blank screen after running `claude` | You're in — just type `go` to start |
+| Claude doesn't introduce itself as tutor | Make sure you ran `claude` from inside the `the-eval-bootcamp` folder, not a parent directory |
+| Claude asks to approve file writes | Type `yes` — it needs this to save your progress |
+| Stuck mid-lesson | Type `resume` — the tutor will re-read your progress and pick up where you left off |
 
 ---
 
@@ -137,37 +147,37 @@ Your progress is saved locally in `progress/progress.json` — gitignored and ne
 
 | Day | Lesson | Key Skills |
 |-----|--------|------------|
-| D1 | What Does This System Actually Do? | Pipeline stages, non-determinism, reading traces |
-| D2 | Mapping Every Way Your AI System Can Fail | Evaluation surface map, failure layers, coverage gaps |
-| D3 | Error Analysis | Open coding, axial coding, saturation, triage |
-| D4 | Thinking in Distributions | Shape before depth, pass@k, reliable@k, the consistency gap |
-| D5 | The Three Types of Quality Checks | Code-based, model-based, human graders; layering strategy |
-| D6 | LLM-as-Judge | Calibration trap, Critique Shadowing, failure modes, meta-evaluation |
-| D7 | Ground Truth and Golden Datasets | Three sources, contamination, dataset lifecycle |
+| D1 - Pipeline Mapping | Pipeline stages, non-determinism, reading traces |
+| D2 - Failure Surface Mapping | Evaluation surface map, failure layers, coverage gaps |
+| D3 - Error Analysis | Open coding, axial coding, saturation, triage |
+| D4 - Thinking in Distributions | Shape before depth, pass@k, reliable@k, the consistency gap |
+| D5 - Grader Types | Code-based, model-based, human graders; layering strategy |
+| D6 - LLM-as-Judge | Calibration trap, Critique Shadowing, failure modes, meta-evaluation |
+| D7 - Golden Datasets | Three sources, contamination, dataset lifecycle |
 
 ### Week 2 — Metrics and Measurement at Scale (Days 8–14)
 
 | Day | Lesson | Key Skills |
 |-----|--------|------------|
-| D8 | Retrieval and RAG Evaluation | Precision@k, faithfulness, answer relevance, context recall |
-| D9 | Hallucination Detection | Detection strategies, grounding, citation evaluation |
-| D10 | Blocking Metrics and Release Criteria | Guardrail vs optimization metrics, ship/hold thresholds |
-| D11 | Metric Design and Cost-Aware Evaluation | Metric tradeoffs, evaluation cost, coverage strategy |
-| D12 | Fairness, Bias, and Subgroup Evaluation | Subgroup slicing, disparity detection, fairness in practice |
-| D13 | Eval-Driven Development | Evals as product specs, regression testing, eval cadence |
-| D14 | The Observability Landscape | Logging, tracing, what to instrument and why |
+| D8 - RAG Evaluation | Precision@k, faithfulness, answer relevance, context recall |
+| D9 - Hallucination Detection | Detection strategies, grounding, citation evaluation |
+| D10 - Release Criteria | Guardrail vs optimization metrics, ship/hold thresholds |
+| D11 - Metric Design | Metric tradeoffs, evaluation cost, coverage strategy |
+| D12 - Fairness & Subgroups | Subgroup slicing, disparity detection, fairness in practice |
+| D13 - Eval-Driven Development | Evals as product specs, regression testing, eval cadence |
+| D14 - Observability | Logging, tracing, what to instrument and why |
 
 ### Week 3 — Ship, Monitor, and Scale (Days 15–21)
 
 | Day | Lesson | Key Skills |
 |-----|--------|------------|
-| D15 | Evaluating AI Agents | Multi-step pipelines, tool use, trajectory evaluation |
-| D16 | What's Different About AI Experiments | LLM A/B testing, variance, confounds |
-| D17 | Launch Readiness and Production Monitoring | Pre-launch checklist, drift detection, incident response |
-| D18 | Red Teaming and Adversarial Evaluation | Threat modeling, adversarial prompts, stress testing |
-| D19 | The Ship Decision Framework | Synthesizing eval signals into a go/no-go recommendation |
-| D20 | Regulatory and Legal Context | AI Act, liability, what product people need to know |
-| D21 | Building an Eval Culture | Institutionalizing evals, team buy-in, eval as product practice |
+| D15 - Agent Evaluation | Multi-step pipelines, tool use, trajectory evaluation |
+| D16 - AI Experiments | LLM A/B testing, variance, confounds |
+| D17 - Launch Readiness | Pre-launch checklist, drift detection, incident response |
+| D18 - Red Teaming | Threat modeling, adversarial prompts, stress testing |
+| D19 - Ship Decisions | Synthesizing eval signals into a go/no-go recommendation |
+| D20 - Regulatory Context | AI Act, liability, what product people need to know |
+| D21 - Eval Culture | Institutionalizing evals, team buy-in, eval as product practice |
 
 > **Currently available:** D1–D19 (Weeks 1–3, Days 1–19). D20–D21 coming soon.
 
@@ -176,7 +186,7 @@ Your progress is saved locally in `progress/progress.json` — gitignored and ne
 ## 📁 What's in the Repo
 
 ```
-lessons/        Lesson content — concepts, exercises, decision points (D1.md through D19.md)
+lessons/        Lesson content — concepts, exercises, decision points (D1-Pipeline-Mapping.md through D21-Eval-Culture.md)
 exercises/      CSV datasets you'll analyze during exercises
 tutor/          Session protocol and scoring rubrics (Claude's tutor instructions)
 progress/       Your local progress — gitignored, never leaves your machine

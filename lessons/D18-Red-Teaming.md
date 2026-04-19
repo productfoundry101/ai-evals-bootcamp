@@ -1,10 +1,10 @@
-# D18: Red Teaming and Adversarial Evaluation
+# D18 - Red Teaming
 
 **Week 3, Day 18** | ~45 min
 **Part times:** Concepts ~15 min | Exercise ~20 min | Decision Point ~10 min
-**Previous lesson:** D17 — you learned that shipping is the start, not the end. You analyzed six weeks of production monitoring where human review dropped 14pp while the LLM judge masked it, and all three drift types (input, output, concept) were happening simultaneously. You applied pre-committed rollback triggers and recommended a targeted fix rather than a full rollback. Today we flip the lens: *everything you've evaluated so far assumed good-faith inputs.* This lesson is about evaluating what happens when an attacker is trying to break your system on purpose.
+**Previous lesson:** D17 - Launch Readiness — you learned that shipping is the start, not the end. You analyzed six weeks of production monitoring where human review dropped 14pp while the LLM judge masked it, and all three drift types (input, output, concept) were happening simultaneously. You applied pre-committed rollback triggers and recommended a targeted fix rather than a full rollback. Today we flip the lens: *everything you've evaluated so far assumed good-faith inputs.* This lesson is about evaluating what happens when an attacker is trying to break your system on purpose.
 
-This lesson assumes D2 (evaluation surface map — you mapped an adversarial surface in D2 conceptually), D5 (grader types), and D10 (release criteria). D18 teaches how to evaluate the adversarial surface systematically, which attack categories to test, and how to translate attack success rates into ship decisions and regulatory documentation.
+This lesson assumes D2 - Failure Surface Mapping (evaluation surface map — you mapped an adversarial surface in D2 - Failure Surface Mapping conceptually), D5 - Grader Types (grader types), and D10 - Release Criteria (release criteria). D18 - Red Teaming teaches how to evaluate the adversarial surface systematically, which attack categories to test, and how to translate attack success rates into ship decisions and regulatory documentation.
 
 ---
 
@@ -62,7 +62,7 @@ Unlike functional pass rates — where you want high numbers — you want *low* 
 - **Medium-severity categories (policy evasion in non-safety flows, basic jailbreaks that produce mildly off-policy output):** ASR target depends on product context. A 10–20% ASR might be acceptable *temporarily* while hardening continues, *if* the output is caught by downstream checks before reaching the user.
 - **Low-severity categories (minor rule bending, benign jailbreaks):** ASR target may be loose. Focus effort elsewhere.
 
-The PM discipline: **pre-commit ASR thresholds by category, and pre-commit what you do if they're breached** — same framework as blocking metrics in D10, applied to adversarial surface. "We'll figure it out if something breaks" is how unsafe systems ship.
+The PM discipline: **pre-commit ASR thresholds by category, and pre-commit what you do if they're breached** — same framework as blocking metrics in D10 - Release Criteria, applied to adversarial surface. "We'll figure it out if something breaks" is how unsafe systems ship.
 
 ### Regulatory context: red teaming is moving from best practice to requirement
 
@@ -82,13 +82,13 @@ Even if you're not in a regulated category today, **document your red team metho
 
 ### Scenario
 
-Your menu verification system is now live at 100% rollout (after the D17 targeted fix). Leadership asks you to prepare for an EU market launch, which requires systematic red teaming documentation. Your security eng ran a structured red team with 25 adversarial probes across five attack categories. They've sent you the results and are pushing to ship the EU launch on the current system.
+Your menu verification system is now live at 100% rollout (after the D17 - Launch Readiness targeted fix). Leadership asks you to prepare for an EU market launch, which requires systematic red teaming documentation. Your security eng ran a structured red team with 25 adversarial probes across five attack categories. They've sent you the results and are pushing to ship the EU launch on the current system.
 
 Before you sign off, you need to analyze the red team results, decide which findings block EU launch, and decide what mitigations are required.
 
 ### Dataset
 
-Open `exercises/red-team-dataset.csv`. Each row is one adversarial probe against the system.
+Open `exercises/D18-red-team-dataset.csv`. Each row is one adversarial probe against the system.
 
 | Column | What it means |
 |--------|---------------|

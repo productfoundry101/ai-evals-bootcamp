@@ -1,8 +1,8 @@
-# D9: Hallucination Detection
+# D9 - Hallucination Detection
 
 **Week 2, Day 9** | ~45 min
 **Part times:** Concepts ~15 min | Exercise ~22 min | Decision Point ~8 min
-**Previous lesson:** D8 — you learned how to evaluate a RAG system by separating retrieval and generation metrics, and used a 2x2 diagnostic matrix to route failures to the right team. One of the generation metrics you measured was *faithfulness* — whether the answer was grounded in retrieved context. Today you go deeper into what happens when that grounding fails: hallucination. You'll learn the two types, why they're hard to detect, and how to build detection into your evaluation pipeline.
+**Previous lesson:** D8 - RAG Evaluation — you learned how to evaluate a RAG system by separating retrieval and generation metrics, and used a 2x2 diagnostic matrix to route failures to the right team. One of the generation metrics you measured was *faithfulness* — whether the answer was grounded in retrieved context. Today you go deeper into what happens when that grounding fails: hallucination. You'll learn the two types, why they're hard to detect, and how to build detection into your evaluation pipeline.
 
 ---
 
@@ -48,7 +48,7 @@ Four approaches to catching hallucinations, each with different tradeoffs.
 
 **Entailment verification** — use a separate model to check whether the source material logically entails (supports) each claim in the output. This automates the source verification step but introduces its own failure mode: the verifier model can also hallucinate or miss subtle contradictions.
 
-No single strategy catches everything. In practice, you layer them — just like you layered code, model, and human graders in D5.
+No single strategy catches everything. In practice, you layer them — just like you layered code, model, and human graders in D5 - Grader Types.
 
 ### The hidden danger: correct decisions with hallucinated reasoning
 
@@ -87,7 +87,7 @@ The system draws on 6 core policies. Here is the exact text of each:
 
 ### Dataset
 
-Open `exercises/hallucination-detection-dataset.csv`. Each row is a menu change decision where the system cited one of the policies above.
+Open `exercises/D9-hallucination-detection-dataset.csv`. Each row is a menu change decision where the system cited one of the policies above.
 
 | Column | What it means |
 |--------|---------------|

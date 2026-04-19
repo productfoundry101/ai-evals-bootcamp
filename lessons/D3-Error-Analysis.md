@@ -1,8 +1,8 @@
-# D3: Error Analysis — The Skill That Separates Good AI PMs
+# D3 - Error Analysis
 
 **Week 1, Day 3** | ~30 min
 **Part times:** Concepts ~10 min | Exercise ~15 min | Decision Point ~5 min
-**Previous lesson:** D2 — you built an evaluation surface map: functional failures by pipeline stage, adversarial risks, and coverage gaps. The key finding: failure type labels tell you *what* went wrong but not always *where* or *why*. Today you go from counting failures to reading them — learning the systematic process of understanding exactly how and why your AI system breaks.
+**Previous lesson:** D2 - Failure Surface Mapping — you built an evaluation surface map: functional failures by pipeline stage, adversarial risks, and coverage gaps. The key finding: failure type labels tell you *what* went wrong but not always *where* or *why*. Today you go from counting failures to reading them — learning the systematic process of understanding exactly how and why your AI system breaks.
 
 ---
 
@@ -48,11 +48,11 @@ The triage turns your taxonomy into a sprint plan. Prompt-fixes go into the curr
 
 ## Part 2: Exercise — Read the Traces
 
-You've counted the failures in D2. Now you're going to read them. Your goal: build a failure taxonomy from the actual data, not from the pre-existing `failure_type` labels.
+You've counted the failures in D2 - Failure Surface Mapping. Now you're going to read them. Your goal: build a failure taxonomy from the actual data, not from the pre-existing `failure_type` labels.
 
 ### Setup
 
-Open `exercises/menu-verification-dataset.csv`. Filter to rows where `human_agrees_with_llm` = `FALSE`.
+Open `exercises/D3-menu-verification-dataset.csv`. Filter to rows where `human_agrees_with_llm` = `FALSE`.
 
 For each failure row, the relevant "trace" is: `change_type`, the old/new value pair, `last_verified_price`, `price_markup_pct`, `context_provided` (the policy and context the LLM had access to), `llm_decision`, `llm_confidence`, `llm_reasoning`, and `human_decision`. For image changes, also check `image_analysis`.
 

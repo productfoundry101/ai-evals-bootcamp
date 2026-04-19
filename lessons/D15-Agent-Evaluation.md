@@ -1,8 +1,8 @@
-# D15: Evaluating AI Agents
+# D15 - Agent Evaluation
 
 **Week 3, Day 15** | ~45 min
 **Part times:** Concepts ~15 min | Exercise ~20 min | Decision Point ~10 min
-**Previous lesson:** D14 — you learned that observability is what evaluation isn't: evaluation runs pre-deployment in controlled conditions; observability runs post-deployment against live traffic. You designed an MVP dashboard across four pillars (metrics, logs, traces, human feedback), separated alert-worthy signals from dashboard-only, and closed the loop from a production incident back to a new eval case. Today we start Week 3 by crossing a different boundary: what happens when your AI system stops being a single LLM call and starts being an **agent** — a system that plans, calls tools, observes results, and takes further actions over multiple steps.
+**Previous lesson:** D14 - Observability — you learned that observability is what evaluation isn't: evaluation runs pre-deployment in controlled conditions; observability runs post-deployment against live traffic. You designed an MVP dashboard across four pillars (metrics, logs, traces, human feedback), separated alert-worthy signals from dashboard-only, and closed the loop from a production incident back to a new eval case. Today we start Week 3 by crossing a different boundary: what happens when your AI system stops being a single LLM call and starts being an **agent** — a system that plans, calls tools, observes results, and takes further actions over multiple steps.
 
 ---
 
@@ -81,7 +81,7 @@ The agent has been running in shadow mode for two weeks. You have 25 sample runs
 
 ### Dataset
 
-Open `exercises/agent-trajectories-dataset.csv`. Each row is one agent run.
+Open `exercises/D15-agent-trajectories-dataset.csv`. Each row is one agent run.
 
 | Column | What it means |
 |--------|---------------|
@@ -122,7 +122,7 @@ This is the cost discipline from Concept 5 applied to real data.
 
 Look at the runs where `trajectory_quality = hallucinated_tool_call`. These are the most dangerous cases in the dataset — the agent produced a correct-looking output built on fabricated tool calls that never actually happened.
 
-Pick one of those runs. Write an eval spec (D13 format: input, expected output, pass criteria, failure mode area, severity) that would catch this failure mode *before* the agent reaches production. The spec should measure **trajectory quality**, not just outcome — meaning the pass criteria must include something about the tool-call log, not just the final decision.
+Pick one of those runs. Write an eval spec (D13 - Eval-Driven Development format: input, expected output, pass criteria, failure mode area, severity) that would catch this failure mode *before* the agent reaches production. The spec should measure **trajectory quality**, not just outcome — meaning the pass criteria must include something about the tool-call log, not just the final decision.
 
 ---
 

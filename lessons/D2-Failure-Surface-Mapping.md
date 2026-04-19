@@ -1,8 +1,8 @@
-# D2: Mapping Every Way Your AI System Can Fail
+# D2 - Failure Surface Mapping
 
 **Week 1, Day 2** | ~27 min
 **Part times:** Concepts ~10 min | Exercise ~12 min | Decision Point ~5 min
-**Previous lesson:** D1 — you mapped the 5 pipeline stages, traced a single row end-to-end, and identified what's invisible in the logs. Key insight: the same wrong output can come from different pipeline stages and requires different fixes. Today you build on that — instead of tracing individual rows, you'll map every way each stage can fail, including failures that haven't happened yet and attacks that haven't been tried.
+**Previous lesson:** D1 - Pipeline Mapping — you mapped the 5 pipeline stages, traced a single row end-to-end, and identified what's invisible in the logs. Key insight: the same wrong output can come from different pipeline stages and requires different fixes. Today you build on that — instead of tracing individual rows, you'll map every way each stage can fail, including failures that haven't happened yet and attacks that haven't been tried.
 
 ---
 
@@ -72,7 +72,7 @@ You're preparing for a launch readiness review of the menu verification system. 
 
 ### Setup
 
-Open `exercises/menu-verification-dataset.csv`.
+Open `exercises/D2-menu-verification-dataset.csv`.
 
 Relevant columns: `change_type`, `llm_decision`, `human_decision`, `human_agrees_with_llm`, `failure_type`, `last_verified_price`
 

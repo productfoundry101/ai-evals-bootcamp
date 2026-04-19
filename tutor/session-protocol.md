@@ -8,11 +8,11 @@ This document defines how to run an interactive tutoring session. Follow this pr
 
 1. Check `progress/progress.json` for prior sessions
 2. If returning learner: "Welcome back. Last time you completed [lesson]. Ready for [next lesson]?"
-3. If new learner (no prior progress): deliver the **Full Onboarding** below before starting D1.
+3. If new learner (no prior progress): deliver the **Full Onboarding** below before starting D1 - Pipeline Mapping.
 
 ### Full Onboarding (new learners only)
 
-Present the following block verbatim (preserve the ASCII formatting), then wait for the learner to type "go" or ask questions before starting D1.
+Present the following block verbatim (preserve the ASCII formatting), then wait for the learner to type "go" or ask questions before starting D1 - Pipeline Mapping.
 
 ---
 
@@ -80,6 +80,11 @@ built specifically for product people.
   → On Mac, press the microphone key (or Fn Fn) to dictate your answers
     instead of typing. Most learners prefer it during exercises.
 
+  → Most of this course happens right here in the terminal. For the best
+    reading experience, increase your font size (Cmd + in Terminal/iTerm,
+    or Ctrl + in Windows Terminal) and widen your window. A larger, wider
+    terminal makes the exercises noticeably easier to follow.
+
 ───────────────────────────────────────────────────────
 
 Any questions before we start?
@@ -93,7 +98,7 @@ Otherwise, type  go  and Day 1 begins.
 - If it's the first lesson (no `Previous lesson` field): briefly orient the learner — what the course is about and what they'll be able to do by the end of Day 1.
 
 Example:
-> "In D1 you mapped the pipeline and learned that the same wrong output can originate at different stages requiring different fixes. You also saw that AI systems are probabilistic — you can't test them once and call it done. Today we zoom out: instead of reading one row, you'll learn to read the whole dataset at once and spot where the system is struggling before diving into individual failures."
+> "In D1 - Pipeline Mapping you mapped the pipeline and learned that the same wrong output can originate at different stages requiring different fixes. You also saw that AI systems are probabilistic — you can't test them once and call it done. Today we zoom out: instead of reading one row, you'll learn to read the whole dataset at once and spot where the system is struggling before diving into individual failures."
 
 ---
 
@@ -157,6 +162,8 @@ Transition clearly: "Now let's apply these concepts. Here's the scenario..."
 - Introduce the use case (food delivery company menu verification) briefly
 - Point them to the relevant CSV file
 - Explain the key columns they'll need
+- **First exercise only (D1 - Pipeline Mapping):** Before starting, remind the learner that the CSV files live on their computer inside the cloned repo. Show them exactly how to find it:
+  > "Before we start — the dataset for this exercise is a CSV file stored locally on your machine. Open Finder (Mac) or File Explorer (Windows), navigate to the `the-eval-bootcamp` folder, then open the `exercises/` subfolder. You'll find the file there. Open it in Excel, Numbers, or Google Sheets so you can see the raw data as we work through it."
 
 ### Guided analysis
 

@@ -1,8 +1,8 @@
-# D4: Thinking in Distributions
+# D4 - Thinking in Distributions
 
 **Week 1, Day 4** | ~35 min
 **Part times:** Concepts ~12 min | Exercise ~18 min | Decision Point ~5 min
-**Previous lesson:** D3 — you learned to read individual traces through open coding, cluster failures through axial coding, and triage each category into prompt-fix, evaluator-needed, or system-fix. The key insight: pre-existing labels flatten the nuance that careful trace reading reveals. Today you shift from reading individual failures to measuring system-level behavior — and discover why a single accuracy number can be deeply misleading.
+**Previous lesson:** D3 - Error Analysis — you learned to read individual traces through open coding, cluster failures through axial coding, and triage each category into prompt-fix, evaluator-needed, or system-fix. The key insight: pre-existing labels flatten the nuance that careful trace reading reveals. Today you shift from reading individual failures to measuring system-level behavior — and discover why a single accuracy number can be deeply misleading.
 
 ---
 
@@ -73,9 +73,9 @@ Your ML team ran an A/B test comparing model v1 (current) against model v2 (cand
 
 ### Setup
 
-Open `exercises/multirun-test.csv`.
+Open `exercises/D4-multirun-test.csv`.
 
-Key columns: `test_id`, `restaurant_name`, `item_name`, `change_type`, `llm_decision`, `llm_confidence`, `llm_reasoning`, `ground_truth`, `run_number`, `is_correct`
+Key columns: `test_id`, `model_version`, `restaurant_name`, `item_name`, `change_type`, `llm_decision`, `llm_confidence`, `llm_reasoning`, `ground_truth`, `run_number`, `is_correct`
 
 Each test case appears in 5 rows (5 independent runs of the same input). 20 test cases total.
 

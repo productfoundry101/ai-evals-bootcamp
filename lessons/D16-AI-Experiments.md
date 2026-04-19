@@ -1,8 +1,8 @@
-# D16: What's Different About AI Experiments
+# D16 - AI Experiments
 
 **Week 3, Day 16** | ~45 min
 **Part times:** Concepts ~15 min | Exercise ~20 min | Decision Point ~10 min
-**Previous lesson:** D15 — you learned that agents introduce a second axis of correctness (trajectory alongside outcome), that tool-use and error-recovery are distinct failure modes, and that step efficiency is a first-class metric. You evaluated a 25-run shadow deployment, found a 24-point gap between outcome and trajectory quality, and blocked the GA ship on hallucinated tool calls and cascade failures. Today we stay in Week 3 but shift from evaluating agents to *experimenting* with AI changes. You already know how to run A/B tests as a PM. What you don't know is how AI experiments break most of the assumptions those tests rely on.
+**Previous lesson:** D15 - Agent Evaluation — you learned that agents introduce a second axis of correctness (trajectory alongside outcome), that tool-use and error-recovery are distinct failure modes, and that step efficiency is a first-class metric. You evaluated a 25-run shadow deployment, found a 24-point gap between outcome and trajectory quality, and blocked the GA ship on hallucinated tool calls and cascade failures. Today we stay in Week 3 but shift from evaluating agents to *experimenting* with AI changes. You already know how to run A/B tests as a PM. What you don't know is how AI experiments break most of the assumptions those tests rely on.
 
 This lesson assumes you already understand A/B testing basics (treatment/control, statistical significance, sample size). We're not re-teaching those. We're covering only the ways AI experiments differ — and the ways PMs routinely get it wrong.
 
@@ -68,9 +68,9 @@ For AI experiments, 20–40 cases is usually too small. 200+ cases with clusteri
 
 Traditional A/B tests usually measure one primary metric. AI experiments should never. The non-determinism and the distribution-sensitivity of AI systems mean that the same change can improve the mean and catastrophically regress a subgroup.
 
-You saw this in D12 (fairness): aggregate 78% approval rate hid Thai cuisine at 44%. The same mechanism plays out in experiments. A new prompt that nets +5 points on aggregate accuracy might be getting +15 points on common cases and −20 points on edge cases that matter most.
+You saw this in D12 - Fairness & Subgroups (fairness): aggregate 78% approval rate hid Thai cuisine at 44%. The same mechanism plays out in experiments. A new prompt that nets +5 points on aggregate accuracy might be getting +15 points on common cases and −20 points on edge cases that matter most.
 
-The discipline from D10 applies: every experiment needs a **primary metric plus a set of guardrails**. The primary metric is what you're optimizing. The guardrails are the regressions you refuse to accept, no matter how good the primary metric looks. Common guardrails for AI experiments: subgroup performance floors, latency/cost ceilings, safety-critical failure counts.
+The discipline from D10 - Release Criteria applies: every experiment needs a **primary metric plus a set of guardrails**. The primary metric is what you're optimizing. The guardrails are the regressions you refuse to accept, no matter how good the primary metric looks. Common guardrails for AI experiments: subgroup performance floors, latency/cost ceilings, safety-critical failure counts.
 
 An experiment where the primary metric improves but a guardrail breaks is a **do-not-ship**, not a "ship and fix later." The mean looks good because the failures are concentrated in the minority you're not measuring.
 
@@ -86,7 +86,7 @@ Engineering sent you a one-line summary: *"v2 scores 75%, v1 scores 65%. +10 poi
 
 ### Dataset
 
-Open `exercises/ai-experiment-dataset.csv`. Each row is one test case evaluated on both versions.
+Open `exercises/D16-ai-experiment-dataset.csv`. Each row is one test case evaluated on both versions.
 
 | Column | What it means |
 |--------|---------------|

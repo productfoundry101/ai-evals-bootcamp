@@ -1,8 +1,8 @@
-# D8: Retrieval and RAG Evaluation
+# D8 - RAG Evaluation
 
 **Week 2, Day 8** | ~45 min
 **Part times:** Concepts ~15 min | Exercise ~22 min | Decision Point ~8 min
-**Previous lesson:** D7 — you learned how to build ground truth that makes all graders meaningful: three sources (automated verifiers, expert annotation, user feedback), how to construct a golden dataset, contamination patterns to avoid, and how datasets evolve over time. Today you apply all of that to a harder problem: evaluating a RAG system, where failures can come from two completely different stages — and an aggregate metric that looks fine can hide that both stages are broken.
+**Previous lesson:** D7 - Golden Datasets — you learned how to build ground truth that makes all graders meaningful: three sources (automated verifiers, expert annotation, user feedback), how to construct a golden dataset, contamination patterns to avoid, and how datasets evolve over time. Today you apply all of that to a harder problem: evaluating a RAG system, where failures can come from two completely different stages — and an aggregate metric that looks fine can hide that both stages are broken.
 
 ---
 
@@ -84,7 +84,7 @@ Your engineering manager has run 18 recent queries through the pipeline and logg
 
 ### Dataset
 
-Open `exercises/rag-eval-dataset.csv`. Each row is one query run through the full pipeline.
+Open `exercises/D8-rag-eval-dataset.csv`. Each row is one query run through the full pipeline.
 
 The pipeline has a knowledge base of 15 policy documents. For each query, the retriever fetches the top-5 most relevant policies. The generator receives those 5 policies as context and produces a decision and reasoning. The `relevant_docs` column is expert-verified ground truth — the policies that actually should have been retrieved for that query.
 

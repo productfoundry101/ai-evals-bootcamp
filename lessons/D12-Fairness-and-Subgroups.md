@@ -1,8 +1,8 @@
-# D12: Fairness, Bias, and Subgroup Evaluation
+# D12 - Fairness & Subgroups
 
 **Week 2, Day 12** | ~45 min
 **Part times:** Concepts ~15 min | Exercise ~18 min | Decision Point ~12 min
-**Previous lesson:** D11 — you learned to design metrics that are specific, actionable, and connected to outcomes, and to build evaluation pipelines that give you coverage without breaking the budget. You compared three pipeline designs and made trade-off decisions under a 40% cost cut. Today we turn the question inward: what if the aggregate metrics you've been tracking are masking dramatic disparities between subgroups? A system that's 78% accurate overall might be 95% accurate for one population and 40% for another. This lesson teaches you to surface those disparities and decide what to do about them.
+**Previous lesson:** D11 - Metric Design — you learned to design metrics that are specific, actionable, and connected to outcomes, and to build evaluation pipelines that give you coverage without breaking the budget. You compared three pipeline designs and made trade-off decisions under a 40% cost cut. Today we turn the question inward: what if the aggregate metrics you've been tracking are masking dramatic disparities between subgroups? A system that's 78% accurate overall might be 95% accurate for one population and 40% for another. This lesson teaches you to surface those disparities and decide what to do about them.
 
 ---
 
@@ -10,7 +10,7 @@
 
 ### Aggregate metrics hide subgroup failures
 
-You saw a version of this in D4: the same 78% accuracy can be uniform performance, one terrible segment, or a model version gap. Fairness evaluation takes this seriously as a first-class concern.
+You saw a version of this in D4 - Thinking in Distributions: the same 78% accuracy can be uniform performance, one terrible segment, or a model version gap. Fairness evaluation takes this seriously as a first-class concern.
 
 A single headline accuracy number tells you what happens *on average*. It tells you nothing about what happens to any specific user. If your system is 85% accurate overall but 55% accurate for a specific customer population, that population is systematically worse off — and they don't care about your aggregate.
 
@@ -80,7 +80,7 @@ You have a labeled sample of 45 recent decisions spanning five cuisine types and
 
 ### Dataset
 
-Open `exercises/fairness-subgroup-dataset.csv`. Each row is one menu verification case.
+Open `exercises/D12-fairness-subgroup-dataset.csv`. Each row is one menu verification case.
 
 | Column | What it means |
 |--------|---------------|

@@ -1,8 +1,8 @@
-# D11: Metric Design and Cost-Aware Evaluation
+# D11 - Metric Design
 
 **Week 2, Day 11** | ~45 min
 **Part times:** Concepts ~15 min | Exercise ~18 min | Decision Point ~12 min
-**Previous lesson:** D10 — you learned that not all metrics are equal. Some block release (guardrails), others track quality over time (optimization metrics). You applied a ship/hold framework to a release candidate and saw that a single guardrail failure blocks shipping regardless of how many other metrics improved. Today you go deeper: instead of classifying metrics others have designed, you'll learn how to design them yourself — and how to build an evaluation pipeline that gives you the coverage you need without exceeding your budget.
+**Previous lesson:** D10 - Release Criteria — you learned that not all metrics are equal. Some block release (guardrails), others track quality over time (optimization metrics). You applied a ship/hold framework to a release candidate and saw that a single guardrail failure blocks shipping regardless of how many other metrics improved. Today you go deeper: instead of classifying metrics others have designed, you'll learn how to design them yourself — and how to build an evaluation pipeline that gives you the coverage you need without exceeding your budget.
 
 ---
 
@@ -96,7 +96,7 @@ Three engineering teams have each proposed an eval pipeline. Each pipeline uses 
 
 ### Dataset
 
-Open `exercises/metric-design-dataset.csv`. Each row is one check in one of three proposed pipelines.
+Open `exercises/D11-metric-design-dataset.csv`. Each row is one check in one of three proposed pipelines.
 
 | Column | What it means |
 |--------|---------------|

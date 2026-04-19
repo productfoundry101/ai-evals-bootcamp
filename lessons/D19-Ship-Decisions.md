@@ -1,10 +1,10 @@
-# D19: The Ship Decision Framework
+# D19 - Ship Decisions
 
 **Week 3, Day 19** | ~45 min
 **Part times:** Concepts ~15 min | Exercise ~20 min | Decision Point ~10 min
-**Previous lesson:** D18 — you learned that functional evals and adversarial evals are separate disciplines with different datasets, attack-category taxonomies, and severity-weighted thresholds. You analyzed 25 red-team probes with a 36% overall ASR that hid a 67% ASR on prompt injection, held the EU launch on 2 critical + 4 high-severity successes, and named the specific EU AI Act conformity-assessment elements the documentation had to show. Today we close the loop. You have all the tools — functional evals, subgroup analysis, experiments, monitoring, red teaming. This lesson is about *synthesizing them into one call* when the signals disagree, the stakeholders are pushing, and the PM has to own the decision.
+**Previous lesson:** D18 - Red Teaming — you learned that functional evals and adversarial evals are separate disciplines with different datasets, attack-category taxonomies, and severity-weighted thresholds. You analyzed 25 red-team probes with a 36% overall ASR that hid a 67% ASR on prompt injection, held the EU launch on 2 critical + 4 high-severity successes, and named the specific EU AI Act conformity-assessment elements the documentation had to show. Today we close the loop. You have all the tools — functional evals, subgroup analysis, experiments, monitoring, red teaming. This lesson is about *synthesizing them into one call* when the signals disagree, the stakeholders are pushing, and the PM has to own the decision.
 
-This lesson assumes D10 (release criteria and guardrail thresholds), D12 (subgroup floors), D16 (experiment-based evidence), D17 (launch readiness), and D18 (adversarial thresholds). D19 is the capstone: how do you actually *decide* when real-world evidence is messy, partial, and contested?
+This lesson assumes D10 - Release Criteria (release criteria and guardrail thresholds), D12 - Fairness & Subgroups (subgroup floors), D16 - AI Experiments (experiment-based evidence), D17 - Launch Readiness (launch readiness), and D18 - Red Teaming (adversarial thresholds). D19 - Ship Decisions is the capstone: how do you actually *decide* when real-world evidence is messy, partial, and contested?
 
 ---
 
@@ -22,7 +22,7 @@ Two failure patterns to avoid:
 
 2. **Overrule without basis:** "I'm the PM, I decided." This is less common but equally bad. A ship decision that overrides eng or security concerns without documented reasoning loses team trust and, in a regulated setting, loses legal defensibility.
 
-Accountability in practice is concrete: pre-committed criteria (D10), documented evidence (D16, D17, D18), a written decision with rationale, and clear rollback ownership. If you can't point to those artifacts for your last ship, you don't own the decision — you inherited it.
+Accountability in practice is concrete: pre-committed criteria (D10 - Release Criteria), documented evidence (D16 - AI Experiments, D17 - Launch Readiness, D18 - Red Teaming), a written decision with rationale, and clear rollback ownership. If you can't point to those artifacts for your last ship, you don't own the decision — you inherited it.
 
 ### Three ship outcomes, not two
 
@@ -49,7 +49,7 @@ If you can't name the expansion criteria and the rollback triggers, you have a s
 
 When you have 15 signals across quality, fairness, safety, adversarial, and performance dimensions, the temptation is to build a weighted score — "we passed 14 of 15, 93% of criteria green, ship it."
 
-That is wrong for guardrails. Guardrails combine with *AND* logic: every one must pass. One critical guardrail breach is a hold, regardless of how many others are green. The D10 distinction between guardrail metrics and optimization metrics is the reason why — guardrails encode hard constraints (safety, fairness, legal), and averaging across them is a category error that trades a violation for unrelated wins.
+That is wrong for guardrails. Guardrails combine with *AND* logic: every one must pass. One critical guardrail breach is a hold, regardless of how many others are green. The D10 - Release Criteria distinction between guardrail metrics and optimization metrics is the reason why — guardrails encode hard constraints (safety, fairness, legal), and averaging across them is a category error that trades a violation for unrelated wins.
 
 The decision rule that works:
 
@@ -102,20 +102,20 @@ Most ship pressure from above evaporates when the PM shows up with a written ana
 
 ### Scenario
 
-It is now four weeks after the D17 rollback. Engineering has re-shipped v2 with a wave of fixes across all three drift types and the D18 red-team findings. Leadership wants to launch v2 in the EU next Monday to hit the Q2 announcement. Before the launch, you have run a complete ship-evaluation packet combining offline evals, subgroup analysis, the D16 experiment, production shadow-mode data, and the D18 red-team regression suite.
+It is now four weeks after the D17 - Launch Readiness rollback. Engineering has re-shipped v2 with a wave of fixes across all three drift types and the D18 - Red Teaming red-team findings. Leadership wants to launch v2 in the EU next Monday to hit the Q2 announcement. Before the launch, you have run a complete ship-evaluation packet combining offline evals, subgroup analysis, the D16 - AI Experiments experiment, production shadow-mode data, and the D18 - Red Teaming red-team regression suite.
 
 The CTO is asking you one question: *"ship, hold, or conditional — and on what basis?"*
 
 ### Dataset
 
-Open `exercises/ship-decision-dataset.csv`. Each row is one ship criterion and its current status.
+Open `exercises/D19-ship-decision-dataset.csv`. Each row is one ship criterion and its current status.
 
 | Column | What it means |
 |--------|---------------|
 | `criterion_id` | Identifier (C-01 through C-15) |
 | `criterion_name` | Human-readable name of the criterion |
 | `type` | `guardrail` or `optimization` |
-| `threshold` | The pre-committed threshold from D10 / D18 / etc. |
+| `threshold` | The pre-committed threshold from D10 - Release Criteria / D18 - Red Teaming / etc. |
 | `observed` | The observed value from the ship-evaluation packet |
 | `confidence_interval` | 95% CI where computed; empty otherwise |
 | `status` | `pass`, `marginal`, or `fail` |

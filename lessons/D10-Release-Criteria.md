@@ -1,8 +1,8 @@
-# D10: Blocking Metrics and Release Criteria
+# D10 - Release Criteria
 
 **Week 2, Day 10** | ~45 min
 **Part times:** Concepts ~15 min | Exercise ~18 min | Decision Point ~12 min
-**Previous lesson:** D9 — you learned to detect hallucinations by comparing reasoning to source material, distinguished intrinsic (contradicts source) from extrinsic (adds fabricated claims), and discovered that correct decisions can hide hallucinated reasoning. Today you step back from individual metrics and ask a higher-level question: given all the metrics you can measure, which ones should block a release, and which ones should you track and improve over time?
+**Previous lesson:** D9 - Hallucination Detection — you learned to detect hallucinations by comparing reasoning to source material, distinguished intrinsic (contradicts source) from extrinsic (adds fabricated claims), and discovered that correct decisions can hide hallucinated reasoning. Today you step back from individual metrics and ask a higher-level question: given all the metrics you can measure, which ones should block a release, and which ones should you track and improve over time?
 
 ---
 
@@ -72,7 +72,7 @@ Your team is preparing to release v3 of the menu verification system. v2 is curr
 
 ### Dataset
 
-Open `exercises/release-criteria-dataset.csv`. Each row is one metric measured for both v2 (current production) and v3 (release candidate).
+Open `exercises/D10-release-criteria-dataset.csv`. Each row is one metric measured for both v2 (current production) and v3 (release candidate).
 
 | Column | What it means |
 |--------|---------------|

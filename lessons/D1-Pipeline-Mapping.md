@@ -1,4 +1,4 @@
-# D1: What Does This System Actually Do?
+# D1 - Pipeline Mapping
 
 **Week 1, Day 1** | ~25 min
 **Part times:** Concepts ~10 min | Exercise ~10 min | Decision Point ~5 min
@@ -77,7 +77,7 @@ Now apply this to the real dataset.
 
 ### Setup
 
-Open `exercises/menu-verification-d1.csv`. This is production shadow-mode data — the AI made decisions, but humans also reviewed every item so you have ground truth.
+Open `exercises/D1-menu-verification-d1.csv`. This is production shadow-mode data — the AI made decisions, but humans also reviewed every item so you have ground truth.
 
 The dataset has 30 rows and 12 columns. Start by understanding the structure.
 
