@@ -94,13 +94,13 @@ If you see a version number, you're good. ✅
 ### Step 3 — Get the course files
 
 ```bash
-git clone https://github.com/sanjeevrao1992/the-eval-bootcamp.git
-cd the-eval-bootcamp
+git clone https://github.com/productfoundry101/ai-evals-bootcamp.git
+cd ai-evals-bootcamp
 ```
 
 > **Don't have git?** Download it from [git-scm.com](https://git-scm.com/downloads), then run the commands above.
 
-**If you're using Cursor:** Go to File → Open Folder and select the `the-eval-bootcamp` folder. Your course files — lessons, datasets, everything — will appear in the left sidebar. These are real files sitting on your computer; you can open the CSVs in Excel, Numbers, or Google Sheets anytime.
+**If you're using Cursor:** Go to File → Open Folder and select the `ai-evals-bootcamp` folder. Your course files — lessons, datasets, everything — will appear in the left sidebar. These are real files sitting on your computer; you can open the CSVs in Excel, Numbers, or Google Sheets anytime.
 
 ---
 
@@ -118,7 +118,7 @@ You'll see a `>` prompt — that means it worked. Type `go` and your tutor will 
 ### 🔄 Returning after your first session
 
 ```bash
-cd the-eval-bootcamp
+cd ai-evals-bootcamp
 claude
 ```
 
@@ -133,7 +133,7 @@ Your progress is saved automatically after each lesson. The tutor will pick up e
 | `claude: command not found` | Run `npm install -g @anthropic-ai/claude-code` again, then restart your terminal |
 | Permissions error during install | Download Node.js directly from [nodejs.org](https://nodejs.org) instead |
 | Blank screen after running `claude` | You're in — just type `go` to start |
-| Claude doesn't introduce itself as tutor | Make sure you ran `claude` from inside the `the-eval-bootcamp` folder, not a parent directory |
+| Claude doesn't introduce itself as tutor | Make sure you ran `claude` from inside the `ai-evals-bootcamp` folder, not a parent directory |
 | Claude asks to approve file writes | Type `yes` — it needs this to save your progress |
 | Stuck mid-lesson | Type `resume` — the tutor will re-read your progress and pick up where you left off |
 

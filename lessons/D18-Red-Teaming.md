@@ -10,6 +10,14 @@ This lesson assumes D2 - Failure Surface Mapping (evaluation surface map — you
 
 ## Part 1: The Concepts
 
+### What is red teaming?
+
+Red teaming is the practice of deliberately attacking your own system to find vulnerabilities before real attackers do. The name comes from military war-gaming, where a "red team" plays the adversary against a "blue team" defending the system.
+
+In AI products, red teaming means constructing inputs designed to make your system fail — not by accident, but on purpose. A red teamer's job is to think like an attacker: *what would someone do if they wanted this system to approve something it shouldn't, leak data it shouldn't, or bypass a safety rule?* Then they try it, systematically, and measure how often it works.
+
+Red teaming is not the same as QA testing. QA tests whether the system works correctly on expected inputs. Red teaming tests whether the system holds up against unexpected, adversarial inputs. Both are necessary. Neither replaces the other.
+
 ### Functional evaluation and adversarial evaluation are separate disciplines
 
 Everything in D1–D17 assumed inputs came from users who wanted your system to work. Functional evaluation asks: *on normal inputs, does the system produce the right outputs?* Accuracy, precision, recall, hallucination rate, fairness — all functional.
@@ -129,6 +137,8 @@ Take only the successful attacks. Group them by `mitigation_layer`:
 - How many need *policy* changes? (e.g., require human review for certain inputs)
 - How many are *out_of_scope*? (e.g., accepted residual risk)
 
+These mitigation layer types — code, prompt, model, policy — are the same categories you used in D5 - Grader Types to classify quality checks, and again in D17 - Launch Readiness when layering production monitoring. The same mental model applies here: push fixes as far left (toward code) as possible, because they're fastest to deploy and hardest to bypass.
+
 **Key question:** code-layer fixes are fast and durable. Prompt fixes are fast but fragile (attackers adapt). Model fixes are slow and expensive. Policy fixes are manual and costly at scale. Given your findings, what's the fastest path to meaningful ASR reduction?
 
 ### Step 4: Pre-commit thresholds and decide
@@ -159,6 +169,6 @@ Your response should do three things:
 
 2. **Push back on at least two things in the security lead's framing.** Use the red team numbers and the concepts from Part 1 to be specific. Hint: "in line with what other labs publish" is not a safety argument; "ship and iterate" on safety-adjacent attacks is often the wrong default.
 
-3. **State what the EU AI Act documentation actually needs to show.** Don't wave at "documentation drafted" — name the specific elements the conformity assessment requires: attack taxonomy coverage, ASR by category, severity-weighted findings, mitigation layer mapping, regression suite status, and what happens on re-breach post-launch.
+3. **Address the documentation claim.** The EU AI Act (Article 15, Annex IV) requires high-risk systems to demonstrate robustness against adversarial inputs and document their testing procedures — but it doesn't prescribe a specific format. "Documentation drafted" means nothing unless it actually evidences the robustness work. Name what strong documentation should contain to satisfy the Act's intent: what attacks were tested, how coverage was determined, what the results were, what mitigations were applied, and what the post-launch monitoring plan is. These aren't mandated line items — they're what makes the documentation credible to an auditor.
 
 Don't frame this as an abstract critique. You are the PM who has to sign the EU launch attestation. If the system isn't ready, saying "eng said it was fine" is not a defense.

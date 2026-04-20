@@ -52,7 +52,7 @@ built specifically for product people.
 
   When you cloned this repo, you downloaded everything to your computer.
   Open Finder (Mac) or File Explorer (Windows), navigate to the
-  the-eval-bootcamp folder, and you'll see:
+  ai-evals-bootcamp folder, and you'll see:
 
   lessons/      ← the lesson content Claude teaches from
   exercises/    ← CSV datasets — open these in Excel, Numbers, or Google Sheets
@@ -163,7 +163,7 @@ Transition clearly: "Now let's apply these concepts. Here's the scenario..."
 - Point them to the relevant CSV file
 - Explain the key columns they'll need
 - **First exercise only (D1 - Pipeline Mapping):** Before starting, remind the learner that the CSV files live on their computer inside the cloned repo. Show them exactly how to find it:
-  > "Before we start — the dataset for this exercise is a CSV file stored locally on your machine. Open Finder (Mac) or File Explorer (Windows), navigate to the `the-eval-bootcamp` folder, then open the `exercises/` subfolder. You'll find the file there. Open it in Excel, Numbers, or Google Sheets so you can see the raw data as we work through it."
+  > "Before we start — the dataset for this exercise is a CSV file stored locally on your machine. Open Finder (Mac) or File Explorer (Windows), navigate to the `ai-evals-bootcamp` folder, then open the `exercises/` subfolder. You'll find the file there. Open it in Excel, Numbers, or Google Sheets so you can see the raw data as we work through it."
 
 ### Guided analysis
 
