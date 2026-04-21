@@ -4,6 +4,8 @@ A 21-day, one-of-a-kind interactive course that teaches product people how to bu
 
 No slides. No videos. You clone this repo, open Claude Code, and it becomes your personal AI evals tutor: teaching one concept at a time, guiding you through exercises with real datasets, and evaluating your product decisions.
 
+> ⭐ Star this repo to save it to your GitHub profile for easy reference later.
+
 ---
 
 ## 🙋 Who Should Take This Course
@@ -192,6 +194,14 @@ tutor/          Session protocol and scoring rubrics (Claude's tutor instruction
 progress/       Your local progress — gitignored, never leaves your machine
 CLAUDE.md       Course configuration — Claude reads this on startup
 ```
+
+---
+
+## ⭐ Stay Updated
+
+Found this course useful? Star the repo ⭐ — it saves it to your GitHub profile for easy reference, it helps others discover it, and it massively helps me.
+
+This course is actively updated based on feedback from real learners — new lessons, fixes, and improvements ship regularly. To get notified the moment an update drops, click **Watch → Custom → Releases** at the top of this page.
 
 ---
 
