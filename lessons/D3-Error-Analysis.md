@@ -1,7 +1,7 @@
 # D3 - Error Analysis
 
-**Week 1, Day 3** | ~30 min
-**Part times:** Concepts ~10 min | Exercise ~15 min | Decision Point ~5 min
+**Week 1, Day 3** | ~35 min
+**Part times:** Concepts ~10 min | Exercise ~20 min | Decision Point ~5 min
 **Previous lesson:** D2 - Failure Surface Mapping — you built an evaluation surface map: functional failures by pipeline stage, adversarial risks, and coverage gaps. The key finding: failure type labels tell you *what* went wrong but not always *where* or *why*. Today you go from counting failures to reading them — learning the systematic process of understanding exactly how and why your AI system breaks.
 
 ---
@@ -46,9 +46,11 @@ The triage turns your taxonomy into a sprint plan. Prompt-fixes go into the curr
 
 ---
 
-## Part 2: Exercise — Read the Traces
+## Part 2: Exercise — Read the Traces Until Saturation
 
-You've counted the failures in D2 - Failure Surface Mapping. Now you're going to read them. Your goal: build a failure taxonomy from the actual data, not from the pre-existing `failure_type` labels.
+You've counted the failures in D2. Now you're going to read them — in batches, watching for the moment new traces stop producing new categories. That moment is saturation, and it's the one signal that tells you your taxonomy is stable.
+
+In practice you'd read 30+ failures. This exercise compresses the experience into 12 across three batches so you can feel the pattern: categories accumulate fast, then slow, then stop.
 
 ### Setup
 
@@ -60,23 +62,47 @@ The key analytical move: compare what the LLM *said* in its reasoning against wh
 
 **Important:** Ignore the `failure_type` column for now. You'll compare your categories against it at the end.
 
-### Step 1: Open coding
+### Step 1: Batch 1 — open code 4 traces (~5 min)
 
-Read 10 failure rows. For each, compare the LLM's reasoning (`llm_reasoning`) against the actual data (the old/new values, markup percentage, available context). Write a freeform note describing what specifically went wrong.
+Read the first four failures in `change_id` order: **CHG-010, CHG-012, CHG-013, CHG-019**.
 
-Don't use labels like "hallucination" yet — describe the failure in your own words.
+For each, write a one-sentence freeform note describing what specifically went wrong. Don't use labels like "hallucination" yet — describe the failure in your own words.
 
-### Step 2: Axial coding and triage
+### Step 2: First taxonomy — cluster (~3 min)
 
-Cluster your 10 notes into named categories. For each category, assign a triage label:
+Cluster your 4 notes into categories. How many distinct categories do you see so far? Name each one. This is your starting taxonomy — expect it to grow.
 
-| Category name | Example (row ID) | Triage |
+### Step 3: Batch 2 — track new vs existing (~5 min)
+
+Read the next four failures: **CHG-023, CHG-024, CHG-032, CHG-036**.
+
+For each, decide: does this fit an existing category, or is it a new one? If new, name it and add to your list.
+
+After this batch, how many total categories do you have? Teams typically predict 3–4 failure types before reading data. How does your count compare?
+
+### Step 4: Batch 3 — saturation check (~4 min)
+
+Read the final four failures: **CHG-039, CHG-046, CHG-048, CHG-049**.
+
+Same check: does each one fit an existing category, or spawn a new one?
+
+**The saturation question:**
+- If all 4 fit existing categories → you've likely saturated at ~12 traces.
+- If even one creates a new category → you haven't saturated. In a real project this is the signal to keep reading; 12 wasn't enough.
+
+Either outcome is instructive. Saturation isn't a target you force — it's an observation you make.
+
+### Step 5: Triage your final categories (~3 min)
+
+For each category in your final taxonomy, assign a triage label:
+
+| Category name | Example (change_id) | Triage |
 |---|---|---|
 | ___ | ___ | prompt-fix / evaluator-needed / system-fix |
 | ___ | ___ | prompt-fix / evaluator-needed / system-fix |
 | ___ | ___ | prompt-fix / evaluator-needed / system-fix |
 
-How many distinct categories did you find across 10 traces? Now reveal the `failure_type` column — how do your categories compare to the pre-existing labels?
+Now reveal the `failure_type` column. How do your discovered categories compare to the pre-existing labels? Did you find anything the labels missed, or miss anything they caught?
 
 ---
 

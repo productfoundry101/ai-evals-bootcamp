@@ -195,6 +195,22 @@ CLAUDE.md       Course configuration — Claude reads this on startup
 
 ---
 
+## 📚 Further Reading & Acknowledgements
+
+This course stands on the shoulders of practitioners who've shared their evals work publicly. If you want to go deeper, these are the sources that most shaped what you just learned:
+
+- **[Hamel Husain](https://hamel.dev)** — evals methodology, error analysis, LLM-as-judge
+- **[Shreya Shankar](https://www.sh-reya.com)** — LLM judge calibration research
+- **[Lenny's Newsletter](https://www.lennysnewsletter.com)** — PM-specific evals framing ("Beyond vibe checks" and related pieces)
+- **[Aman Khan](https://amankhan1.substack.com)** — AI PM evals perspective
+- **[Tal Raviv](https://talraviv.co)** — practical PM evals examples
+- **[AI Analyst Lab](https://aianalystlab.ai)** — inspiration for framing evals as a product-centric arc (rather than analyst-centric) and for treating error analysis as the foundation every other technique builds on
+- **[RAGAS](https://docs.ragas.io)** — RAG evaluation framework
+- **[OWASP LLM Top 10](https://genai.owasp.org/llm-top-10/)** — adversarial attack taxonomy for LLM systems
+- **["Building AI Product Sense with a Custom Tutor" by Aman Khan](https://amankhan1.substack.com/p/building-ai-product-sense-with-a)** — inspiration for implementing Claude Code as your AI tutor
+
+---
+
 ## 📄 License
 
 [CC BY-NC-SA 4.0](LICENSE) — Free to use and adapt for non-commercial purposes with attribution.

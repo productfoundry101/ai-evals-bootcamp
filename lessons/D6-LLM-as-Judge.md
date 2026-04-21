@@ -78,14 +78,9 @@ For a production quality judge, **prioritize recall on FAIL.** It's better to fl
 
 ---
 
-## Part 2: Exercise — Calibrating a Judge
+## Part 2: Exercise — Critique Shadowing a Judge
 
-Your team built an LLM judge for the menu verification system. They tried two versions of the judge prompt:
-
-- **Judge V1:** A broad prompt — "Evaluate whether the menu verification decision is correct. Explain your reasoning, then give a verdict: PASS or FAIL."
-- **Judge V2:** A specific rubric — "Check the following criteria: (1) For description changes, does the description add any unverifiable sourcing, origin, or premium ingredient claims without referenced certification? (2) Is the system's reasoning grounded in the data and established policy, or does it fabricate exceptions, cite non-existent rules, or make claims unsupported by the available evidence? Explain your reasoning against each applicable criterion, then give a verdict: PASS or FAIL."
-
-Both judges evaluated the same 20 menu verification decisions. A domain expert also reviewed all 20 and provided ground truth.
+You're not going to analyze two pre-built judges. You're going to build a rubric the way practitioners actually do it: label real cases as the expert, extract criteria from your own critiques, then measure what an existing rubric captures and misses.
 
 ### Setup
 
@@ -95,21 +90,48 @@ Key columns: `case_id`, `change_type`, `change_summary`, `llm_decision`, `llm_re
 
 Each row is one menu verification decision, evaluated by both judge versions and the human expert.
 
-### Step 1: Agreement rates
+Your team has drafted two candidate judge prompts:
 
-Calculate the agreement rate between each judge and the human: V1 vs human, V2 vs human. Which version is better calibrated?
+- **Judge V1:** A broad prompt — "Evaluate whether the menu verification decision is correct. Explain your reasoning, then give a verdict: PASS or FAIL."
+- **Judge V2:** A specific rubric — "Check the following criteria: (1) For description changes, does the description add any unverifiable sourcing, origin, or premium ingredient claims without referenced certification? (2) Is the system's reasoning grounded in the data and established policy, or does it fabricate exceptions, cite non-existent rules, or make claims unsupported by the available evidence? Explain your reasoning against each applicable criterion, then give a verdict: PASS or FAIL."
 
-### Step 2: Failure analysis of V1
+### Step 1: Be the expert — label five cases yourself (~8 min)
 
-Find the cases where V1 said PASS but the human said FAIL. Read the V1 reasoning alongside the human critique for each one. What pattern explains V1's blind spots?
+Pick these five cases: **J-02, J-06, J-09, J-10, J-20**.
 
-### Step 3: How V2 improves
+For each case, read **only** `change_summary` and `llm_reasoning`. **Do not look at `human_verdict` or `human_critique` yet** — that's the answer key and you'll use it in a moment.
 
-For the same cases you analyzed in Step 2, check whether V2 got them right. Compare V1 and V2's reasoning side-by-side on the same cases — what specific element of the V2 rubric caught the problem V1 missed?
+For each one:
+1. Decide: does the system's decision look correct? **PASS** or **FAIL**.
+2. Write a **one-sentence critique** explaining your reasoning — what did the system get right or wrong, and why?
 
-### Step 4: Where V2 still fails
+Once you've labeled all five, reveal `human_verdict` and `human_critique`. How many did you match? Where did your critique differ from the expert's — and which criteria did you not even think to look for until you saw the expert's note?
 
-Find any cases where V2 also disagrees with the human — either PASS when human said FAIL, or FAIL when human said PASS. What does this tell you about the limits of even a well-designed rubric?
+This is Critique Shadowing in miniature. The same loop, scaled up to 30-100 cases, is how production judges actually get built.
+
+### Step 2: Extract rubric criteria from the critiques (~4 min)
+
+Now look at the five `human_critique` values from the cases you just reviewed. What 2-3 criteria keep appearing?
+
+Write them as a mini judge rubric — two or three bullet points of the form "Flag FAIL if…". This is how a real rubric gets built: not from a brainstorm, but from patterns that surface when an expert critiques real cases.
+
+### Step 3: Compare your rubric to V2 (~3 min)
+
+Look at the V2 prompt above. How does it line up with the rubric you extracted in Step 2?
+
+- Which of your criteria does V2 cover?
+- Is there anything you captured that V2 missed?
+- Is there anything V2 includes that you didn't pick up on?
+
+This is **criteria drift** in action — a rubric written without looking at data almost always differs from one built from critiques.
+
+### Step 4: Meta-evaluate both judges (~5 min)
+
+Now zoom out to all 20 cases. Treat `human_verdict` as ground truth.
+
+- Calculate the agreement rate for V1 vs human, and V2 vs human.
+- The gap will be large. Pick any two cases where V1 said PASS but the human said FAIL, and read V1's reasoning. What does confident, well-articulated reasoning that still gets the answer wrong tell you about vague rubrics?
+- Find the cases where V2 still disagrees with the human. Read V2's reasoning on those cases — what kind of judgment is the rubric missing, and is it the kind of thing prompt text can ever capture?
 
 ---
 
@@ -117,5 +139,5 @@ Find any cases where V2 also disagrees with the human — either PASS when human
 
 Your ML lead says: *"We need to ship an LLM judge for the menu verification system. Here's my proposed rubric."* They hand you the V2 prompt.
 
-Based on your analysis: Would you approve this judge for production use? What specific improvements would you require before trusting it to run on live decisions? Write your recommendation, citing evidence from the exercise.
+Based on your analysis: Would you approve this judge for production use? What specific improvements would you require before trusting it to run on live decisions? Ground your recommendation in evidence from the exercise — the rubric gaps you surfaced in Step 3, the meta-evaluation numbers from Step 4, and the types of judgment the rubric still can't capture.
 

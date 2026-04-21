@@ -32,7 +32,7 @@ The PM instinct: **match the source to the task.** Price threshold checks → au
 
 ### Building a golden dataset
 
-A **golden dataset** is a curated, labeled collection of test cases with verified ground truth. It's what your graders measure against and what gates your releases. Getting it right matters more than most teams realize.
+A **golden dataset** is a curated, labeled collection of test cases with verified ground truth — essentially eval specs bundled with their ground-truth labels. You write eval specs first (as you'll do in D13 - Eval-Driven Development), then organize them into a golden dataset to measure system performance. It's what your graders measure against and what gates your releases. Getting it right matters more than most teams realize.
 
 **Start small.** Leading practitioners recommend beginning with 20-50 test cases sourced from real failures. Not synthetic. Not hypothetical. Real cases where your system got it wrong in ways that matter. You don't need hundreds of cases to start — early-stage changes produce large effect sizes detectable with small samples.
 

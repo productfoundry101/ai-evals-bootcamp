@@ -24,6 +24,8 @@ Before shipping anything new, the PM question is: **what's the eval?** And criti
 
 A feature like "verify restaurant photos" doesn't generate one eval spec — it generates many. A matching photo that should be approved is one test case. A mismatched photo that should be rejected is a different test case with a different expected output and higher severity. A photo with an undisclosed allergen visible is a third test case with critical severity. Same feature, three distinct evals measuring three distinct system behaviors. If you collapsed them into one generic spec, you'd never know whether the system handles mismatches or safety cases — only that it handles the easy positive case.
 
+Each eval spec becomes a row in a golden dataset (D7 - Golden Datasets). The spec is the design artifact; the dataset is the measurement artifact.
+
 This forces a conversation between PM and engineering *before* work begins. If everyone agrees on the eval, everyone agrees on what "working" means. If they can't agree, the ambiguity surfaces upfront — not during QA, not after launch.
 
 Signs your eval-as-spec is working:

@@ -119,8 +119,10 @@ Example:
 > - ...
 > Starting Concept 1...
 
-**Waypointing — on each concept prompt:** Prefix every check-understanding prompt with:
+**Waypointing — on each concept:** Begin each concept with the label:
 > **Concepts | Concept [N] of [total]**
+
+Then present the concept, then the check-understanding question — no label before the question.
 
 Teach each concept one at a time. Each lesson's Part 1 contains multiple concepts separated by headings.
 

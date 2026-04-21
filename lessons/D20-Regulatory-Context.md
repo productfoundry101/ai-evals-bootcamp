@@ -85,7 +85,7 @@ The PM's role: you don't write the legal filings, but you own the *eval evidence
 Compliance is not a one-time gate. High-risk system providers must:
 
 1. **Monitor continuously** — track system performance against the documented benchmarks. If performance degrades below documented thresholds, corrective action is required.
-2. **Report serious incidents** — any incident involving death, serious health damage, disruption of critical infrastructure, or violation of fundamental rights must be reported to the relevant market surveillance authority. Timeline: typically within 72 hours of becoming aware.
+2. **Report serious incidents** — any incident involving death, serious health damage, disruption of critical infrastructure, or violation of fundamental rights must be reported to the relevant market surveillance authority. Timelines per Article 73: within 15 days for most serious incidents; within 2 days for widespread infringements; within 10 days if death is involved.
 3. **Take corrective action** — if non-compliance is identified (by you or by an authority), you must bring the system back into compliance or withdraw it from the market.
 4. **Cooperate with authorities** — provide information, access to logs, and system documentation upon request.
 
@@ -116,10 +116,10 @@ Open `exercises/D20-regulatory-audit-dataset.csv`. The dataset has two sections:
 | `item_name` | Product name (Section A) or requirement name (Section B) |
 | `description` | What the product does (A) or what the requirement demands (B) |
 | `sector` | Industry sector (Section A only) |
+| `notes` | Additional context — **read this first before filling any columns** |
 | `risk_tier` | Your classification: unacceptable, high, limited, minimal (Section A — you fill this in) |
-| `course_coverage` | Which D-lessons address this requirement (Section B only) |
-| `coverage_status` | covered, partial, or gap (Section B — you assess this) |
-| `notes` | Additional context |
+| `course_coverage` | Which D-lessons address this requirement (Section B — you fill this in based on the notes) |
+| `coverage_status` | covered, partial, or gap (Section B — you assess this after filling course_coverage) |
 
 ### Expected outcome
 
@@ -150,10 +150,14 @@ State your classification and your reasoning. If you classify it as high-risk, a
 
 Look at Section B (R-01 through R-10). Assume you've classified the menu verification system as high-risk (even if you argued limited risk in Step 2 — this is the conservative approach).
 
-For each requirement, assess `coverage_status`:
-- **Covered:** your D1–D19 eval practices fully address this requirement, including documentation.
-- **Partial:** you do the work but haven't formalized or documented it in a way that survives an audit.
-- **Gap:** you haven't addressed this requirement at all.
+For each row, work left to right:
+
+1. **Read `notes`** — this gives you context on what the requirement demands and hints at which D-lessons are relevant.
+2. **Fill `course_coverage`** — based on the notes, write which D-lessons address this requirement (e.g., "D7, D12").
+3. **Fill `coverage_status`** — assess whether those lessons constitute full, partial, or no coverage:
+   - **Covered:** your D1–D19 eval practices fully address this requirement, *including documentation that survives an audit*.
+   - **Partial:** you do the work but haven't formalized or documented it in an auditable format.
+   - **Gap:** you haven't addressed this requirement at all.
 
 **Key question:** most of your eval practices are "partial" rather than "covered." What's the common pattern in what's missing — is it the practice itself, or the documentation of the practice?
 
