@@ -1,4 +1,4 @@
-# 🧪 The Eval Bootcamp
+# 🧪 AI Evals Bootcamp
 
 A 21-day, one-of-a-kind interactive course that teaches product people how to build and evaluate production-ready AI systems — ✨ by actually doing it ✨
 
@@ -10,9 +10,9 @@ No slides. No videos. You clone this repo, open Claude Code, and it becomes your
 
 ## 🙋 Who Should Take This Course
 
-This course is for **anyone working on AI products** who wants to build rigorous evaluation skills — without needing a machine learning background.
+This course is for product folks who want to ship AI features that actually work — reliably, at scale, beyond gut-feel.
 
-**Primary audience: Product Managers** shipping AI features and wanting to go beyond gut-feel quality checks. Also great for:
+**Primary audience: Product Managers** shipping AI features who want a systematic, repeatable way to know their product is actually working. Also great for:
 
 - Associate and Group PMs transitioning into AI-focused roles
 - Founders and solo builders who own both product and quality
@@ -181,8 +181,6 @@ Your progress is saved automatically after each lesson. The tutor will pick up e
 | D20 | Regulatory Context | AI Act, liability, what product people need to know |
 | D21 | Eval Culture | Institutionalizing evals, team buy-in, eval as product practice |
 
-> **Currently available:** D1–D19 (Weeks 1–3, Days 1–19). D20–D21 coming soon.
-
 ---
 
 ## 📁 What's in the Repo
@@ -207,7 +205,7 @@ This course is actively updated based on feedback from real learners — new les
 
 ## 📚 Further Reading & Acknowledgements
 
-This course stands on the shoulders of practitioners who've shared their evals work publicly. If you want to go deeper, these are the sources that most shaped what you just learned:
+This course stands on the shoulders of practitioners who've shared their teachings publicly. If you want to go deeper, these are the sources that most shaped what you just learned:
 
 - **[Hamel Husain](https://hamel.dev)** — evals methodology, error analysis, LLM-as-judge
 - **[Shreya Shankar](https://www.sh-reya.com)** — LLM judge calibration research

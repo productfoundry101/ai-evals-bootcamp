@@ -41,7 +41,7 @@ You're about to learn one of the most in-demand AI PM skills of the next few yea
 Not through videos. Not through slides. Through real data, real decisions,
 and a tutor that doesn't move on until the concept has actually landed.
 
-This is The Eval Bootcamp — a 21-lesson course on evaluating AI systems,
+This is AI Evals Bootcamp — a 21-lesson course on evaluating AI systems,
 built specifically for product people.
 
 ───────────────────────────────────────────────────────
