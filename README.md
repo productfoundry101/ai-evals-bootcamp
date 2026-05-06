@@ -25,15 +25,14 @@ If you've ever asked *"how do I know if this AI is actually working?"* — this 
 
 ## 🎯 What You'll Learn
 
-- **Read any AI system from scratch** — map pipeline stages, trace production logs, identify which stage is breaking
-- **Measure reliability, not just accuracy** — pass@k, reliable@k, and the consistency gap that separates demo-ready from production-ready
-- **Build a failure taxonomy** — systematic error analysis that turns raw traces into actionable categories
-- **Design automated quality checks** — code-based graders, LLM-as-judge, and a layering strategy that scales
-- **Build ground truth you can trust** — golden datasets, contamination detection, and lifecycle management
-- **Design metrics that drive decisions** — guardrail vs optimization metrics, fairness and subgroup evaluation
-- **Run AI experiments** — what's different about A/B testing for LLM systems, and how to avoid the common traps
-- **Ship with a framework** — release criteria, production monitoring, and a repeatable ship/hold process
-- **Build an eval culture** — how to institutionalize evals across your team
+- **Tell if your AI is actually working** — not just in demos, but in production, consistently, for all your users
+- **Find what's breaking before your users do** — when AI behaves unexpectedly, you'll know exactly where to look and what to ask
+- **Write quality standards your team can build to** — replace vague requests with clear, testable criteria before development starts
+- **Catch when AI fails some users more than others** — spot whether certain customer groups are getting a worse experience before it becomes a problem
+- **Run AI experiments that actually tell you something** — avoid the traps that make AI test results misleading
+- **Make launch calls with a framework, not a gut feel** — a repeatable ship/hold process for every AI feature you own
+- **Hold your team and vendors accountable** — ask the right questions in any AI review, regardless of how technical it gets
+- **Build a culture where quality is everyone's job** — turn evals from a last-minute checkbox into a team-wide habit
 
 ---
 
@@ -51,10 +50,10 @@ If you've ever asked *"how do I know if this AI is actually working?"* — this 
 ## 🚀 Quick Start
 
 **Already set up? Skip ahead:**
-- Not sure if you have Node.js or Claude Code installed? → [Step 1](#step-1----check-your-setup)
-- Have Node.js but not Claude Code? → [Step 2](#step-2----install-claude-code)
-- Have Claude Code installed? → [Step 3](#step-3----get-the-course-files)
-- Have the files cloned? → [Step 4](#step-4----start-the-course)
+- Not sure if you have Node.js or Claude Code installed? → [Step 1](#step-1--check-your-setup)
+- Have Node.js but not Claude Code? → [Step 2](#step-2--install-claude-code)
+- Have Claude Code installed? → [Step 3](#step-3--get-the-course-files)
+- Have the files cloned? → [Step 4](#step-4--start-the-course)
 
 ---
 
@@ -77,7 +76,7 @@ If you see a version number, you have Node.js. If not, download it from [nodejs.
 ```bash
 claude --version
 ```
-If you see a version number, skip to [Step 3](#step-3----get-the-course-files). If not, continue to Step 2.
+If you see a version number, skip to [Step 3](#step-3--get-the-course-files). If not, continue to Step 2.
 
 **Create an Anthropic account** (free) at [claude.ai](https://claude.ai) if you don't have one — you'll need it to authenticate Claude Code.
 

@@ -148,8 +148,8 @@ Teach each concept one at a time. Each lesson's Part 1 contains multiple concept
 
 1. **Present** — Explain the concept. Use the lesson text but adapt to the learner's level. Always include concrete examples with specific numbers.
 
-2. **Check understanding** — Rephrase the concept and ask the learner if they understood it. Ask any clarification if needed, or enter any key to continue.
-   - "Does it make sense why pass@k isn't the only metric you should be looking at to evaluate production readiness? Ask if you need any clarifications, or enter any key to continue."
+2. **Check understanding** — Rephrase the concept and ask the learner if they understood it. Ask any clarification if needed, or type `ok` to continue.
+   - "Does it make sense why pass@k isn't the only metric you should be looking at to evaluate production readiness? Ask if you need any clarifications, or type `ok` to continue."
 
 3. **Correct or confirm** — If their explanation has gaps or errors, clarify. If they nail it, confirm and move on. Don't belabor a concept they already get.
 
