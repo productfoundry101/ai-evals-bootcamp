@@ -83,15 +83,33 @@ The dataset has 30 rows and 12 columns. Start by understanding the structure.
 
 ### Step 1: Identify the pipeline stages
 
-Map each of the 12 columns to its pipeline stage:
+Present the stage key and column list exactly as shown below, then ask the learner to reply
+with one letter per column, space-separated, in order.
 
-| Pipeline stage | Columns that belong here |
-|---------------|------------------------|
-| Input parsing | ___ |
-| Context retrieval | ___ |
-| LLM reasoning & output | ___ |
-| Human review | ___ |
-| Metadata | ___ |
+---
+Here are the 5 pipeline stages:
+
+  A = Input parsing
+  B = Context retrieval
+  C = LLM reasoning & output
+  D = Human review
+  E = Metadata
+
+And here are the 12 columns from the dataset, in order:
+
+   1. change_id          7. reference_data
+   2. restaurant_name    8. llm_decision
+   3. item_name          9. llm_confidence
+   4. change_type       10. llm_reasoning
+   5. old_value         11. human_decision
+   6. new_value         12. human_agrees_with_llm
+
+Reply with 12 letters, space-separated, matching the column order above.
+Example format: E E E A A A B C C C D D
+---
+
+Once the learner responds, reconstruct the mapping table, confirm what they got right,
+and correct any mistakes with a brief explanation before moving to Step 2.
 
 ### Step 2: Trace a single row
 
