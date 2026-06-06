@@ -1,6 +1,6 @@
 # 🧪 AI Evals Bootcamp
 
-A 21-day, one-of-a-kind interactive course that teaches product people how to build and evaluate production-ready AI systems — ✨ by actually doing it ✨
+A one-of-a-kind interactive roleplay bootcamp that teaches product people of all levels of proficiency how to build and evaluate production-ready AI systems — ✨ by actually doing it ✨
 
 No slides. No videos. You clone this repo, open Claude Code, and it becomes your personal AI evals tutor: teaching one concept at a time, guiding you through exercises with real datasets, and evaluating your product decisions.
 
@@ -38,6 +38,7 @@ If you've ever asked *"how do I know if this AI is actually working?"* — this 
 
 ## ✨ Course Features
 
+- **Multiple learning tracks** — choose the use case that matches your level and context; new tracks are added regularly
 - **Hands-on with real data** — every lesson includes a synthetic dataset you analyze yourself; no toy examples
 - **You do the thinking** — Claude computes on request; you direct the analysis and draw the conclusions
 - **PM Decision Points** — each lesson ends with you writing a recommendation or artifact; Claude evaluates it against a scoring rubric
@@ -150,6 +151,12 @@ Your progress is saved automatically after each lesson. The tutor will pick up e
 
 ## 📅 Course Structure
 
+When you start the course, you'll choose a learning track. Each track has its own lessons, exercises, and PM decision points built around a specific real-world AI use case.
+
+---
+
+### 🟡 Track 1 — Menu Verification at a Food Delivery Company *(Intermediate)*
+
 21 days. 3 weeks. One lesson per day.
 
 ### Week 1 — Your Eval Foundation (Days 1–7)
@@ -190,14 +197,31 @@ Your progress is saved automatically after each lesson. The tutor will pick up e
 
 ---
 
+### 🟢 Track 2 — Building a Conversational Language Tutor *(Beginner)*
+
+New to AI evaluation? This track teaches the same eval fundamentals through the lens of a consumer AI product — a language learning assistant that holds conversations, gives feedback, and adapts to the learner's level.
+
+Open-ended outputs, tricky quality definitions, and a use case most people intuitively understand — making it the ideal entry point if you're new to AI evals or working in consumer AI.
+
+> 📝 **Content in progress** — lessons and exercises for this track are being added regularly. [Watch the repo](#-stay-updated) to get notified when new content drops.
+
+---
+
 ## 📁 What's in the Repo
 
 ```
-lessons/        Lesson content — concepts, exercises, decision points (D1-Pipeline-Mapping.md through D21-Eval-Culture.md)
-exercises/      CSV datasets you'll analyze during exercises
-tutor/          Session protocol and scoring rubrics (Claude's tutor instructions)
-progress/       Your local progress — gitignored, never leaves your machine
-CLAUDE.md       Course configuration — Claude reads this on startup
+use-cases/
+  menu-verification/    Intermediate track — menu verification at a food delivery company
+    lessons/            Lesson content (D1–D21)
+    exercises/          CSV datasets you'll analyse during exercises
+    scoring-rubrics.md  PM Decision Point rubrics (used by Claude, not shown to you)
+    meta.md             Track title, level, and description
+  language-tutor/       Beginner track — building a conversational language tutor
+    lessons/            (coming soon)
+    exercises/          (coming soon)
+tutor/                  Session protocol — Claude's tutoring instructions
+progress/               Your local progress — gitignored, never leaves your machine
+CLAUDE.md               Course configuration — Claude reads this on startup
 ```
 
 ---
@@ -206,7 +230,7 @@ CLAUDE.md       Course configuration — Claude reads this on startup
 
 Found this course useful? Star the repo ⭐ — it saves it to your GitHub profile for easy reference, it helps others discover it, and it massively helps me.
 
-This course is actively updated based on feedback from real learners — new lessons, fixes, and improvements ship regularly. To get notified the moment an update drops, click **Watch → Custom → Releases** at the top of this page.
+This course is actively updated based on feedback from real learners — new lessons, new use cases, fixes, and improvements ship regularly. To get notified the moment an update drops, click **Watch → Custom → Releases** at the top of this page.
 
 ---
 
