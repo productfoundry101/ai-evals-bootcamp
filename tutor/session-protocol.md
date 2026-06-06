@@ -22,15 +22,48 @@ Before anything else in the session, silently check whether the course has been 
 - If `git fetch` fails (offline, network issue, not a git repo): skip silently and continue to Step 1. Never block the session on this check.
 - If `git pull` fails after approval (unexpected conflict): surface the error, suggest the learner run `git status` and resolve manually, then continue teaching with the existing version.
 
+### Step 0.5 — Use-case selection
+
+After the update check, read `progress/progress.json`.
+
+**If `selected_use_case` is already set:** load that use case's content from `use-cases/{selected_use_case}/` and proceed to Greeting.
+
+**If `selected_use_case` is missing or null (first run):**
+
+1. Read all `use-cases/*/meta.md` files to discover available use cases.
+2. Present the selection menu verbatim (substituting real content from each meta.md):
+
+```
+Welcome to AI Evals Bootcamp!
+
+Before we start, choose your learning track:
+
+  [A] {use case title}  ·  {level}
+      {tagline}
+
+  [B] {use case title}  ·  {level}
+      {tagline}
+
+Type A or B to choose.
+```
+
+3. Wait for the learner to type their choice.
+4. Write `"selected_use_case": "{folder-name}"` into `progress/progress.json`.
+5. Confirm: "Great — you're on the [title] track. Let's begin." Then proceed to Greeting.
+
+**Error handling:** If `use-cases/` contains only one folder, skip the menu and auto-select it silently.
+
+---
+
 ### Greeting
 
 1. Check `progress/progress.json` for prior sessions
 2. If returning learner: "Welcome back. Last time you completed [lesson]. Ready for [next lesson]?"
-3. If new learner (no prior progress): deliver the **Full Onboarding** below before starting D1 - Pipeline Mapping.
+3. If new learner (no prior progress): deliver the **Full Onboarding** below before starting D1.
 
 ### Full Onboarding (new learners only)
 
-Present the following block verbatim (preserve the ASCII formatting), then wait for the learner to type "go" or ask questions before starting D1 - Pipeline Mapping.
+Present the following block verbatim (preserve the ASCII formatting), then wait for the learner to type "go" or ask questions before starting D1.
 
 ---
 
@@ -72,10 +105,10 @@ built specifically for product people.
   Open Finder (Mac) or File Explorer (Windows), navigate to the
   ai-evals-bootcamp folder, and you'll see:
 
-  lessons/      ← the lesson content Claude teaches from
-  exercises/    ← CSV datasets — open these in Excel, Numbers, or Google Sheets
-  tutor/        ← tutor instructions (you don't need to touch this)
-  progress/     ← your progress log (auto-updated after each lesson)
+  use-cases/{your-track}/lessons/    ← the lesson content Claude teaches from
+  use-cases/{your-track}/exercises/  ← CSV datasets — open in Excel, Numbers, or Google Sheets
+  tutor/                             ← tutor instructions (you don't need to touch this)
+  progress/                          ← your progress log (auto-updated after each lesson)
 
   During exercises, the tutor reads the CSV and runs the numbers for you.
   But you can — and should — open the file yourself in a spreadsheet
@@ -93,7 +126,8 @@ built specifically for product people.
   → Ask questions any time — mid-concept, mid-exercise, anywhere. Just type.
     If it's covered in a later lesson, you'll get a brief answer and a pointer.
 
-  → This course works best on Claude Sonnet. Type /model to check or switch.
+  → This course works best on Claude Sonnet or Opus. Type /model to check
+    or switch.
 
   → Use voice dictation to answer instead of typing — most learners prefer
     it during exercises. On Mac: press Fn Fn (or the microphone key).
@@ -180,11 +214,11 @@ Transition clearly: "Now let's apply these concepts. Here's the scenario..."
 > **Exercise | Step [N] of [total]**
 
 ### Setup
-- Introduce the use case (food delivery company menu verification) briefly
-- Point them to the relevant CSV file
+- Briefly introduce the use-case context (read from `use-cases/{selected_use_case}/meta.md` if needed as a reminder)
+- Point them to the relevant CSV file inside `use-cases/{selected_use_case}/exercises/`
 - Explain the key columns they'll need
-- **First exercise only (D1 - Pipeline Mapping):** Before starting, remind the learner that the CSV files live on their computer inside the cloned repo. Show them exactly how to find it:
-  > "Before we start — the dataset for this exercise is a CSV file stored locally on your machine. Open Finder (Mac) or File Explorer (Windows), navigate to the `ai-evals-bootcamp` folder, then open the `exercises/` subfolder. You'll find the file there. Open it in Excel, Numbers, or Google Sheets so you can see the raw data as we work through it."
+- **First exercise only (D1):** Before starting, remind the learner that the CSV files live on their computer inside the cloned repo. Show them exactly how to find it:
+  > "Before we start — the dataset for this exercise is a CSV file stored locally on your machine. Open Finder (Mac) or File Explorer (Windows), navigate to the `ai-evals-bootcamp` folder, then open `use-cases/{your-track}/exercises/`. You'll find the file there. Open it in Excel, Numbers, or Google Sheets so you can see the raw data as we work through it."
 
 ### Guided analysis
 
@@ -233,7 +267,7 @@ Walk through each exercise step. For each step:
 
 3. **Let them write** — Give them space to compose their memo/artifact. Don't pre-fill any blanks.
 
-4. **Evaluate** — Use the scoring rubric from `tutor/scoring-rubrics.md`. Give feedback:
+4. **Evaluate** — Use the scoring rubric from `use-cases/{selected_use_case}/scoring-rubrics.md`. Give feedback:
    - What they got right (specific)
    - What could be stronger (specific)
    - Whether their recommendation matches their data
