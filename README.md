@@ -1,8 +1,8 @@
-# 🧪 AI Evals Bootcamp
+# 🧪 AI Builders Bootcamp
 
 A one-of-a-kind interactive roleplay bootcamp that teaches product people of all levels of proficiency how to build and evaluate production-ready AI systems — ✨ by actually doing it ✨
 
-No slides. No videos. You clone this repo, open Claude Code, and it becomes your personal AI evals tutor: teaching one concept at a time, guiding you through exercises with real datasets, and evaluating your product decisions.
+No slides. No videos. You clone this repo, open Claude Code, and it becomes your personal AI evals tutor: teaching one concept at a time, guiding you through hands-on exercises, and evaluating your product decisions.
 
 > ⭐ Star this repo to save it to your GitHub profile for easy reference later.
 
@@ -39,7 +39,7 @@ If you've ever asked *"how do I know if this AI is actually working?"* — this 
 ## ✨ Course Features
 
 - **Multiple learning tracks** — choose the use case that matches your level and context; new tracks are added regularly
-- **Hands-on with real data** — every lesson includes a synthetic dataset you analyze yourself; no toy examples
+- **Hands-on exercises** — every lesson includes an exercise where you do the analysis; no toy examples
 - **You do the thinking** — Claude computes on request; you direct the analysis and draw the conclusions
 - **PM Decision Points** — each lesson ends with you writing a recommendation or artifact; Claude evaluates it against a scoring rubric
 - **Adaptive tutoring** — Claude matches your pace; experienced practitioners move fast, newcomers get more examples
@@ -102,13 +102,13 @@ If you see a version number, you're good. ✅
 ### Step 3 — Get the course files
 
 ```bash
-git clone https://github.com/productfoundry101/ai-evals-bootcamp.git
-cd ai-evals-bootcamp
+git clone https://github.com/productfoundry101/ai-builders-bootcamp.git
+cd ai-builders-bootcamp
 ```
 
 > **Don't have git?** Download it from [git-scm.com](https://git-scm.com/downloads), then run the commands above.
 
-**If you're using Cursor:** Go to File → Open Folder and select the `ai-evals-bootcamp` folder. Your course files — lessons, datasets, everything — will appear in the left sidebar. These are real files sitting on your computer; you can open the CSVs in Excel, Numbers, or Google Sheets anytime.
+**If you're using Cursor:** Go to File → Open Folder and select the `ai-builders-bootcamp` folder. Your course files — lessons, datasets, everything — will appear in the left sidebar. These are real files sitting on your computer; you can open the CSVs in Excel, Numbers, or Google Sheets anytime.
 
 ---
 
@@ -128,7 +128,7 @@ You'll see a `>` prompt — that means it worked. Type `go` and your tutor will 
 Each time you come back to continue the course — the next day, or after any break — run these two commands from your terminal:
 
 ```bash
-cd ai-evals-bootcamp
+cd ai-builders-bootcamp
 claude
 ```
 
@@ -143,7 +143,7 @@ Your progress is saved automatically after each lesson. The tutor will pick up e
 | `claude: command not found` | Run `npm install -g @anthropic-ai/claude-code` again, then restart your terminal |
 | Permissions error during install | Download Node.js directly from [nodejs.org](https://nodejs.org) instead |
 | Blank screen after running `claude` | You're in — just type `go` to start |
-| Claude doesn't introduce itself as tutor | Make sure you ran `claude` from inside the `ai-evals-bootcamp` folder, not a parent directory |
+| Claude doesn't introduce itself as tutor | Make sure you ran `claude` from inside the `ai-builders-bootcamp` folder, not a parent directory |
 | Claude asks to approve file writes | Type `yes` — it needs this to save your progress |
 | Stuck mid-lesson | Type `resume` — the tutor will re-read your progress and pick up where you left off |
 

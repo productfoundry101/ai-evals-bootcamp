@@ -1,0 +1,13 @@
+pain_id,learner_pain,segment,how_common,current_handling
+P01,"Beginners feel anxious and self-conscious about speaking the new language with real people, so they avoid speaking altogether and never build the habit",A0/A1 beginner,~65% of beginners say fear of sounding foolish stops them speaking,No dedicated support; help center suggests finding a language partner
+P02,"Learners hit a grammar point they don't understand mid-lesson and have no one to ask in the moment, so they stall and drift away",A0/A1 beginner,Very common; a top reason cited in day-1 drop-off surveys,Static grammar-tips pages; no in-the-moment help
+P03,"Learners want to know whether a sentence they wrote sounds natural to a native speaker, not just whether it is technically correct",A1/A2,Common among engaged learners,Exercises mark answers right or wrong against a fixed answer key
+P04,"Advanced learners want to debate abstract topics like politics and ethics to keep their fluency sharp",B2+,Small but vocal segment (~3% of users),Advanced reading lessons only; no open practice
+P05,"Learners aren't sure which words they should review and when, so they forget vocabulary they thought they had learned",All levels,Common,A basic review list that is not personalized to each learner's forgetting curve
+P06,"Learners can't tell what their subscription includes or how to cancel it, leading to angry support tickets and chargebacks",All levels,~8% of all support tickets,Help-center FAQ plus human support agents
+P07,"The app is slow and crashes on older Android phones, so many beginners churn on day 1 before finishing a lesson",A0/A1 beginner,Affects ~15% of new Android installs,Open item in the engineering backlog
+P08,"Free-tier learners hit the daily lesson cap and get frustrated before the habit forms",A0/A1 beginner,Affects all free-tier users,A paywall prompt to upgrade
+P09,"Learners want a certificate accredited by a recognized institution to show employers",A2+,Frequently requested,Lingo issues an unaccredited completion badge
+P10,"Streak and reminder notifications arrive at inconvenient times; learners want control over when they are nudged",All levels,Common complaint,A fixed notification schedule with limited settings
+P11,"Beginners can't tell whether they are pronouncing words correctly and get no feedback on their own attempts",A0/A1 beginner,Common,Audio clips to imitate; no feedback on the learner's own pronunciation
+P12,"New learners don't know which level or course to start with, pick the wrong one, and quickly feel lost",A0/A1 beginner,Affects most new signups,Learners self-select a level from a dropdown menu
